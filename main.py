@@ -14,14 +14,21 @@ from jinja2 import Environment, FileSystemLoader
 
 from base import BaseHandler
 
+from member import SigninHandler
+
 class HomeHandler(BaseHandler):
     def get(self):
-        self.render('home.html', test = 'a')
+        if self.current_user:
+            title = u'Home'
+            self.render('home.html', locals())
+        else:
+            self.render('index.html', locals())
 
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
             (r'/', HomeHandler),
+            (r'/signin', SigninHandler), 
         ]
         settings = {
             'site_title' : u'Online Judge',
@@ -30,6 +37,7 @@ class Application(tornado.web.Application):
             'static_path' : os.path.join(os.path.dirname(__file__), "static"),
             'xsrf_cookies' : True,
             'cookie_secret' : '32954k1s668c4ad48dad436vd0402905',
+            'debug'   : True,  
         }
         tornado.web.Application.__init__(self, handlers, **settings)
         self.jinja2 = Environment(loader = FileSystemLoader(self.settings['template_path']))
