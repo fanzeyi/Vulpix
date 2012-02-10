@@ -224,5 +224,15 @@ class ChangePasswordHandler(BaseHandler):
         sql = """UPDATE `member` SET `password` = '%s' WHERE `id` = '%d'""" \
                  % (auth, self.current_user['id'])
         self.db.execute(sql)
+        sql = """DELETE FROM `auth` WHERE `uid` = '%d'""" \
+                 % (self.current_user['id'])
+        self.db.execute(sql)
+        random = binascii.b2a_hex(uuid.uuid4().bytes)
+        sql = """INSERT INTO `auth` (`uid`, `secret`, `create`) \
+                 VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
+                 % (users['id'], random)
+        self.db.execute(sql)
+        self.set_cookie('auth', random)
+        self.set_cookie('uid', str(users['id']))
         self.set_secure_cookie('msg', 'Password Updated.')
         self.redirect('/settings')
