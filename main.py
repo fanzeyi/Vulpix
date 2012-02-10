@@ -19,6 +19,7 @@ from base import BaseHandler
 from config import mysql_config
 
 from lang import LangeuageSetHandler
+from member import MemberHandler
 from member import SigninHandler
 from member import SignupHandler
 from member import SignoutHandler
@@ -53,6 +54,7 @@ class Application(tornado.web.Application):
             (r'/signout', SignoutHandler), 
             (r'/settings', SettingsHandler), 
             (r'/settings/changepass', ChangePasswordHandler), 
+            (r'/member/(.*)', MemberHandler), 
             (r'/lang/(.*)', LangeuageSetHandler), 
             (r'/test', TestHandler), 
         ]
@@ -64,7 +66,7 @@ class Application(tornado.web.Application):
             'i18n_path' : os.path.join(os.path.dirname(__file__), 'i18n'), 
             'xsrf_cookies' : True,
             'cookie_secret' : '32954k1s668c4ad48dad436vd0402905',
-            'bcrypt_salt' : '$2a$12$pQuN8eiNw/f.jpQK8/x8IO', 
+            'bcrypt_salt' : '$2a$04$WL.FEXqZFwMOso3dsXOwuO', 
             'debug'   : True,
         }
         tornado.web.Application.__init__(self, handlers, **settings)

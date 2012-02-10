@@ -2,6 +2,7 @@
 
 import datetime
 import functools
+from MySQLdb import escape_string
 
 import tornado.web
 import tornado.locale
@@ -30,6 +31,8 @@ class BaseHandler(tornado.web.RequestHandler):
         uid = self.get_cookie('uid', default = None)
         user = None
         if auth and uid:
+            auth = escape_string(auth)
+            uid = escape_string(uid)
             sql = """SELECT * FROM `auth` WHERE `secret` = '%s' AND `uid` = '%s' LIMIT 1""" \
                      % (auth, uid)
             auth = self.db.get(sql)

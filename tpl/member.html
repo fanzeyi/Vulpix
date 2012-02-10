@@ -1,0 +1,6 @@
+{% include 'header.html' %}
+{{ _('Username') }}: {{ member.username }} <br />
+{% if member.website %}{{ _('Website') }}: <a href="{{ member.website }}" rel="nofollow">{{ member.website }}</a> <br />{% endif %}
+{% if member.tagline %}{{ _('Tagline') }}: {{ member.tagline }} <br />{% endif %}
+{% if member.bio %}{{ _('Bio') }}: {{ member.bio }} {% endif %}
+{% include 'footer.html' %}

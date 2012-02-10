@@ -5,10 +5,12 @@ import uuid
 import binascii
 import bcrypt
 import datetime
+from MySQLdb import escape_string
 
 import tornado.web
 import tornado.escape
 import tornado.locale
+from tornado.web import HTTPError
 from base import BaseHandler
 from base import unauthenticated
 from utils import unicode_len
@@ -32,7 +34,7 @@ class SigninHandler(BaseHandler):
             """ TODO: check username and password is valid. """
             auth = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
             sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' and `password` = '%s' LIMIT 1""" \
-                     % (usr.lower(), auth)
+                     % (escape_string(usr.lower()), auth)
             users = self.db.get(sql)
             if not users:
                 error.append(self._("Wrong Username and password combination."))
@@ -94,7 +96,7 @@ class SignupHandler(BaseHandler):
                     email = email.lower()
                     """ TODO: check is email had been token. """
                     sql = """SELECT * FROM `member` WHERE `email` = '%s' LIMIT 1""" \
-                             % email
+                             % escape_string(email)
                     users = self.db.get(sql)
                     if users:
                         error.append("That Email is taken. Please choose another.")
@@ -125,7 +127,7 @@ class SignoutHandler(BaseHandler):
     def get(self):
         auth = self.get_cookie('auth')
         sql = """DELETE FROM `auth` WHERE `secret` = '%s' LIMIT 1""" \
-                 % auth
+                 % escape_string(auth)
         self.db.execute(sql)
         self.clear_cookie('auth')
         self.clear_cookie('uid')
@@ -153,7 +155,7 @@ class SettingsHandler(BaseHandler):
             else:
                 p = re.compile(r"(?:^|\s)[-a-z0-9_.+]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)", re.IGNORECASE)
                 if p.search(email):
-                    email = email.lower()
+                    email = escape_string(email.lower())
                     """ TODO: check is email had been token. """
                     sql = """SELECT * FROM `member` WHERE `email` = '%s' LIMIT 1""" \
                              % email
@@ -168,20 +170,20 @@ class SettingsHandler(BaseHandler):
             if unicode_len(tagline) > 70:
                 error.append(self._("Tagline cannot be longer than 32 characters long."))
             else:
-                tagline = tornado.escape.xhtml_escape(tagline)
+                tagline = escape_string(tornado.escape.xhtml_escape(tagline))
         if website:
             if len(website) > 200:
                 error.append(self._("Website address cannot be longer than 200 characters long.")); 
             p = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
             if (p.search(website)):
-                website = tornado.escape.xhtml_escape(website)
+                website = escape_string(tornado.escape.xhtml_escape(website))
             else:
                 error.append(self._("Website address is invalid."))
         if bio:
             if unicode_len(bio) > 2000:
                 error.append(self._("Bio cannot be longer than 2000 characters long."))
             else:
-                bio = tornado.escape.xhtml_escape(bio)
+                bio = escape_string(tornado.escape.xhtml_escape(bio))
         if error:
             title = self._("Settings")
             self.render("settings.html", locals())
@@ -236,3 +238,14 @@ class ChangePasswordHandler(BaseHandler):
         self.set_cookie('uid', str(users['id']))
         self.set_secure_cookie('msg', 'Password Updated.')
         self.redirect('/settings')
+
+class MemberHandler(BaseHandler):
+    def get(self, username):
+        title = self._("Member")
+        username = escape_string(username.lower())
+        sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' LIMIT 1""" \
+                 % username
+        member = self.db.get(sql)
+        if not member:
+            raise HTTPError(404)
+        self.render("member.html", locals())
