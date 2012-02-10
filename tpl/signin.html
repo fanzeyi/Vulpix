@@ -1,8 +1,15 @@
 {% include 'header.html' %}
-<form method="POST" action="/signin">
-<label for="usr">Username</label><input type="TEXT" name="usr" id="usr" />
-<label for="pwd">Password</label><input type="PASSWORD" name="pwd" id="pwd" />
-<label for="email">E-mail</label><input type="EMAIL" name="email" id="email" />
+<form method="POST" action="">
+{%- if error -%}
+<ul class="errorlist">
+{% for err in error %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{{ page.xsrf_form_html() }}
+<label for="usr">{{ _('Username') }}</label><input type="TEXT" name="usr" id="usr" placeholder="Username" {%- if usr -%}value="{{ usr }}"{% endif %}/>
+<label for="pwd">{{ _('Password') }}</label><input type="PASSWORD" name="pwd" id="pwd" placeholder="Password" />
 <input type="submit" value="Submit" />
 </form>
 {% include 'footer.html' %}
