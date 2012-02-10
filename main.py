@@ -22,6 +22,7 @@ from lang import LangeuageSetHandler
 from member import SigninHandler
 from member import SignupHandler
 from member import SignoutHandler
+from member import SettingsHandler
 
 tornado.options.parse_command_line()
 
@@ -49,6 +50,7 @@ class Application(tornado.web.Application):
             (r'/signin', SigninHandler), 
             (r'/signup', SignupHandler), 
             (r'/signout', SignoutHandler), 
+            (r'/settings', SettingsHandler), 
             (r'/lang/(.*)', LangeuageSetHandler), 
             (r'/test', TestHandler), 
         ]

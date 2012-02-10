@@ -1,0 +1,21 @@
+{% include 'header.html' %}
+{%- if error -%}
+<ul class="errorlist">
+{% for err in error %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% if msg %}
+{{ msg }}
+{% endif %}
+<form method="POST" action="/settings">
+{{ page.xsrf_form_html() }}
+{{ _('Username') }}: {{ user.username }} <br />
+{{ _('Email') }}: <input type="email" name="email" value="{%- if email -%}{{ email }}{% else %}{{ user.email }}{% endif %}" /> <br />
+{{ _('Website') }}: <input type="text" name="website" value="{%- if website -%}{{ website }}{% elif user.website %}{{ user.website }}{% endif %}" /> <br />
+{{ _('Tagline') }}: <input type="text" name="tagline" value="{%- if tagline -%}{{ tagline }}{% elif user.tagline %}{{ user.tagline }}{% endif %}" /> <br />
+{{ _('Bio') }}: <textarea name="bio">{%- if bio -%}{{ bio }}{% elif user.bio %}{{ user.bio }}{% endif %}</textarea><br/>
+<input type="submit" value="{{ _('Submit') }}" />
+</form>
+{% include 'footer.html' %}

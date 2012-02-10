@@ -7,9 +7,11 @@ import bcrypt
 import datetime
 
 import tornado.web
+import tornado.escape
 import tornado.locale
 from base import BaseHandler
 from base import unauthenticated
+from utils import unicode_len
 
 class SigninHandler(BaseHandler):
     @unauthenticated
@@ -45,6 +47,10 @@ class SigninHandler(BaseHandler):
         self.db.execute(sql)
         self.set_cookie('auth', random)
         self.set_cookie('uid', str(users['id']))
+        go_next = self.get_argument('next', default = None)
+        if go_next:
+            self.redirect(go_next)
+            return
         self.redirect('/')
 
 class SignupHandler(BaseHandler):
@@ -124,3 +130,68 @@ class SignoutHandler(BaseHandler):
         self.clear_cookie('auth')
         self.clear_cookie('uid')
         self.redirect('/')
+
+class SettingsHandler(BaseHandler):
+    @tornado.web.authenticated
+    def get(self):
+        title = self._("Settings")
+        msg = self.get_secure_cookie("msg")
+        if msg:
+            msg = self._(msg)
+            self.clear_cookie("msg")
+        self.render("settings.html", locals())
+    @tornado.web.authenticated
+    def post(self):
+        email = self.get_argument("email", default = None)
+        website = self.get_argument("website", default = "")
+        tagline = self.get_argument("tagline", default = "")
+        bio = self.get_argument("bio", default = "")
+        error = []
+        if email != self.current_user['email']:
+            if len(email) > 32:
+                error.append(self._("Email address cannot be longer than 32 characters long."))
+            else:
+                p = re.compile(r"(?:^|\s)[-a-z0-9_.+]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)", re.IGNORECASE)
+                if p.search(email):
+                    email = email.lower()
+                    """ TODO: check is email had been token. """
+                    sql = """SELECT * FROM `member` WHERE `email` = '%s' LIMIT 1""" \
+                             % email
+                    users = self.db.get(sql)
+                    if users:
+                        error.append("That Email is taken. Please choose another.")
+                else:
+                    error.append(self._("Your Email address is invalid."))
+        elif email == None:
+            error.append(self._("Email Address is required!"))
+        if tagline:
+            if unicode_len(tagline) > 70:
+                error.append(self._("Tagline cannot be longer than 32 characters long."))
+            else:
+                tagline = tornado.escape.xhtml_escape(tagline)
+        if website:
+            if len(website) > 200:
+                error.append(self._("Website address cannot be longer than 200 characters long.")); 
+            p = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+            if (p.search(website)):
+                website = tornado.escape.xhtml_escape(website)
+            else:
+                error.append(self._("Website address is invalid."))
+        if bio:
+            if unicode_len(bio) > 2000:
+                error.append(self._("Bio cannot be longer than 2000 characters long."))
+            else:
+                bio = tornado.escape.xhtml_escape(bio)
+        if error:
+            title = self._("Settings")
+            self.render("settings.html", locals())
+            return 
+        sql = """UPDATE `member` SET `email` = '%s', \
+                                     `website` = '%s', \
+                                     `tagline` = '%s', \
+                                     `bio` = '%s' \
+                                 WHERE `id` = '%d'""" % \
+                 (email, website, tagline, bio, self.current_user['id'])
+        self.db.execute(sql)
+        self.set_secure_cookie('msg', 'Settings Update.')
+        self.redirect('/settings')
