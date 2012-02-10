@@ -1,0 +1,16 @@
+{% include 'header.html' %}
+{%- if error -%}
+<ul class="errorlist">
+{% for err in error %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+<h3>{{ _('Change Password') }}</h3>
+<form method="POST" action="/settings/changepass">
+{{ page.xsrf_form_html() }}
+{{ _('Current Password') }}: <input type="password" name="oldpwd" /> <br />
+{{ _('New Password') }}: <input type="password" name="newpwd" /><br />
+<input type="submit" value="{{ _('Change Password') }}" />
+</form>
+{% include 'footer.html' %}

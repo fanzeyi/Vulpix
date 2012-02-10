@@ -193,5 +193,36 @@ class SettingsHandler(BaseHandler):
                                  WHERE `id` = '%d'""" % \
                  (email, website, tagline, bio, self.current_user['id'])
         self.db.execute(sql)
-        self.set_secure_cookie('msg', 'Settings Update.')
+        self.set_secure_cookie('msg', 'Settings Updated.')
+        self.redirect('/settings')
+
+class ChangePasswordHandler(BaseHandler):
+    @tornado.web.authenticated
+    def post(self):
+        oldpwd = self.get_argument('oldpwd', default = None)
+        newpwd = self.get_argument('newpwd', default = None)
+        error = []
+        if oldpwd:
+            auth = bcrypt.hashpw(oldpwd, self.settings['bcrypt_salt'])
+            sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' and `password` = '%s' LIMIT 1""" \
+                     % (self.current_user['username_lower'], auth)
+            users = self.db.get(sql)
+            if not users:
+                error.append(self._("Wrong password."))
+        else:
+            error.append(self._('Current password is required.'))
+        if newpwd:
+            if len(newpwd) < 6 or len(newpwd) > 32:
+                error.append(self._("A password should be between 6 and 32 characters long."))
+        else:
+            error.append(self._("New password is required."))
+        if error:
+            title = self._("Change Password")
+            self.render("settings_changepass.html", locals())
+            return
+        auth = bcrypt.hashpw(newpwd, self.settings['bcrypt_salt'])
+        sql = """UPDATE `member` SET `password` = '%s' WHERE `id` = '%d'""" \
+                 % (auth, self.current_user['id'])
+        self.db.execute(sql)
+        self.set_secure_cookie('msg', 'Password Updated.')
         self.redirect('/settings')
