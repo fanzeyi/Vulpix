@@ -1,7 +1,9 @@
 # -*- coding: utf-8
 
+import smtplib
 import datetime
 import functools
+from email.mime.text import MIMEText
 from MySQLdb import escape_string
 
 import tornado.web
@@ -61,6 +63,16 @@ class BaseHandler(tornado.web.RequestHandler):
         else:
             result = tornado.locale.get(result)
         return result
+    def sendmail(self, to, subject, msg):
+        self.require_setting('default_mail', 'Send Mail')
+        self.require_setting('mail_server', 'Send Mail')
+        msg = MIMEText(msg)
+        msg['Subject'] = subject
+        msg['From'] = self.settings['default_mail']
+        msg['To'] = to
+        s = smtplib.SMTP(self.settings['mail_server'])
+        s.sendmail(self.settings['default_mail'], [to], msg.as_string())
+        s.quit()
     @property
     def db(self):
         return self.application.db

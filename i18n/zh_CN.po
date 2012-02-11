@@ -14,142 +14,138 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #: main.py:39 tpl/header.html:12 tpl/header.html:14
 msgid "Home"
-msgstr ""
+msgstr "首页"
 
 #: member.py:23 member.py:49
 msgid "Sign In"
-msgstr ""
+msgstr "登录"
 
 #: member.py:34 member.py:45
 msgid "Wrong Username and password combination."
-msgstr ""
+msgstr "用户名或密码错误。"
 
 #: member.py:47
 msgid "A username can only contain letters and digits."
-msgstr ""
+msgstr "用户名只能包含数字或英文字母。"
 
 #: member.py:68 member.py:118
 msgid "Sign Up"
-msgstr ""
+msgstr "注册"
 
 #: member.py:79
 msgid "A username should be between 3 and 15 characters long."
-msgstr ""
+msgstr "用户名长度不能超过15个字符或低于3个字符。"
 
 #: member.py:88
 msgid "That username is taken. Please choose another."
-msgstr ""
+msgstr "用户名已经被注册过了。"
 
 #: member.py:92
 msgid "A username is required!"
-msgstr ""
+msgstr "请填写你的用户名。"
 
 #: member.py:95 member.py:219 member.py:232
 msgid "A password should be between 6 and 32 characters long."
-msgstr ""
+msgstr "密码长度不能超过32个字符或低于6个字符。"
 
 #: member.py:99
 msgid "A password is required!"
-msgstr ""
+msgstr "请填写你的密码。"
 
 #: member.py:102 member.py:164
 msgid "Email address cannot be longer than 100 characters long."
-msgstr ""
+msgstr "邮箱地址长度不能超过100个字符。"
 
 #: member.py:114 member.py:176
 msgid "Your Email address is invalid."
-msgstr ""
+msgstr "你的邮箱地址不合法。"
 
 #: member.py:116 member.py:178
 msgid "Email Address is required!"
-msgstr ""
+msgstr "请填写你的邮箱地址。"
 
 #: member.py:149 member.py:198 tpl/header.html:12
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 #: member.py:181
 msgid "Tagline cannot be longer than 70 characters long."
-msgstr ""
+msgstr "签名长度不能超过70个字符。"
 
 #: member.py:186
 msgid "Website address cannot be longer than 200 characters long."
-msgstr ""
+msgstr "网站地址长度不能超过200个字符。"
 
 #: member.py:191
 msgid "Website address is invalid."
-msgstr ""
+msgstr "网站地址不合法。"
 
 #: member.py:194
 msgid "Bio cannot be longer than 2000 characters long."
-msgstr ""
+msgstr "个人介绍长度不能超过2000个字符。"
 
 #: member.py:227
 msgid "Wrong password."
-msgstr ""
+msgstr "错误的密码。"
 
 #: member.py:229
 msgid "Current password is required."
-msgstr ""
+msgstr "请输入你的当前密码。"
 
 #: member.py:236
 msgid "New password is required."
-msgstr ""
+msgstr "请输入你的新密码。"
 
 #: member.py:238 tpl/settings_changepass.html:9 tpl/settings.html:21
 msgid "Change Password"
-msgstr ""
-
-#: member.py:260
-msgid "Member"
-msgstr ""
+msgstr "修改密码"
 
 #: tpl/member.html:2 tpl/signup.html:11 tpl/settings.html:14
 #: tpl/signin.html:11
 msgid "Username"
-msgstr ""
+msgstr "用户名"
 
 #: tpl/member.html:3 tpl/settings.html:16
 msgid "Website"
-msgstr ""
+msgstr "网站"
 
 #: tpl/member.html:4 tpl/settings.html:17
 msgid "Tagline"
-msgstr ""
+msgstr "签名"
 
 #: tpl/member.html:5 tpl/settings.html:18
 msgid "Bio"
-msgstr ""
+msgstr "个人介绍"
 
 #: tpl/signup.html:12 tpl/signin.html:12
 msgid "Password"
-msgstr ""
+msgstr "密码"
 
 #: tpl/signup.html:13 tpl/settings.html:15
 msgid "Email"
-msgstr ""
+msgstr "邮箱"
 
 #: tpl/settings_changepass.html:12 tpl/settings.html:24
 msgid "Current Password"
-msgstr ""
+msgstr "当前密码"
 
 #: tpl/settings_changepass.html:13 tpl/settings.html:25
 msgid "New Password"
-msgstr ""
+msgstr "新密码"
 
 #: tpl/header.html:12
 msgid "Sign Out"
-msgstr ""
+msgstr "登出"
 
 #: tpl/header.html:14
 msgid "Sign in"
-msgstr ""
+msgstr "登入"
 
 #: tpl/header.html:14
 msgid "Sign up"
-msgstr ""
+msgstr "注册"

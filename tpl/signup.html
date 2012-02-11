@@ -10,7 +10,7 @@
 {{ page.xsrf_form_html() }}
 <label for="usr">{{ _('Username') }}: </label><input type="TEXT" name="usr" id="usr" placeholder="Username" {%- if usr -%}value="{{ usr }}"{% endif %}/>
 <label for="pwd">{{ _('Password') }}: </label><input type="PASSWORD" name="pwd" id="pwd" placeholder="Password"/>
-<label for="email">{{ _('E-mail') }}: </label><input type="EMAIL" name="email" id="email" placeholder="Email" {%- if email -%}value="{{ email }}"{% endif %}/>
+<label for="email">{{ _('Email') }}: </label><input type="EMAIL" name="email" id="email" placeholder="Email" {%- if email -%}value="{{ email }}"{% endif %}/>
 <input type="submit" value="{{ _('Submit') }}" />
 </form>
 {% include 'footer.html' %}

@@ -24,7 +24,9 @@ from member import SigninHandler
 from member import SignupHandler
 from member import SignoutHandler
 from member import SettingsHandler
+from member import ResetPasswordHandler
 from member import ChangePasswordHandler
+from member import ForgetPasswordHandler
 
 tornado.options.parse_command_line()
 
@@ -54,12 +56,15 @@ class Application(tornado.web.Application):
             (r'/signout', SignoutHandler), 
             (r'/settings', SettingsHandler), 
             (r'/settings/changepass', ChangePasswordHandler), 
-            (r'/member/(.*)', MemberHandler), 
+            (r'/forget', ForgetPasswordHandler), 
+            (r'/reset/([\w\d]{32})', ResetPasswordHandler), 
+            (r'/member/([\w\d]*)', MemberHandler), 
             (r'/lang/(.*)', LangeuageSetHandler), 
             (r'/test', TestHandler), 
         ]
         settings = {
             'site_title' : u'Online Judge',
+            'base_domain' : 'me.fanhe.org:8080', 
             'login_url' : '/signin',
             'template_path' : os.path.join(os.path.dirname(__file__), 'tpl'),
             'static_path' : os.path.join(os.path.dirname(__file__), "static"),
@@ -67,6 +72,8 @@ class Application(tornado.web.Application):
             'xsrf_cookies' : True,
             'cookie_secret' : '32954k1s668c4ad48dad436vd0402905',
             'bcrypt_salt' : '$2a$04$WL.FEXqZFwMOso3dsXOwuO', 
+            'default_mail' : 'no-reply@fanhe.org', 
+            'mail_server' : '127.0.0.1', 
             'debug'   : True,
         }
         tornado.web.Application.__init__(self, handlers, **settings)

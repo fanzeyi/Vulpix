@@ -8,8 +8,8 @@
 </ul>
 {% endif %}
 {{ page.xsrf_form_html() }}
-<label for="usr">{{ _('Username') }}</label><input type="TEXT" name="usr" id="usr" placeholder="Username" {%- if usr -%}value="{{ usr }}"{% endif %}/>
-<label for="pwd">{{ _('Password') }}</label><input type="PASSWORD" name="pwd" id="pwd" placeholder="Password" />
+<label for="usr">{{ _('Username') }}</label><input type="TEXT" name="usr" id="usr" placeholder="Username" {% if usr %}value="{{ usr }}"{% endif %}/>
+<label for="pwd">{{ _('Password') }}</label><input type="PASSWORD" name="pwd" id="pwd" placeholder="Password" /> <a href="/forget">{{ _('Forget Password') }}</a>
 <input type="submit" value="Submit" />
 </form>
 {% include 'footer.html' %}
