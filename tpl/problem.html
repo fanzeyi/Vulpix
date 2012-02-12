@@ -1,0 +1,20 @@
+{% include 'header.html' %}
+<h3>{{ _('Title') }}</h3>
+{{ problem.title }}
+<h3>{{ _('Short Name') }}</h3>
+{{ problem.shortname }}
+<h3>{{ _('Content') }}</h3>
+{{ problem.content_html }}
+<h3>{{ _('Input Format') }}</h3>
+{{ problem.inputfmt }}
+<h3>{{ _('Sample Input') }}</h3>
+<pre>
+{{ problem.samplein }}
+</pre>
+<h3>{{ _('Output Format') }}</h3>
+{{ problem.outputfmt }}
+<h3>{{ _('Sample Output') }}</h3>
+<pre>
+{{ problem.sampleout }}
+</pre>
+{% include 'footer.html' %}

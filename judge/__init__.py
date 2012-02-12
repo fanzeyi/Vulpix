@@ -182,6 +182,12 @@ class Problem(BaseDBObject):
     create = None
 
 class ProblemDBMixin(object):
+    def _new_problem_by_row(self, row):
+        if row:
+            problem = Problem()
+            problem._init_row(row)
+            return [problem]
+        return []
     def insert_problem(self, problem):
         sql = """INSERT INTO `problem` (`title`, `shortname`, `content`, `content_html`, \
                  `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `create`) \
@@ -190,3 +196,19 @@ class ProblemDBMixin(object):
                     problem.e('inputfmt'), problem.e('outputfmt'), problem.e('samplein'), problem.e('sampleout'))
         pid = self.db.execute(sql)
         problem.id = pid
+    def select_problem_by_id(self, pid):
+        sql = """SELECT * FROM `problem` WHERE `id` = '%d' LIMIT 1""" % pid
+        query = self.db.get(sql)
+        if query:
+            problem = Problem()
+            problem._init_row(query)
+            return problem
+        return None
+    def select_problem_by_create(self, nums):
+        sql = """SELECT * FROM `problem` ORDER BY `id` DESC LIMIT %d""" % nums
+        result = []
+        rows = self.db.query(sql)
+        if rows:
+            for row in rows:
+                result.extend(self._new_problem_by_row(row))
+        return result

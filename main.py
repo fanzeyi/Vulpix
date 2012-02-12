@@ -21,6 +21,7 @@ from judge.utils import escape
 from judge.config import mysql_config
 
 from lang import SetLangeuageHandler
+from home import HomeHandler
 from member import MemberHandler
 from member import SigninHandler
 from member import SignupHandler
@@ -29,6 +30,7 @@ from member import SettingsHandler
 from member import ResetPasswordHandler
 from member import ChangePasswordHandler
 from member import ForgetPasswordHandler
+from problem import ProblemHandler
 from backstage import BackstageHandler
 from backstage import AddProblemHandler
 
@@ -38,14 +40,6 @@ define("mysql_host",     default = mysql_config['mysql_host'])
 define("mysql_database", default = mysql_config['mysql_database'])
 define("mysql_user",     default = mysql_config['mysql_user'])
 define("mysql_password", default = mysql_config['mysql_password'])
-
-class HomeHandler(BaseHandler):
-    def get(self):
-        if self.current_user:
-            title = self._("Home")
-            self.render('home.html', locals())
-        else:
-            self.render('index.html', locals())
 
 class TestHandler(BaseHandler, MemberDBMixin):
     def get(self):
@@ -65,6 +59,7 @@ class Application(tornado.web.Application):
             (r'/reset/([\w\d]{32})', ResetPasswordHandler), 
             (r'/member/([\w\d]*)', MemberHandler), 
             (r'/lang/(.*)', SetLangeuageHandler), 
+            (r'/problem/([\d]*)', ProblemHandler), 
             (r'/backstage', BackstageHandler), 
             (r'/backstage/problem/add', AddProblemHandler), 
             (r'/test', TestHandler), 

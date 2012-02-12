@@ -120,7 +120,6 @@ class SignupHandler(BaseHandler, MemberDBMixin, AuthDBMixin,):
         member.password = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
         member.username = usr
         member.email = email
-        print member
         self.insert_member(member)
         auth = self.create_auth(member.id)
         self.set_cookie('auth', auth.secret)

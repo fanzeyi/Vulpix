@@ -1,2 +1,10 @@
 {% include 'header.html' %}
+{% if newest_problem %}
+<h3>{{ _('Newest Problem') }}</h3>
+<ul>
+    {% for problem in newest_problem %}
+    <li><a href="/problem/{{ problem.id }}">{{ problem.title }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% include 'footer.html' %}
