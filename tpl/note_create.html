@@ -1,0 +1,16 @@
+{% include 'header.html' %}
+<h3>{{ _('Write Note') }}</h3>
+{%- if error -%}
+<ul class="errorlist">
+{% for err in error %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+<form method="POST" action="">
+{{ page.xsrf_form_html() }}
+    {{ _('Title') }}: <input type="text" name="notetitle" {% if notetitle %}value="{{ notetitle }}" {% endif %}/><br />
+    {{ _('Content') }}: <textarea name="content">{% if content %}{{ content }}{% endif %}</textarea><br />
+    <input type="submit" value="{{ _('Submit') }}" />
+</form>
+{% include 'footer.html' %}

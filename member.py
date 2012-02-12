@@ -11,6 +11,7 @@ import tornado.web
 import tornado.escape
 import tornado.locale
 from tornado.web import HTTPError
+from tornado.web import authenticated
 
 from judge import Member
 from judge import AuthDBMixin
@@ -127,7 +128,7 @@ class SignupHandler(BaseHandler, MemberDBMixin, AuthDBMixin,):
         self.redirect('/')
 
 class SignoutHandler(BaseHandler, AuthDBMixin):
-    @tornado.web.authenticated
+    @authenticated
     def get(self):
         auth = self.get_cookie('auth')
         self.delete_auth_by_secret(auth)
@@ -136,7 +137,7 @@ class SignoutHandler(BaseHandler, AuthDBMixin):
         self.redirect('/')
 
 class SettingsHandler(BaseHandler, MemberDBMixin):
-    @tornado.web.authenticated
+    @authenticated
     def get(self):
         title = self._("Settings")
         msg = self.get_secure_cookie("msg")
@@ -144,7 +145,7 @@ class SettingsHandler(BaseHandler, MemberDBMixin):
             msg = self._(msg)
             self.clear_cookie("msg")
         self.render("settings.html", locals())
-    @tornado.web.authenticated
+    @authenticated
     def post(self):
         email = self.get_argument("email", default = None)
         website = self.get_argument("website", default = "")
@@ -213,7 +214,7 @@ class SettingsHandler(BaseHandler, MemberDBMixin):
         self.redirect('/settings')
 
 class ChangePasswordHandler(BaseHandler, MemberDBMixin, AuthDBMixin):
-    @tornado.web.authenticated
+    @authenticated
     def post(self):
         oldpwd = self.get_argument('oldpwd', default = None)
         newpwd = self.get_argument('newpwd', default = None)

@@ -212,3 +212,18 @@ class ProblemDBMixin(object):
             for row in rows:
                 result.extend(self._new_problem_by_row(row))
         return result
+
+class Note(BaseDBObject):
+    id = 0
+    title = ""
+    content = ""
+    member_id = 0
+    create = ""
+
+class NoteDBMixin(object):
+    def insert_note(self, note):
+        sql = """INSERT INTO `note` (`title`, `content`, `member_id`, `create`) \
+                 VALUES ('%s', '%s', '%s', UTC_TIMESTAMP())""" \
+                 % (note.e('title'), note.e('content'), int(note.member_id))
+        nid = self.db.execute(sql)
+        note.id = nid

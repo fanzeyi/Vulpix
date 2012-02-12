@@ -32,6 +32,12 @@ class BaseHandler(tornado.web.RequestHandler):
     xhtml_escape = lambda self, text: tornado.escape.xhtml_escape(text) if text else text
     def prepare(self):
         pass
+    def _check_text_value(self, text, title, required = False):
+        error = []
+        if not text:
+            if required:
+                error.append(self._('%s is Required!' % title))
+        return error
     def get_current_user(self):
         auth = self.get_cookie('auth', default = None)
         uid = self.get_cookie('uid', default = None)

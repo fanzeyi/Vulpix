@@ -27,12 +27,6 @@ class BackstageHandler(BaseHandler):
         self.render("backstage/index.html", locals())
 
 class AddProblemHandler(BaseHandler, ProblemDBMixin):
-    def _check_value(self, text, title, required = False):
-        error = []
-        if not text:
-            if required:
-                error.append(self._('%s is Required!' % title))
-        return error
     @backstage
     def get(self):
         title = self._("Add Problem")
@@ -47,13 +41,13 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         samplein = self.get_argument('samplein', default = None)
         sampleout = self.get_argument('sampleout', default = None)
         error = []
-        error.extend(self._check_value(probtitle, "Title", True))
-        error.extend(self._check_value(shortname, "Short Name", True))
-        error.extend(self._check_value(content, "Content", True))
-        error.extend(self._check_value(inputfmt, "Input Format"))
-        error.extend(self._check_value(outputfmt, "Output Format"))
-        error.extend(self._check_value(samplein, "Sample Input"))
-        error.extend(self._check_value(sampleout, "Sample Output"))
+        error.extend(self._check_text_value(probtitle, "Title", True))
+        error.extend(self._check_text_value(shortname, "Short Name", True))
+        error.extend(self._check_text_value(content, "Content", True))
+        error.extend(self._check_text_value(inputfmt, "Input Format"))
+        error.extend(self._check_text_value(outputfmt, "Output Format"))
+        error.extend(self._check_text_value(samplein, "Sample Input"))
+        error.extend(self._check_text_value(sampleout, "Sample Output"))
         probtitle = self.xhtml_escape(probtitle)
         shortname = self.xhtml_escape(shortname)
         content = self.xhtml_escape(content)
