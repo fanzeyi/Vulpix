@@ -4,6 +4,7 @@ import functools
 from tornado.web import HTTPError
 from tornado.web import authenticated
 
+from judge import Problem
 from judge import ProblemDBMixin
 from judge.base import BaseHandler
 from judge.utils import escape
@@ -74,4 +75,4 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         problem.samplein = escape(samplein)
         problem.sampleout = escape(sampleout)
         self.insert_problem(problem)
-        self.redirect('/problem/%d' % pid)
+        self.redirect('/problem/%d' % problem.id)

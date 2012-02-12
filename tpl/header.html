@@ -9,7 +9,7 @@
 <body>
 <div class="nav">
     {% if user %}
-    <a href="/">{{ _('Home') }}</a> | <a href="/member/{{ user['username'] }}">{{ user['username'] }}</a> | <a href="/settings">{{ _('Settings') }}</a> | {% if user['id'] == 1 -%}<a href="/backstage">Backstage</a> | {% endif -%}
+    <a href="/">{{ _('Home') }}</a> | <a href="/member/{{ user['username'] }}">{{ user['username'] }}</a> | <a href="/settings">{{ _('Settings') }}</a> | {% if user.admin -%}<a href="/backstage">Backstage</a> | {% endif -%}
 <a href="/signout">{{ _('Sign Out') }}</a>
     {% else %}
     <a href="/">{{ _('Home') }}</a> | <a href="{{ page.get_login_url() }}">{{ _('Sign in') }}</a> | <a href="/signup">{{ _('Sign up') }}</a>

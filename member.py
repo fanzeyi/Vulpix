@@ -44,7 +44,6 @@ class SigninHandler(BaseHandler, AuthDBMixin, MemberDBMixin):
                 pwd = to_ascii(pwd)
                 auth = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
                 member = self.select_member_by_usr_pwd(usr, auth)
-                print member
                 if not member:
                     error.append(self._("Wrong Username and password combination."))
             else:

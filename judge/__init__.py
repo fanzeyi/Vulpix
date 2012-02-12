@@ -52,7 +52,6 @@ class MemberDBMixin(object):
     def select_member_by_usr_pwd(self, usr, pwd):
         sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' AND `password` = '%s' LIMIT 1""" % (escape(usr.lower()), escape(pwd))
         result = self.db.get(sql)
-        print sql
         if result:
             return self._new_member_by_row(result)
         return None
@@ -187,7 +186,7 @@ class ProblemDBMixin(object):
         sql = """INSERT INTO `problem` (`title`, `shortname`, `content`, `content_html`, \
                  `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `create`) \
                  VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', UTC_TIMESTAMP())""" \
-                 % (problem.e('title'), problem.e('shortname'), problem.e('content'), proble.e('content_html'), \
+                 % (problem.e('title'), problem.e('shortname'), problem.e('content'), problem.e('content_html'), \
                     problem.e('inputfmt'), problem.e('outputfmt'), problem.e('samplein'), problem.e('sampleout'))
         pid = self.db.execute(sql)
         problem.id = pid
