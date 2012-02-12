@@ -1,0 +1,8 @@
+{% include 'header.html' %}
+{{ _('Title') }}: {{ note.title }}<br />
+{{ _('Content') }}: {{ note.content }}<br />
+{% if note.member_id == user.id %}
+<a href="/note/create?nid={{ note.id }}">{{ _('Edit') }}</a>
+<a href="/note/{{ note.id }}/remove">{{ _('Delete') }}</a>
+{% endif %}
+{% include 'footer.html' %}

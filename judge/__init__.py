@@ -221,9 +221,41 @@ class Note(BaseDBObject):
     create = ""
 
 class NoteDBMixin(object):
+    def _new_problem_by_row(self, row):
+        if row:
+            note = Note()
+            note._init_row(row)
+            return [note]
+        return []
+    def select_note_by_id(self, nid):
+        sql = """SELECT * FROM `note` WHERE `id` = '%d' LIMIT 1""" % int(nid)
+        query = self.db.get(sql)
+        if query:
+            note = Note()
+            note._init_row(query)
+            return note
+        return None
+    def select_note_by_mid(self, mid, start = 0):
+        sql = """SELECT * FROM `note` WHERE `member_id` = '%d' LIMIT %d, 10""" \
+                 % (int(mid), int(start))
+        query = self.db.query(sql)
+        result = []
+        if query:
+            for row in query:
+                result.extend(self._new_problem_by_row(row))
+        return result
     def insert_note(self, note):
         sql = """INSERT INTO `note` (`title`, `content`, `member_id`, `create`) \
                  VALUES ('%s', '%s', '%s', UTC_TIMESTAMP())""" \
                  % (note.e('title'), note.e('content'), int(note.member_id))
         nid = self.db.execute(sql)
         note.id = nid
+    def update_note(self, note):
+        sql = """UPDATE `note` SET `title` = '%s', \
+                                   `content` = '%s' \
+                               WHERE `id` = '%d'""" \
+                 % (note.title, note.content, note.id)
+        self.db.execute(sql)
+    def delete_note_by_nid(self, nid):
+        sql = """DELETE FROM `note` WHERE `id` = '%d'""" % int(nid)
+        self.db.execute(sql)

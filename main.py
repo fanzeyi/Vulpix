@@ -22,7 +22,10 @@ from judge.config import mysql_config
 
 from lang import SetLangeuageHandler
 from home import HomeHandler
+from note import NoteHandler
 from note import CreateNoteHandler
+from note import DeleteNoteHandler
+from note import MemberNotesHandler
 from member import MemberHandler
 from member import SigninHandler
 from member import SignupHandler
@@ -59,9 +62,12 @@ class Application(tornado.web.Application):
             (r'/forget', ForgetPasswordHandler), 
             (r'/reset/([\w\d]{32})', ResetPasswordHandler), 
             (r'/member/([\w\d]*)', MemberHandler), 
+            (r'/member/([\w\d]*)/notes', MemberNotesHandler), 
             (r'/lang/(.*)', SetLangeuageHandler), 
             (r'/problem/([\d]*)', ProblemHandler), 
             (r'/note/create', CreateNoteHandler), 
+            (r'/note/([\d]*)', NoteHandler), 
+            (r'/note/([\d]*)/remove', DeleteNoteHandler), 
             (r'/backstage', BackstageHandler), 
             (r'/backstage/problem/add', AddProblemHandler), 
             (r'/test', TestHandler), 

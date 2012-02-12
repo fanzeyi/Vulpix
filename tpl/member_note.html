@@ -1,0 +1,10 @@
+{% include 'header.html' %}
+{% if member.id == user.id %}
+<a href="/note/create">{{ _('Write Note') }}</a>
+{% endif %}
+<ul>
+    {% for note in notes %}
+    <li><a href="/note/{{ note.id }}">{{ note.title }}</a></li>
+    {% endfor %}
+</ul>
+{% include 'footer.html' %}
