@@ -38,13 +38,15 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin):
         notetitle = self.get_argument("notetitle", default = None)
         content = self.get_argument("content", default = None)
         nid = self.get_argument("nid", default = None)
+        link_problem = self.get_arguments("link_problem[]")
         note = Note()
         error = []
         error.extend(self._check_text_value(notetitle, "Note Title", True))
         error.extend(self._check_text_value(content, "Content", True))
         note.title = self.xhtml_escape(notetitle)
         note.content = self.xhtml_escape(content)
-        note.id = int(nid)
+        note.link_problem = [self.xhtml_escape(problem) for problem in link_problem]
+        note.id = int(nid) if nid else None
         if error:
             title = self._("Write Note")
             self.render("note_create.html", locals())

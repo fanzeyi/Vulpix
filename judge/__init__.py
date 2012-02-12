@@ -219,12 +219,14 @@ class Note(BaseDBObject):
     content = ""
     member_id = 0
     create = ""
+    link_problem = ""
 
 class NoteDBMixin(object):
     def _new_problem_by_row(self, row):
         if row:
             note = Note()
             note._init_row(row)
+            note.link_problem = note.link_problem.split(", ")
             return [note]
         return []
     def select_note_by_id(self, nid):
@@ -233,6 +235,7 @@ class NoteDBMixin(object):
         if query:
             note = Note()
             note._init_row(query)
+            note.link_problem = note.link_problem.split(", ")
             return note
         return None
     def select_note_by_mid(self, mid, start = 0):
@@ -245,9 +248,10 @@ class NoteDBMixin(object):
                 result.extend(self._new_problem_by_row(row))
         return result
     def insert_note(self, note):
-        sql = """INSERT INTO `note` (`title`, `content`, `member_id`, `create`) \
-                 VALUES ('%s', '%s', '%s', UTC_TIMESTAMP())""" \
-                 % (note.e('title'), note.e('content'), int(note.member_id))
+        sql = """INSERT INTO `note` (`title`, `content`, `member_id`, `create`, `link_problem`) \
+                 VALUES ('%s', '%s', '%s', UTC_TIMESTAMP(), '%s')""" \
+                 % (note.e('title'), note.e('content'), int(note.member_id), escape(", ".join(note.link_problem)))
+        print sql
         nid = self.db.execute(sql)
         note.id = nid
     def update_note(self, note):
