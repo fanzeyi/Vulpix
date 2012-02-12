@@ -4,12 +4,13 @@
     <meta charset="utf-8" />
     <title>{{ page.settings['site_title'] }}{% if title %} › {{ title }}{% endif %}</title>
     <link rel="stylesheet" href="/static/css/style.css" />
-    <script src="/static/js/base.js" type="text/javascript"></script>
+    <script src="/static/js/kissy-min.js" type="text/javascript"></script>
 </head>
 <body>
 <div class="nav">
     {% if user %}
-    <a href="/">{{ _('Home') }}</a> | <a href="/member/{{ user['username'] }}">{{ user['username'] }}</a> | <a href="/settings">{{ _('Settings') }}</a> | <a href="/signout">{{ _('Sign Out') }}</a>
+    <a href="/">{{ _('Home') }}</a> | <a href="/member/{{ user['username'] }}">{{ user['username'] }}</a> | <a href="/settings">{{ _('Settings') }}</a> | {% if user['id'] == 1 -%}<a href="/backstage">Backstage</a> | {% endif -%}
+<a href="/signout">{{ _('Sign Out') }}</a>
     {% else %}
     <a href="/">{{ _('Home') }}</a> | <a href="{{ page.get_login_url() }}">{{ _('Sign in') }}</a> | <a href="/signup">{{ _('Sign up') }}</a>
     {% endif %}

@@ -5,12 +5,15 @@ import datetime
 import functools
 from email.mime.text import MIMEText
 from MySQLdb import escape_string
+from werkzeug.contrib.securecookie import SecureCookie
 
 import tornado.web
+import tornado.escape
 import tornado.locale
 from tornado.web import HTTPError
 
-from werkzeug.contrib.securecookie import SecureCookie
+from judge import Member
+
 
 def unauthenticated(method):
     """Decorate methods with this to require that user be NOT logged in"""
@@ -26,6 +29,7 @@ def unauthenticated(method):
 
 class BaseHandler(tornado.web.RequestHandler):
     _ = lambda self, text: self.locale.translate(text)
+    xhtml_escape = lambda self, text: tornado.escape.xhtml_escape(text) if text else text
     def prepare(self):
         pass
     def get_current_user(self):
@@ -41,20 +45,26 @@ class BaseHandler(tornado.web.RequestHandler):
             if auth:
                 sql = """SELECT * FROM `member` WHERE `id` = '%d' LIMIT 1""" \
                          % (auth['uid'])
-                user = self.db.get(sql)
-                delta = auth['create'] - datetime.datetime.now() 
-                if delta.days > 20:
-                    """ Refresh Token """
-                    sql = """DELETE FROM `auth` WHERE `secret` = '%s' LIMIT 1""" \
-                             % auth
-                    self.db.execute(sql)
-                    random = binascii.b2a_hex(uuid.uuid4().bytes)
-                    sql = """INSERT INTO `auth` (`uid`, `secret`, `create`) \
-                             VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
-                             % (uid, random)
-                    self.db.execute(sql)
-                    self.set_cookie('auth', random)
-                    self.set_cookie('uid', str(uid))
+                user = Member()
+                query = self.db.get(sql)
+                if query:
+                    user._init_row(query)
+                    delta = auth['create'] - datetime.datetime.now() 
+                    if delta.days > 20:
+                        """ Refresh Token """
+                        sql = """DELETE FROM `auth` WHERE `secret` = '%s' LIMIT 1""" \
+                                 % auth
+                        self.db.execute(sql)
+                        random = binascii.b2a_hex(uuid.uuid4().bytes)
+                        sql = """INSERT INTO `auth` (`uid`, `secret`, `create`) \
+                                 VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
+                                 % (uid, random)
+                        self.db.execute(sql)
+                        self.set_cookie('auth', random)
+                        self.set_cookie('uid', str(uid))
+                else:
+                    self.clear_cookie('auth')
+                    self.clear_cookie('uid')
         return user
     def get_user_locale(self):
         result = self.get_cookie('OJ_LANG', default = None)
@@ -79,6 +89,9 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def jinja2(self):
         return self.application.jinja2
+    @property
+    def markdown(self):
+        return self.application.markdown
     def render(self, tplname, args = {}):
         if 'self' in args.keys():
             args.pop('self')

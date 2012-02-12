@@ -5,7 +5,7 @@ from tornado.web import HTTPError
 from base import BaseHandler
 from config import accept_lang
 
-class LangeuageSetHandler(BaseHandler):
+class SetLangeuageHandler(BaseHandler):
     def get(self, lang):
         if lang not in accept_lang.keys():
             raise HTTPError(404)

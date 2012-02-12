@@ -15,6 +15,7 @@
 {{ _('Email') }}: <input type="email" name="email" value="{%- if email -%}{{ email }}{% else %}{{ user.email }}{% endif %}" /> <br />
 {{ _('Website') }}: <input type="text" name="website" value="{%- if website -%}{{ website }}{% elif user.website %}{{ user.website }}{% endif %}" /> <br />
 {{ _('Tagline') }}: <input type="text" name="tagline" value="{%- if tagline -%}{{ tagline }}{% elif user.tagline %}{{ user.tagline }}{% endif %}" /> <br />
+{{ _('Default Code Language') }}: {% if lang %}<select name="lang"><option value="pas" {% if lang == 1 %}selected{% endif %}>Pascal</option><option value="c" {% if lang == 2 %}selected{% endif %}>C</option><option value="cpp" {% if lang == 3 %}selected{% endif %}>C++</option></select>{% else %}<select name="lang"><option value="pas" {% if user.lang == 1 %}selected{% endif %}>Pascal</option><option value="c" {% if user.lang == 2 %}selected{% endif %}>C</option><option value="cpp" {% if user.lang == 3 %}selected{% endif %}>C++</option></select>{% endif %}<br />
 {{ _('Bio') }}: <textarea name="bio">{%- if bio -%}{{ bio }}{% elif user.bio %}{{ user.bio }}{% endif %}</textarea><br/>
 <input type="submit" value="{{ _('Submit') }}" />
 </form>

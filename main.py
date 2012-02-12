@@ -2,6 +2,7 @@
 
 import os
 import sys
+import markdown
 import datetime
 
 import tornado.web
@@ -18,7 +19,8 @@ from jinja2 import Environment, FileSystemLoader
 from base import BaseHandler
 from config import mysql_config
 
-from lang import LangeuageSetHandler
+from utils import escape
+from lang import SetLangeuageHandler
 from member import MemberHandler
 from member import SigninHandler
 from member import SignupHandler
@@ -27,6 +29,10 @@ from member import SettingsHandler
 from member import ResetPasswordHandler
 from member import ChangePasswordHandler
 from member import ForgetPasswordHandler
+from backstage import BackstageHandler
+from backstage import AddProblemHandler
+
+from judge import MemberDBMixin
 
 tornado.options.parse_command_line()
 
@@ -43,8 +49,9 @@ class HomeHandler(BaseHandler):
         else:
             self.render('index.html', locals())
 
-class TestHandler(BaseHandler):
+class TestHandler(BaseHandler, MemberDBMixin):
     def get(self):
+        print self.select_member_by_id(1).o('tagline')
         self.set_secure_cookie_new('test', 'test')
 
 class Application(tornado.web.Application):
@@ -59,7 +66,9 @@ class Application(tornado.web.Application):
             (r'/forget', ForgetPasswordHandler), 
             (r'/reset/([\w\d]{32})', ResetPasswordHandler), 
             (r'/member/([\w\d]*)', MemberHandler), 
-            (r'/lang/(.*)', LangeuageSetHandler), 
+            (r'/lang/(.*)', SetLangeuageHandler), 
+            (r'/backstage', BackstageHandler), 
+            (r'/backstage/problem/add', AddProblemHandler), 
             (r'/test', TestHandler), 
         ]
         settings = {
@@ -79,6 +88,7 @@ class Application(tornado.web.Application):
         tornado.web.Application.__init__(self, handlers, **settings)
         tornado.locale.set_default_locale('zh_CN')
         tornado.locale.load_gettext_translations(self.settings['i18n_path'], "onlinejudge")
+        self.markdown = markdown.Markdown(['codehilite(force_linenos=True)', 'tables'], safe_mode=True)
         self.jinja2 = Environment(loader = FileSystemLoader(self.settings['template_path']))
         self.db = tornado.database.Connection(
                   host=options.mysql_host, database=options.mysql_database,

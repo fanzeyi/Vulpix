@@ -1,0 +1,21 @@
+{% include 'header.html' %}
+{%- if error -%}
+<ul class="errorlist">
+{% for err in error %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+<form method="POST" action="">
+{{ page.xsrf_form_html() }}
+<h3>{{ _('Add Problem') }}</h3>
+{{ _('Title') }} <input name="probtitle" type="text" {% if probtitle %}value="{{ probtitle }}" {% endif %}/> <br />
+{{ _('Short Name') }} <input name="shortname" type="text" {% if shortname %}value="{{shortname}}" {% endif %}/> <br />
+{{ _('Content') }} <textarea name="content">{% if content %}{{ content }}{% endif %}</textarea> <br />
+{{ _('Input Format') }} <textarea name="inputfmt">{% if inputfmt %}{{ inputfmt }}{% endif %}</textarea> <br />
+{{ _('Sample Input') }} <textarea name="samplein">{% if samplein %}{{ samplein }}{% endif %}</textarea> <br />
+{{ _('Output Format') }} <textarea name="outputfmt">{% if outputfmt %}{{ outputfmt }}{% endif %}</textarea> <br />
+{{ _('Sample Output') }} <textarea name="sampleout">{% if sampleout %}{{ sampleout }}{% endif %}</textarea> <br />
+<input type="submit" value="{{ _('Submit') }}" />
+</form>
+{% include 'footer.html' %}

@@ -17,7 +17,12 @@ from utils import escape
 from utils import to_ascii
 from utils import unicode_len
 
-class SigninHandler(BaseHandler):
+from judge import Member
+from judge import AuthDBMixin
+from judge import MemberDBMixin
+from judge import ResetMailDBMixin
+
+class SigninHandler(BaseHandler, AuthDBMixin, MemberDBMixin):
     @unauthenticated
     def get(self):
         title = self._("Sign In")
@@ -38,10 +43,9 @@ class SigninHandler(BaseHandler):
                 """ TODO: check username and password is valid. """
                 pwd = to_ascii(pwd)
                 auth = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
-                sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' and `password` = '%s' LIMIT 1""" \
-                         % (escape_string(usr.lower()), auth)
-                users = self.db.get(sql)
-                if not users:
+                member = self.select_member_by_usr_pwd(usr, auth)
+                print member
+                if not member:
                     error.append(self._("Wrong Username and password combination."))
             else:
                 error.append(self._("A username can only contain letters and digits."))
@@ -49,20 +53,19 @@ class SigninHandler(BaseHandler):
             title = self._("Sign In")
             self.render("signin.html", locals())
             return
-        random = binascii.b2a_hex(uuid.uuid4().bytes)
-        sql = """INSERT INTO `auth` (`uid`, `secret`, `create`) \
-                 VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
-                 % (users['id'], random)
-        self.db.execute(sql)
-        self.set_cookie('auth', random)
-        self.set_cookie('uid', str(users['id']))
-        go_next = self.get_argument('next', default = None)
-        if go_next:
-            self.redirect(go_next)
-            return
-        self.redirect('/')
+        auth = self.create_auth(member.id)
+        if auth:
+            self.set_cookie('auth', auth.secret)
+            self.set_cookie('uid', str(auth.uid))
+            go_next = self.get_argument('next', default = None)
+            if go_next:
+                self.redirect(go_next)
+                return
+            self.redirect('/')
+        else:
+            raise HTTPError(500)
 
-class SignupHandler(BaseHandler):
+class SignupHandler(BaseHandler, MemberDBMixin, AuthDBMixin,):
     @unauthenticated
     def get(self):
         title = self._("Sign Up")
@@ -81,10 +84,8 @@ class SignupHandler(BaseHandler):
                 p = re.compile(r'^([\w\d]*)$')
                 if p.match(usr):
                     """ TODO: check is username had been token. """
-                    sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' LIMIT 1""" \
-                             % usr.lower()
-                    users = self.db.get(sql)
-                    if users:
+                    member = self.select_member_by_username(usr)
+                    if member:
                         error.append(self._("That username is taken. Please choose another."))
                 else:
                     error.append("A username can only contain letters and digits.")
@@ -105,10 +106,8 @@ class SignupHandler(BaseHandler):
                 if p.match(email):
                     email = email.lower()
                     """ TODO: check is email had been token. """
-                    sql = """SELECT * FROM `member` WHERE `email` = '%s' LIMIT 1""" \
-                             % escape(email)
-                    users = self.db.get(sql)
-                    if users:
+                    member = self.select_member_by_email(email)
+                    if member:
                         error.append("That Email is taken. Please choose another.")
                 else:
                     error.append(self._("Your Email address is invalid."))
@@ -118,32 +117,27 @@ class SignupHandler(BaseHandler):
             title = self._("Sign Up")
             self.render("signup.html", locals())
             return
-        pwd = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
-        sql = """INSERT INTO `member` (`username`, `username_lower`, `password`,  `email`, `create`) \
-                 VALUES ('%s', '%s', '%s', '%s', UTC_TIMESTAMP())""" \
-                 % (usr, usr.lower(), pwd, email)
-        uid = self.db.execute(sql)
-        random = binascii.b2a_hex(uuid.uuid4().bytes)
-        sql = """INSERT INTO `auth` (`uid`, `secret`, `create`) \
-                 VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
-                 % (uid, random)
-        self.db.execute(sql)
-        self.set_cookie('auth', random)
-        self.set_cookie('uid', str(uid))
+        member = Member()
+        member.password = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
+        member.username = usr
+        member.email = email
+        print member
+        self.insert_member(member)
+        auth = self.create_auth(member.id)
+        self.set_cookie('auth', auth.secret)
+        self.set_cookie('uid', str(auth.uid))
         self.redirect('/')
 
-class SignoutHandler(BaseHandler):
+class SignoutHandler(BaseHandler, AuthDBMixin):
     @tornado.web.authenticated
     def get(self):
         auth = self.get_cookie('auth')
-        sql = """DELETE FROM `auth` WHERE `secret` = '%s' LIMIT 1""" \
-                 % escape_string(auth)
-        self.db.execute(sql)
+        self.delete_auth_by_secret(auth)
         self.clear_cookie('auth')
         self.clear_cookie('uid')
         self.redirect('/')
 
-class SettingsHandler(BaseHandler):
+class SettingsHandler(BaseHandler, MemberDBMixin):
     @tornado.web.authenticated
     def get(self):
         title = self._("Settings")
@@ -157,6 +151,7 @@ class SettingsHandler(BaseHandler):
         email = self.get_argument("email", default = None)
         website = self.get_argument("website", default = "")
         tagline = self.get_argument("tagline", default = "")
+        lang = self.get_argument("lang", default = "")
         bio = self.get_argument("bio", default = "")
         error = []
         if email and email != self.current_user['email']:
@@ -167,10 +162,8 @@ class SettingsHandler(BaseHandler):
                 if p.match(email):
                     email = escape_string(email.lower())
                     """ TODO: check is email had been token. """
-                    sql = """SELECT * FROM `member` WHERE `email` = '%s' LIMIT 1""" \
-                             % email
-                    users = self.db.get(sql)
-                    if users:
+                    member = self.select_member_by_email(email)
+                    if member:
                         error.append("That Email is taken. Please choose another.")
                 else:
                     error.append(self._("Your Email address is invalid."))
@@ -180,35 +173,48 @@ class SettingsHandler(BaseHandler):
             if unicode_len(tagline) > 70:
                 error.append(self._("Tagline cannot be longer than 70 characters long."))
             else:
-                tagline = escape(tornado.escape.xhtml_escape(tagline))
+                tagline = tornado.escape.xhtml_escape(tagline)
         if website:
             if unicode_len(website) > 200:
                 error.append(self._("Website address cannot be longer than 200 characters long.")); 
             p = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
             if (p.match(website)):
-                website = escape(tornado.escape.xhtml_escape(website))
+                website = tornado.escape.xhtml_escape(website)
             else:
                 error.append(self._("Website address is invalid."))
+        if lang:
+            if lang in ['pas', 'c', 'cpp']:
+                if lang == 'pas':
+                    lang = 1
+                elif lang == 'c':
+                    lang = 2
+                elif lang == 'cpp':
+                    lang = 3
+            else:
+                error.append(self._("Wrong Language select."))
+        else:
+            error.append(self._("Wrong Language select."))
         if bio:
             if unicode_len(bio) > 2000:
                 error.append(self._("Bio cannot be longer than 2000 characters long."))
             else:
-                bio = escape(tornado.escape.xhtml_escape(bio))
+                bio = tornado.escape.xhtml_escape(bio)
         if error:
+            del member
             title = self._("Settings")
             self.render("settings.html", locals())
             return 
-        sql = """UPDATE `member` SET `email` = '%s', \
-                                     `website` = '%s', \
-                                     `tagline` = '%s', \
-                                     `bio` = '%s' \
-                                 WHERE `id` = '%d'""" % \
-                 (email, website, tagline, bio, self.current_user['id'])
-        self.db.execute(sql)
+        member = self.select_member_by_id(self.current_user['id'])
+        member.email = email
+        member.website = website
+        member.tagline = tagline
+        member.bio = bio
+        member.lang = lang
+        self.update_member(member)
         self.set_secure_cookie('msg', 'Settings Updated.')
         self.redirect('/settings')
 
-class ChangePasswordHandler(BaseHandler):
+class ChangePasswordHandler(BaseHandler, MemberDBMixin, AuthDBMixin):
     @tornado.web.authenticated
     def post(self):
         oldpwd = self.get_argument('oldpwd', default = None)
@@ -220,9 +226,7 @@ class ChangePasswordHandler(BaseHandler):
             else:
                 oldpwd = to_ascii(oldpwd)
                 auth = bcrypt.hashpw(oldpwd, self.settings['bcrypt_salt'])
-                sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' and `password` = '%s' LIMIT 1""" \
-                         % (self.current_user['username_lower'], auth)
-                users = self.db.get(sql)
+                users = self.select_member_by_usr_pwd(self.current_user['username_lower'], auth)
                 if not users:
                     error.append(self._("Wrong password."))
         else:
@@ -238,35 +242,26 @@ class ChangePasswordHandler(BaseHandler):
             title = self._("Change Password")
             self.render("settings_changepass.html", locals())
             return
-        auth = bcrypt.hashpw(newpwd, self.settings['bcrypt_salt'])
-        sql = """UPDATE `member` SET `password` = '%s' WHERE `id` = '%d'""" \
-                 % (auth, self.current_user['id'])
-        self.db.execute(sql)
-        sql = """DELETE FROM `auth` WHERE `uid` = '%d'""" \
-                 % (self.current_user['id'])
-        self.db.execute(sql)
-        random = binascii.b2a_hex(uuid.uuid4().bytes)
-        sql = """INSERT INTO `auth` (`uid`, `secret`, `create`) \
-                 VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
-                 % (users['id'], random)
-        self.db.execute(sql)
-        self.set_cookie('auth', random)
-        self.set_cookie('uid', str(users['id']))
+        member = self.select_member_by_id(self.current_user['id'])
+        member.password = bcrypt.hashpw(newpwd, self.settings['bcrypt_salt'])
+        self.update_member(member)
+        self.delete_auth_by_uid(member.id)
+        auth = self.create_auth(member.id)
+        self.set_cookie('auth', auth.secret)
+        self.set_cookie('uid', str(auth.uid))
         self.set_secure_cookie('msg', 'Password Updated.')
         self.redirect('/settings')
 
-class MemberHandler(BaseHandler):
+class MemberHandler(BaseHandler, MemberDBMixin):
     def get(self, username):
         title = username
         username = escape_string(username.lower())
-        sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' LIMIT 1""" \
-                 % username
-        member = self.db.get(sql)
+        member = self.select_member_by_username(username)
         if not member:
             raise HTTPError(404)
         self.render("member.html", locals())
 
-class ForgetPasswordHandler(BaseHandler):
+class ForgetPasswordHandler(BaseHandler, MemberDBMixin, ResetMailDBMixin):
     @unauthenticated
     def get(self):
         title = self._("Forget Password")
@@ -280,11 +275,9 @@ class ForgetPasswordHandler(BaseHandler):
         if usr:
             p = re.compile(r'^([\w\d]*)$')
             if p.match(usr):
-                    sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' LIMIT 1""" \
-                             % usr.lower()
-                    users = self.db.get(sql)
-                    if not users:
-                        error.append(self._("Sorry, We couldn't find you."))
+                users = self.select_member_by_username(usr)
+                if not users:
+                    error.append(self._("Sorry, We couldn't find you."))
             else:
                 error.append(self._('A username can only contain letters and digits.'))
         else:
@@ -300,8 +293,7 @@ class ForgetPasswordHandler(BaseHandler):
         else:
             error.append(self._('Email Address is required!'))
         if users:
-            sql = """SELECT * FROM `reset_mail` WHERE `uid` = '%d' ORDER BY `create` DESC LIMIT 1""" % (users['id'])
-            query = self.db.get(sql)
+            query = self.select_reset_mail_last_by_uid(users.id)
             if query:
                 delta = datetime.datetime.now() - query['create']
                 if delta.days < 1:
@@ -310,11 +302,7 @@ class ForgetPasswordHandler(BaseHandler):
             title = self._("Forget Password")
             self.render("forget.html", locals())
             return
-        secret = binascii.b2a_hex(uuid.uuid4().bytes)
-        sql = """INSERT INTO `reset_mail` (`uid`, `secret`, `create`) \
-                 VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
-                 % (users['id'], secret)
-        self.db.execute(sql)
+        reset = self.create_reset_mail(users.id)
         msg = """Hello, %s
 
     Please use this link to change your password:
@@ -326,21 +314,19 @@ class ForgetPasswordHandler(BaseHandler):
     UA: %s
     IP: %s
 
-%s""" % (users['username'], self.settings['base_domain'], secret, self.request.headers['User-Agent'], self.request.remote_ip, self.settings['site_title'])
+%s""" % (users['username'], self.settings['base_domain'], reset.secret, self.request.headers['User-Agent'], self.request.remote_ip, self.settings['site_title'])
         self.sendmail(users['email'], "[%s] Reset Your Password" % (self.settings['site_title']), msg)
         self.redirect('/')
 
-class ResetPasswordHandler(BaseHandler):
+class ResetPasswordHandler(BaseHandler, MemberDBMixin, ResetMailDBMixin, AuthDBMixin):
     @unauthenticated
     def get(self, secret):
         if len(secret) != 32:
             raise HTTPError(404)
-        sql = """SELECT * FROM `reset_mail` WHERE `secret` = '%s' LIMIT 1""" % (escape(secret))
-        query = self.db.get(sql)
-        if query:
+        reset = self.select_reset_mail_by_secret(secret)
+        if reset: 
             title = self._('Reset Password')
-            sql = """SELECT * FROM `member` WHERE `id` = '%d' LIMIT 1""" % (query['uid'])
-            reset_user = self.db.get(sql)
+            reset_user = self.select_member_by_id(reset.uid)
             self.render('reset.html', locals())
         else:
             raise HTTPError(404)
@@ -348,14 +334,12 @@ class ResetPasswordHandler(BaseHandler):
     def post(self, secret):
         if len(secret) != 32:
             raise HTTPError(404)
-        sql = """SELECT * FROM `reset_mail` WHERE `secret` = '%s' LIMIT 1""" % (escape(secret))
-        query = self.db.get(sql)
-        if query:
+        reset = self.select_reset_mail_by_secret(secret)
+        if reset:
             newpwd = self.get_argument('newpwd', default = None)
             repeatpwd = self.get_argument('repeatpwd', default = None)
             error = []
-            sql = """SELECT * FROM `member` WHERE `id` = '%d' LIMIT 1""" % (query['uid'])
-            reset_user = self.db.get(sql)
+            reset_user = self.select_member_by_id(reset.uid)
             if not reset_user:
                 raise HTTPError(404)
             if newpwd != repeatpwd:
@@ -369,17 +353,10 @@ class ResetPasswordHandler(BaseHandler):
                 title = self._("Reset Password")
                 self.render('reset.html', locals())
                 return
-            auth = bcrypt.hashpw(newpwd, self.settings['bcrypt_salt'])
-            sql = """UPDATE `member` SET `password` = '%s' WHERE `id` = '%d'""" \
-                     % (auth, reset_user['id'])
-            self.db.execute(sql)
-            sql = """DELETE FROM `auth` WHERE `uid` = '%d'""" \
-                     % (reset_user['id'])
-            self.db.execute(sql)
-            sql = """DELETE FROM `reset_mail` WHERE `uid` = '%d'""" \
-                     % (reset_user['id'])
-            print sql
-            self.db.execute(sql)
+            reset_user.auth = bcrypt.hashpw(newpwd, self.settings['bcrypt_salt'])
+            self.update_member(reset_user)
+            self.delete_auth_by_uid(reset_user.id)
+            auth = self.create_auth(reset_user.id)
             success = 1
             self.render('reset.html', locals())
         else:
