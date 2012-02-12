@@ -2,8 +2,8 @@
 
 from tornado.web import HTTPError
 
-from base import BaseHandler
-from config import accept_lang
+from judge.base import BaseHandler
+from judge.config import accept_lang
 
 class SetLangeuageHandler(BaseHandler):
     def get(self, lang):

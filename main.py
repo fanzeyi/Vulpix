@@ -4,6 +4,7 @@ import os
 import sys
 import markdown
 import datetime
+from jinja2 import Environment, FileSystemLoader
 
 import tornado.web
 import tornado.locale
@@ -14,12 +15,11 @@ import tornado.httpserver
 from tornado.options import define
 from tornado.options import options
 
-from jinja2 import Environment, FileSystemLoader
+from judge import MemberDBMixin
+from judge.base import BaseHandler
+from judge.utils import escape
+from judge.config import mysql_config
 
-from base import BaseHandler
-from config import mysql_config
-
-from utils import escape
 from lang import SetLangeuageHandler
 from member import MemberHandler
 from member import SigninHandler
@@ -31,8 +31,6 @@ from member import ChangePasswordHandler
 from member import ForgetPasswordHandler
 from backstage import BackstageHandler
 from backstage import AddProblemHandler
-
-from judge import MemberDBMixin
 
 tornado.options.parse_command_line()
 

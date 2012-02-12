@@ -2,7 +2,7 @@
 
 import uuid
 import binascii
-from utils import escape
+from judge.utils import escape
 
 class BaseDBObject(object):
     def __repr__(self):
@@ -170,3 +170,24 @@ class ResetMailDBMixin(object):
     def delete_reset_mail_by_secret(self, secret):
         sql = """DELETE FROM `reset_mail` WHERE `secret` = '%s'""" % (escape(secret))
         self.db.execute(sql)
+
+class Problem(BaseDBObject):
+    title = ""
+    shortname = ""
+    content = ""
+    content_html = ""
+    inputfmt = ""
+    outputfmt = ""
+    samplein = ""
+    sampleout = ""
+    create = None
+
+class ProblemDBMixin(object):
+    def insert_problem(self, problem):
+        sql = """INSERT INTO `problem` (`title`, `shortname`, `content`, `content_html`, \
+                 `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `create`) \
+                 VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', UTC_TIMESTAMP())""" \
+                 % (problem.e('title'), problem.e('shortname'), problem.e('content'), proble.e('content_html'), \
+                    problem.e('inputfmt'), problem.e('outputfmt'), problem.e('samplein'), problem.e('sampleout'))
+        pid = self.db.execute(sql)
+        problem.id = pid

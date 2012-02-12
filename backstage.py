@@ -4,8 +4,9 @@ import functools
 from tornado.web import HTTPError
 from tornado.web import authenticated
 
-from base import BaseHandler
-from utils import escape
+from judge import ProblemDBMixin
+from judge.base import BaseHandler
+from judge.utils import escape
 
 def backstage(method):
     """Decorate methods with this to require that user be NOT logged in"""
@@ -24,7 +25,7 @@ class BackstageHandler(BaseHandler):
         title = self._("Backstage")
         self.render("backstage/index.html", locals())
 
-class AddProblemHandler(BaseHandler):
+class AddProblemHandler(BaseHandler, ProblemDBMixin):
     def _check_value(self, text, title, required = False):
         error = []
         if not text:
@@ -63,17 +64,14 @@ class AddProblemHandler(BaseHandler):
             title = self._("Add Problem")
             self.render("backstage/problem_add.html", locals())
             return
-        probtitle = escape(probtitle)
-        md = escape(self.markdown.convert(content))
-        shortname = escape(shortname)
-        content = escape(content)
-        inputfmt = escape(inputfmt)
-        outputfmt = escape(outputfmt)
-        samplein = escape(samplein)
-        sampleout = escape(sampleout)
-        sql = """INSERT INTO `problem` (`title`, `shortname`, `content`, `content_html`, \
-                 `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `create`) \
-                 VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', UTC_TIMESTAMP())""" \
-                 % (probtitle, shortname, content, md, inputfmt, outputfmt, samplein, sampleout)
-        pid = self.db.execute(sql)
+        problem = Problem()
+        problem.title = escape(probtitle)
+        problem.content_html = escape(self.markdown.convert(content))
+        problem.shortname = escape(shortname)
+        problem.content = escape(content)
+        problem.inputfmt = escape(inputfmt)
+        problem.outputfmt = escape(outputfmt)
+        problem.samplein = escape(samplein)
+        problem.sampleout = escape(sampleout)
+        self.insert_problem(problem)
         self.redirect('/problem/%d' % pid)
