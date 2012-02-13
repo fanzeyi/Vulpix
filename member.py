@@ -144,6 +144,10 @@ class SettingsHandler(BaseHandler, MemberDBMixin):
         if msg:
             msg = self._(msg)
             self.clear_cookie("msg")
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self.current_user.username, '/member/%s' % self.current_user.username))
+        breadcrumb.append((self._('Settings'), '/settings'))
         self.render("settings.html", locals())
     @authenticated
     def post(self):
@@ -153,6 +157,7 @@ class SettingsHandler(BaseHandler, MemberDBMixin):
         lang = self.get_argument("lang", default = "")
         bio = self.get_argument("bio", default = "")
         error = []
+        member = None
         if email and email != self.current_user['email']:
             if len(email) > 100:
                 error.append(self._("Email address cannot be longer than 100 characters long."))
@@ -199,8 +204,13 @@ class SettingsHandler(BaseHandler, MemberDBMixin):
             else:
                 bio = tornado.escape.xhtml_escape(bio)
         if error:
-            del member
+            if member:
+                del member
             title = self._("Settings")
+            breadcrumb = []
+            breadcrumb.append((self._('Home'), '/'))
+            breadcrumb.append((self.current_user.username, '/member/%s' % self.current_user.username))
+            breadcrumb.append((self._('Settings'), '/settings'))
             self.render("settings.html", locals())
             return 
         member = self.select_member_by_id(self.current_user['id'])
@@ -258,6 +268,9 @@ class MemberHandler(BaseHandler, MemberDBMixin):
         member = self.select_member_by_username(username)
         if not member:
             raise HTTPError(404)
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((member.username, '/member/%s' % member.username))
         self.render("member.html", locals())
 
 class ForgetPasswordHandler(BaseHandler, MemberDBMixin, ResetMailDBMixin):

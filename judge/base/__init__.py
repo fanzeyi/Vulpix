@@ -1,6 +1,7 @@
 # -*- coding: utf-8
 
 import smtplib
+import hashlib
 import datetime
 import functools
 from email.mime.text import MIMEText
@@ -98,6 +99,9 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def markdown(self):
         return self.application.markdown
+    def get_gravatar_url(self, email, size):
+        gravatar_id = hashlib.md5(email.lower()).hexdigest()
+        return "http://www.gravatar.com/avatar/%s?s=%d&d=mm" % (gravatar_id, size) 
     def render(self, tplname, args = {}):
         if 'self' in args.keys():
             args.pop('self')

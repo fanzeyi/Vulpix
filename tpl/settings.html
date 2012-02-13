@@ -1,29 +1,91 @@
 {% include 'header.html' %}
 {%- if error -%}
-<ul class="errorlist">
-{% for err in error %}
-<li>{{ err }}</li>
-{% endfor %}
-</ul>
+<div class="alert alert-error">
+    <ul class="errorlist">
+    {% for err in error %}
+    <li>{{ err }}</li>
+    {% endfor %}
+    </ul>
+</div>
 {% endif %}
 {% if msg %}
-{{ msg }}
+<div class="alert alert-success">
+    <a class="close" data-dismiss="alert" href="#">&times;</a>
+    {{ msg }}
+</div>
 {% endif %}
-<form method="POST" action="/settings">
+<form method="POST" action="/settings" class="form-horizontal">
+<fieldset>
+<legend>{{ _('Basic Settings') }}</legend>
+<div class="sep30"></div>
 {{ page.xsrf_form_html() }}
-{{ _('Username') }}: {{ user.username }} <br />
-{{ _('Email') }}: <input type="email" name="email" value="{%- if email -%}{{ email }}{% else %}{{ user.email }}{% endif %}" /> <br />
-{{ _('Website') }}: <input type="text" name="website" value="{%- if website -%}{{ website }}{% elif user.website %}{{ user.website }}{% endif %}" /> <br />
-{{ _('Tagline') }}: <input type="text" name="tagline" value="{%- if tagline -%}{{ tagline }}{% elif user.tagline %}{{ user.tagline }}{% endif %}" /> <br />
-{{ _('Default Code Language') }}: {% if lang %}<select name="lang"><option value="pas" {% if lang == 1 %}selected{% endif %}>Pascal</option><option value="c" {% if lang == 2 %}selected{% endif %}>C</option><option value="cpp" {% if lang == 3 %}selected{% endif %}>C++</option></select>{% else %}<select name="lang"><option value="pas" {% if user.lang == 1 %}selected{% endif %}>Pascal</option><option value="c" {% if user.lang == 2 %}selected{% endif %}>C</option><option value="cpp" {% if user.lang == 3 %}selected{% endif %}>C++</option></select>{% endif %}<br />
-{{ _('Bio') }}: <textarea name="bio">{%- if bio -%}{{ bio }}{% elif user.bio %}{{ user.bio }}{% endif %}</textarea><br/>
-<input type="submit" value="{{ _('Submit') }}" />
+<div class="control-group">
+    <label class="control-label" for="email">{{ _('Email') }}</label>
+    <div class="controls">
+        <input type="email" name="email" id="email" class="input-xlarge" value="{%- if email -%}{{ email }}{% else %}{{ user.email }}{% endif %}" />
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="website">{{ _('Website') }}</label>
+    <div class="controls">
+        <input type="text" name="website" id="website" class="input-xlarge" value="{%- if website -%}{{ website }}{% elif user.website %}{{ user.website }}{% endif %}" />
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="tagline">{{ _('Tagline') }}</label>
+    <div class="controls">
+        <input type="text" name="tagline" id="tagline" class="input-xlarge" value="{%- if tagline -%}{{ tagline }}{% elif user.tagline %}{{ user.tagline }}{% endif %}" />
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="lang">{{ _('Code Language') }}</label>
+    <div class="controls">
+        {% if lang %}
+        <select name="lang">
+            <option value="pas" {% if lang == 1 %}selected{% endif %}>Pascal</option>
+            <option value="c" {% if lang == 2 %}selected{% endif %}>C</option>
+            <option value="cpp" {% if lang == 3 %}selected{% endif %}>C++</option>
+        </select>
+        {% else %}
+        <select name="lang">
+            <option value="pas" {% if user.lang == 1 %}selected{% endif %}>Pascal</option>
+            <option value="c" {% if user.lang == 2 %}selected{% endif %}>C</option>
+            <option value="cpp" {% if user.lang == 3 %}selected{% endif %}>C++</option>
+        </select>
+        {% endif %}
+    </div>
+</div>
+<div class="control-group">
+    <label class="control-label" for="bio">{{ _('Bio') }}</label>
+    <div class="controls">
+        <textarea name="bio" class="input-xlarge" id="bio" rows="5">{%- if bio -%}{{ bio }}{% elif user.bio %}{{ user.bio }}{% endif %}</textarea>
+    </div>
+</div>
+<div class="form-actions">
+    <button type="submit" class="btn btn-primary">{{ _('Save Changes') }}</button>
+</div>
+</fieldset>
 </form>
-<h3>{{ _('Change Password') }}</h3>
-<form method="POST" action="/settings/changepass">
-{{ page.xsrf_form_html() }}
-{{ _('Current Password') }}: <input type="password" name="oldpwd" /> <br />
-{{ _('New Password') }}: <input type="password" name="newpwd" /><br />
-<input type="submit" value="{{ _('Change Password') }}" />
+<form method="POST" action="/settings/changepass" class="form-horizontal">
+<fieldset>
+    <legend>{{ _('Change Password') }}</legend>
+    {{ page.xsrf_form_html() }}
+    <div class="sep30"></div>
+    <div class="control-group">
+        <label class="control-label" for="oldpwd">{{ _('Current Password') }}</label>
+        <div class="controls">
+            <input type="password" name="oldpwd" id="oldpwd" class="input-xlarge"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="newpwd">{{ _('New Password') }}</label>
+        <div class="controls">
+            <input type="password" name="newpwd" id="newpwd" class="input-xlarge" />
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-danger">{{ _('Change Passowrd') }}</button>
+    </div>
+</fieldset>
 </form>
 {% include 'footer.html' %}

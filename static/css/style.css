@@ -6,6 +6,25 @@ body.logined {
     margin-left: 260px; 
 }
 
+.logined form {
+    background-color: white; 
+    border: 2px solid #EEE; 
+    padding-top: 20px; 
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+}
+
+form .form-actions {
+    margin-bottom: 0px; 
+}
+
+form fieldset legend {
+    padding-left: 20px; 
+}
+
 input, .btn {
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
@@ -116,8 +135,13 @@ nav .profile .avatar .avatar_mask {
 }
 
 nav .profile img {
-    height: 45px; 
-    width: 45px; 
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    width: 45px;
+    height: 45px;
 }
 
 nav .nav {
@@ -140,6 +164,10 @@ nav .copyright {
 
 nav .copyright a:hover {
     color: white; 
+}
+
+.sep30 {
+    height: 30px; 
 }
 
 .navBorder {
@@ -211,7 +239,7 @@ nav .copyright a:hover {
     width: 196px; 
 }
 
-.signinform .alert ul {
+.alert ul {
     margin-left: 14px; 
     margin-bottom: 0; 
 }
@@ -225,4 +253,5 @@ nav .copyright a:hover {
 .main {
     padding-top: 40px; 
     padding-right: 20px; 
+    width: 900px; 
 }

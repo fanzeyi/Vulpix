@@ -19,8 +19,8 @@
         <span class="username">Guest</span>
         {% endif %}
         <div class="avatar">
-            {% if user.avatar %}
-            <img src="{{ user.avatar }}" />
+            {% if user.email %}
+            <img src="{{ page.get_gravatar_url(user.email, 45) }}" />
             {% else %}
             <img src="/static/img/avatar.png" />
             {% endif %}

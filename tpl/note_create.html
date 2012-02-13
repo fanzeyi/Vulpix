@@ -1,23 +1,40 @@
 {% include 'header.html' %}
-<h3>{{ _('Write Note') }}</h3>
 {%- if error -%}
-<ul class="errorlist">
-{% for err in error %}
-<li>{{ err }}</li>
-{% endfor %}
-</ul>
+<div class="alert alert-error">
+    <a class="close" data-dismiss="alert" href="#">&times;</a>
+    <ul>
+    {% for err in error %}
+    <li>{{ err }}</li>
+    {% endfor %}
+    </ul>
+</div>
 {% endif %}
-<form method="POST" action="">
-{{ page.xsrf_form_html() }}
-{{ _('Title') }}: <input type="text" name="notetitle" {% if note.title %}value="{{ note.title }}" {% endif %}/><br />
-{{ _('Content') }}: <textarea name="content">{% if note.content %}{{ note.content }}{% endif %}</textarea><br />
-<input type="hidden" name="nid" value="{% if note.id %}{{ note.id }}{% endif %}" />
-<input type="submit" value="{{ _('Submit') }}" />
-<input name="link_problem[]" type="hidden" value="1" />
-<input name="link_problem[]" type="hidden" value="2" />
-<input name="link_problem[]" type="hidden" value="3" />
+<form method="POST" action="" class="form-horizontal">
+<fieldset>
+    <legend>{% if note.nid %}{{ _('Edit Note') }}{% else %}{{ _('Write Note') }}{% endif %}</legend>
+    <div class="sep30"></div>
+    {{ page.xsrf_form_html() }}
+    <div class="control-group">
+        <label class="control-label" for="notetitle">{{ _('Title') }}</label>
+        <div class="controls">
+            <input type="text" name="notetitle" class="input-xlarge" {% if note.title %}value="{{ note.title }}" {% endif %}/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="content">{{ _('Content') }}</label>
+        <div class="controls">
+            <textarea name="content" id="content" class="input-xlarge" rows="20" style="width:500px">{% if note.content %}{{ note.content }}{% endif %}</textarea>
+        </div>
+    </div>
+    <input type="hidden" name="nid" value="{% if note.id %}{{ note.id }}{% endif %}" />
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
+    </div>
+{% if note.link_problem %}
 {% for problem_id in note.link_problem %}
 <input id="link_problem_{{ problem_id }}" type="hidden" name="link_problem[]" value="{{ problem_id }}" />
 {% endfor %}
+{% endif %}
+</fieldset>
 </form>
 {% include 'footer.html' %}

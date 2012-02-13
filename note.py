@@ -9,7 +9,7 @@ from judge import MemberDBMixin
 from judge.base import BaseHandler
 from judge.utils import escape
 
-class NoteHandler(BaseHandler, NoteDBMixin):
+class NoteHandler(BaseHandler, NoteDBMixin, MemberDBMixin):
     def get(self, nid):
         try:
             nid = int(nid)
@@ -18,6 +18,12 @@ class NoteHandler(BaseHandler, NoteDBMixin):
         note = self.select_note_by_id(nid)
         if note:
             title = note.title
+            member = self.select_member_by_id(note.member_id)
+            breadcrumb = []
+            breadcrumb.append((self._('Home'), '/'))
+            breadcrumb.append((member.username, '/member/%s' % member.username))
+            breadcrumb.append((self._('Note'), '/member/%s/notes' % member.username))
+            breadcrumb.append((note.title, '/note/%d' % note.id))
             self.render("note.html", locals())
         else:
             raise HTTPError(404)
@@ -27,10 +33,17 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin):
     def get(self):
         nid = self.get_argument("nid", default = None)
         note = None
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self.current_user.username, '/member/%s' % self.current_user.username))
+        breadcrumb.append((self._('Note'), '/member/%s/notes' % self.current_user.username))
         if nid:
             note = self.select_note_by_id(nid)
             if note.member_id != self.current_user['id']:
                 raise HTTPError(403)
+            breadcrumb.append((self._('Edit Note'), '/note/create?nid=%s' % nid))
+        else:
+            breadcrumb.append((self._('Write Note'), '/note/create'))
         title = self._("Write Note")
         self.render("note_create.html", locals())
     @authenticated
@@ -49,6 +62,14 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin):
         note.id = int(nid) if nid else None
         if error:
             title = self._("Write Note")
+            breadcrumb = []
+            breadcrumb.append((self._('Home'), '/'))
+            breadcrumb.append((self.current_user.username, '/member/%s' % self.current_user.username))
+            breadcrumb.append((self._('Note'), '/member/%s/notes' % self.current_user.username))
+            if note.id:
+                breadcrumb.append((self._('Edit Note'), '/note/create?nid=%s' % nid))
+            else:
+                breadcrumb.append((self._('Write Note'), '/note/create'))
             self.render("note_create.html", locals())
             return
         note.member_id = self.current_user['id']
@@ -75,6 +96,10 @@ class MemberNotesHandler(BaseHandler, MemberDBMixin, NoteDBMixin):
     def get(self, username):
         member = self.select_member_by_username(username)
         if member:
+            breadcrumb = []
+            breadcrumb.append((self._('Home'), '/'))
+            breadcrumb.append((member.username, '/member/%s' % member.username))
+            breadcrumb.append((self._('Note'), '/member/%s/notes' % member.username))
             start = self.get_argument("start", default = 0)
             notes = self.select_note_by_mid(member.id, start = start)
             title = member.username + self._("'s Note")

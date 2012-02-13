@@ -235,7 +235,7 @@ class NoteDBMixin(object):
         if query:
             note = Note()
             note._init_row(query)
-            note.link_problem = note.link_problem.split(", ")
+            note.link_problem = note.link_problem.split(", ") if note.link_problem else None
             return note
         return None
     def select_note_by_mid(self, mid, start = 0):
