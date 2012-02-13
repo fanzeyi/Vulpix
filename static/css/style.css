@@ -314,7 +314,7 @@ nav .copyright a:hover {
 
 .note {
     margin-left: 0; 
-    width: 620px; 
+    width: 590px; 
 }
 
 .note .meta {
@@ -329,7 +329,7 @@ nav .copyright a:hover {
 
 .sidebar {
     display: inline; 
-    width: 230px; 
+    width: 250px; 
     float: right; 
 }
 
@@ -342,21 +342,23 @@ nav .copyright a:hover {
 }
 
 .problem {
+    width: 620px; 
     margin-bottom: 30px; 
 }
 
-.problem .line {
+.cell .line {
     font-size: 14px; 
     line-height: 20px; 
     padding-left: 10px; 
+    padding-right: 10px; 
     border-bottom: 1px solid #E2E2E2; 
 }
 
-.problem .line:first-child {
+.cell .line:first-child {
     padding-top: 5px; 
 }
 
-.problem .line .meta {
+.cell .line .meta {
     float: right; 
     display: inline; 
     padding-right: 20px; 
@@ -372,9 +374,13 @@ nav .copyright a:hover {
 }
 
 .problem .table tr td:first-child {
-    width: 130px; 
+    width: 100px; 
     border-right: 1px solid #E2E2E2; 
     text-align: right; 
+}
+
+.problem .table td pre {
+    margin-right: 12px; 
 }
 
 .problem .last {
@@ -401,6 +407,7 @@ nav .copyright a:hover {
 }
 
 .codehilitetable .codehilite pre{
+    width: 540px; 
     -webkit-border-top-left-radius: 0px;
     -webkit-border-bottom-left-radius: 0px;
     -moz-border-radius-topleft: 0px;
@@ -478,3 +485,13 @@ nav .copyright a:hover {
 .codehilite .vg { color: #19177C } /* Name.Variable.Global */
 .codehilite .vi { color: #19177C } /* Name.Variable.Instance */
 .codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+.problem_star {
+    background: url(http://img3.douban.com/pics/all_bigstars.gif) no-repeat; 
+    height: 14px; 
+    overflow: hidden; 
+    width: 75px; 
+    display: block; 
+    margin-top: 10px; 
+    margin-bottom: 10px; 
+}

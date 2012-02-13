@@ -1,5 +1,5 @@
 {% include 'header.html' %}
-{% if note.link_problem %}
+{% if note.link_problem or true %}
 <div class="sidebar cell nopadding">
     <div class="module_title">
         {{ _('Related Problem') }}

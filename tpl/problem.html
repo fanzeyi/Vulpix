@@ -1,4 +1,12 @@
 {% include 'header.html' %}
+<div class="cell sidebar nopadding problem_sidebar">
+    <div class="line">
+        <span class="problem_star"></span>
+    </div>
+    <div class="module_title">
+        {{ _('Related Notes') }}
+    </div>
+</div>
 <div class="cell problem nopadding">
     <div class="line">
         {% if user.admin %}
