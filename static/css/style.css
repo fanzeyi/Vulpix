@@ -1,0 +1,228 @@
+body {
+    background-image: url(/static/img/bg-noise.jpg); 
+}
+
+body.logined {
+    margin-left: 260px; 
+}
+
+input, .btn {
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+}
+
+nav {
+    color: white; 
+    background-color: #2B2B2B; 
+    background-image: url(/static/img/lines.jpg); 
+    width: 240px; 
+    height: 100%; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    overflow: hidden; 
+    z-index: 5; 
+    border-right: solid 1px black; 
+}
+
+nav a {
+    color: #FFF; 
+}
+
+nav .nav-list > li > a {
+    color: #FFF; 
+    text-shadow: 0px 1px 1px black;
+}
+
+nav .nav-list > li > a:hover {
+    background: rgba(0, 0, 0, 0.2); 
+    color: white; 
+    text-shadow: 0px 1px 1px black;
+}
+
+nav .profile {
+    height: 76px; 
+    border-bottom: 1px solid #4A4A54;
+}
+
+nav .profile .profile_wrap {
+    height: 75px; 
+    border-bottom: 1px solid #1D1E21;
+}
+
+nav .profile .username {
+    position: absolute; 
+    top: 20px; 
+    left: 70px;
+    font-family: Arial, sans-serif;
+    font-size: 14px; 
+    text-shadow: black 0px 1px 1px;
+}
+
+nav .profile .username a:hover {
+    color: white; 
+}
+
+nav .profile .tagline {
+    position: absolute; 
+    top: 40px; 
+    left: 70px; 
+    width: 140px; 
+    overflow: hidden;  
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+nav .profile .avatar {
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+    -moz-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+    -ms-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+    -o-box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+    border: 1px solid black;
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    top: 15px;
+    left: 14px;
+    cursor: pointer;
+    overflow: hidden;
+    border-image: initial;
+}
+
+nav .profile .avatar .avatar_mask {
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+    -webkit-box-shadow: inset 0px 0px 9px #000000;
+    -moz-box-shadow: inset 0px 0px 9px #000000;
+    -ms-box-shadow: inset 0px 0px 9px #000000;
+    -o-box-shadow: inset 0px 0px 9px #000000;
+    box-shadow: inset 0px 0px 9px #000000;
+    opacity: 0.5;
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+nav .profile img {
+    height: 45px; 
+    width: 45px; 
+}
+
+nav .nav {
+    margin-top: 20px; 
+}
+
+nav .sep {
+    margin-top: 20px; 
+    height: 0px; 
+    border-bottom: 1px solid #4A4A54;
+    border-top: 1px solid #1D1E21;
+}
+
+nav .copyright {
+    font-size: 10px; 
+    text-shadow: black 0px 1px 1px;
+    padding-top: 20px; 
+    padding-left: 14px; 
+}
+
+nav .copyright a:hover {
+    color: white; 
+}
+
+.navBorder {
+    background-color: #2F2F31;
+    opacity: .2; 
+    position: fixed; 
+    width: 165px; 
+    top: 0; 
+    left: 0; 
+    height: 100%; 
+    z-index: 4; 
+}
+
+.toper {
+    width: 250px; 
+    margin: 0 auto; 
+}
+
+.toper #logo {
+    margin-top: 200px; 
+    margin-bottom: 20px; 
+    padding-left: 40px; 
+    width: 260px; 
+}
+
+.toper #logo .logo {
+    font-size: 50px; 
+    font-family: 'Port Lligat Slab', serif;
+}
+
+.toper #logo .subtitle {
+    position: relative; 
+    left: 80px; 
+    top: -5px; 
+    font-size: 10px; 
+}
+
+.signinform {
+    width: 260px; 
+}
+
+.signinform label {
+    color: #999; 
+    text-shadow: 0 1px 1px #111; 
+    font-size: 17px; 
+}
+
+.signinform .btn {
+    width: 246px; 
+    height: 34px; 
+}
+
+.signinform a.btn {
+    width: 226px; 
+    height: 26px; 
+    line-height: 26px; 
+}
+
+.signinform .add-on, .signinform input {
+    height: 28px; 
+    line-height: 28px; 
+}
+
+.signinform .input-prepend > input, .signinform .input-prepend > .btn {
+    float: left; 
+}
+
+.signinform .alert {
+    width: 196px; 
+}
+
+.signinform .alert ul {
+    margin-left: 14px; 
+    margin-bottom: 0; 
+}
+
+.sep10 {
+    height: 5px; 
+    background-color: white; 
+    opacity: .5; 
+}
+
+.main {
+    padding-top: 40px; 
+    padding-right: 20px; 
+}

@@ -10,6 +10,8 @@ class HomeHandler(BaseHandler, ProblemDBMixin):
     def get(self):
         if self.current_user:
             title = self._("Home")
+            breadcrumb = []
+            breadcrumb.append((self._("Home"), '/'))
             newest_problem = self.select_problem_by_create(5)
             self.render('home.html', locals())
         else:

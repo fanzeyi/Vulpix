@@ -1,16 +1,54 @@
-{% include 'header.html' %}
-{%- if error -%}
-<ul class="errorlist">
-{% for err in error %}
-<li>{{ err }}</li>
-{% endfor %}
-</ul>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8" />
+    <title>{{ page.settings['site_title'] }}</title>
+    <link href='http://fonts.googleapis.com/css?family=Port+Lligat+Slab' rel='stylesheet' type='text/css'>    
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="toper">
+    <div id="logo">
+        <span class="logo">Vulpix</span>
+        <div class="subtitle">Online Judge System</div>
+    </div>
+<div class="signinform">
+{% if error %}
+    <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <ul>
+            {% for err in error %}
+            <li>{{ err }}</li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endif %}
-<form method="POST" action="/signup">
+    <form class="form-inline" method="POST" action="/signup">
 {{ page.xsrf_form_html() }}
-<label for="usr">{{ _('Username') }}: </label><input type="TEXT" name="usr" id="usr" placeholder="Username" {%- if usr -%}value="{{ usr }}"{% endif %}/>
-<label for="pwd">{{ _('Password') }}: </label><input type="PASSWORD" name="pwd" id="pwd" placeholder="Password"/>
-<label for="email">{{ _('Email') }}: </label><input type="EMAIL" name="email" id="email" placeholder="Email" {%- if email -%}value="{{ email }}"{% endif %}/>
-<input type="submit" value="{{ _('Submit') }}" />
-</form>
-{% include 'footer.html' %}
+        <div class="input-prepend">
+            <span class="add-on"><i class="icon-user"></i></span>
+            <input type="input" placeholder="Username" name="usr" {% if usr %}value="{{ usr }}"{% endif %}/>
+        </div>
+        <div class="input-prepend">
+            <span class="add-on"><i class="icon-lock"></i></span>
+            <input type="password" placeholder="Password" name="pwd" />
+        </div>
+        <div class="input-prepend">
+            <span class="add-on"><i class="icon-envelope"></i></span>
+            <input type="email" placeholder="Email" name="email" />
+        </div>
+        <div class="input-prepend">
+            <button type="submit" class="btn btn-info">{{ _('Sign Up') }}</button>
+        </div>
+        <div class="input-prepend">
+            <a href="/signin" class="btn">{{ _('Sign In') }}</a>
+        </div>
+    </form>
+</div>
+
+</div>
+</body>
+</html>

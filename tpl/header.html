@@ -1,17 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 <head>
     <meta charset="utf-8" />
     <title>{{ page.settings['site_title'] }}{% if title %} › {{ title }}{% endif %}</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/static/css/style.css" />
-    <script src="/static/js/script.js" type="text/javascript"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
 </head>
-<body>
-<div class="nav">
-    {% if user %}
-    <a href="/">{{ _('Home') }}</a> | <a href="/member/{{ user['username'] }}">{{ user['username'] }}</a> | <a href="/settings">{{ _('Settings') }}</a> | {% if user.admin -%}<a href="/backstage">Backstage</a> | {% endif -%}
-<a href="/signout">{{ _('Sign Out') }}</a>
-    {% else %}
-    <a href="/">{{ _('Home') }}</a> | <a href="{{ page.get_login_url() }}">{{ _('Sign in') }}</a> | <a href="/signup">{{ _('Sign up') }}</a>
-    {% endif %}
+<body class="logined">
+<nav>
+<div class="profile">
+    <div class="profile_wrap">
+        {% if user %}
+        <span class="username"><a href="/member/{{ user['username'] }}">{{ user['username'] }}</a></span>
+        <span class="tagline">{{ user['tagline'] }}</span>
+        {% else %}
+        <span class="username">Guest</span>
+        {% endif %}
+        <div class="avatar">
+            {% if user.avatar %}
+            <img src="{{ user.avatar }}" />
+            {% else %}
+            <img src="/static/img/avatar.png" />
+            {% endif %}
+            <span class="avatar_mask"></span>
+        </div>
+    </div>
 </div>
+<ul class="nav nav-list">
+    <li class="nav-header">
+        {{ page.settings['site_title'] }}
+    </li>
+    <li>
+        <a href="/">
+            <i class="icon-home icon-white"></i>
+            {{ _('Home') }}
+        </a>
+    </li>
+    <li>
+        <a href="/problems">
+            <i class="icon-heart icon-white"></i>
+            {{ _('Problems') }}
+        </a>
+    </li>
+{% if user %}
+    <li>
+        <a href="/member/{{ user['username'] }}/notes">
+            <i class="icon-file icon-white"></i>
+            {{ _('Notes') }}
+        </a>
+    </li>
+    <li>
+        <a href="/settings">
+            <i class="icon-cog icon-white"></i>
+            {{ _('Settings') }}
+        </a>
+    </li>
+{% if user.admin %}
+    <li>
+        <a href="/backstage">
+            <i class="icon-warning-sign icon-white"></i>
+            {{ _('Backstage') }}
+        </a>
+    </li>
+{% endif %}
+    <li>
+        <a href="/signout">
+            <i class="icon-off icon-white"></i>
+            {{ _('Sign Out') }}
+        </a>
+    </li>
+{% else %}
+    <li>
+        <a href="/signin">
+            <i class="icon-user icon-white"></i>
+            {{ _('Sign In') }}
+        </a>
+    </li>
+    <li>
+        <a href="/signup">
+            <i class="icon-flag icon-white"></i>
+            {{ _('Sign Up') }}
+        </a>
+    </li>
+{% endif %}
+</ul>
+<div class="sep"></div>
+<div class="copyright">
+    &copy; 2012 <a href="https://github.com/fanzeyi/Vulpix">Vulpix</a> | <a href="/lang/en">English</a> | <a href="/lang/zh_cn">简体中文</a> | <a href="/help">{{ _('Help') }}</a>
+</div>
+</nav>
+<div class="main">
+{% if breadcrumb %}
+<ul class="breadcrumb">
+    {% for crumb in breadcrumb %}
+    {% if not loop.last %}
+    <li>
+        <a href="{{ crumb[1] }}">{{ crumb[0] }}</a>
+        <span class="divider">/</span>
+    </li>
+    {% else %}
+    <li class="active">
+        {{ crumb[0] }}
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
