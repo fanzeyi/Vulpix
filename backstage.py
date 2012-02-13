@@ -30,16 +30,25 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
     @backstage
     def get(self):
         title = self._("Add Problem")
+        pid = self.get_argument("pid", default = 0)
+        problem = None
+        if pid:
+            problem = self.select_problem_by_id(pid)
         self.render("backstage/problem_add.html", locals())
     @backstage
     def post(self):
         probtitle = self.get_argument('probtitle', default = None)
         shortname = self.get_argument('shortname', default = None)
+        timelimit = self.get_argument('timelimit', default = 1000)
+        memlimit = self.get_argument('memlimit', default = 1000)
         content = self.get_argument('content', default = None)
         inputfmt = self.get_argument('inputfmt', default = None)
         outputfmt = self.get_argument('outputfmt', default = None)
         samplein = self.get_argument('samplein', default = None)
         sampleout = self.get_argument('sampleout', default = None)
+        pid = self.get_argument('pid', default = 0)
+        print pid
+        problem = Problem()
         error = []
         error.extend(self._check_text_value(probtitle, "Title", True))
         error.extend(self._check_text_value(shortname, "Short Name", True))
@@ -48,25 +57,23 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         error.extend(self._check_text_value(outputfmt, "Output Format"))
         error.extend(self._check_text_value(samplein, "Sample Input"))
         error.extend(self._check_text_value(sampleout, "Sample Output"))
-        probtitle = self.xhtml_escape(probtitle)
-        shortname = self.xhtml_escape(shortname)
-        content = self.xhtml_escape(content)
-        inputfmt = self.xhtml_escape(inputfmt)
-        outputfmt = self.xhtml_escape(outputfmt)
-        samplein = self.xhtml_escape(samplein)
-        sampleout = self.xhtml_escape(sampleout)
+        problem.id = int(pid)
+        problem.title = self.xhtml_escape(probtitle)
+        problem.shortname = self.xhtml_escape(shortname)
+        problem.timelimit = self.xhtml_escape(timelimit)
+        problem.memlimit = self.xhtml_escape(memlimit)
+        problem.content = self.xhtml_escape(content)
+        problem.inputfmt = self.xhtml_escape(inputfmt)
+        problem.outputfmt = self.xhtml_escape(outputfmt)
+        problem.samplein = self.xhtml_escape(samplein)
+        problem.sampleout = self.xhtml_escape(sampleout)
         if error:
             title = self._("Add Problem")
             self.render("backstage/problem_add.html", locals())
             return
-        problem = Problem()
-        problem.title = escape(probtitle)
-        problem.content_html = escape(self.markdown.convert(content))
-        problem.shortname = escape(shortname)
-        problem.content = escape(content)
-        problem.inputfmt = escape(inputfmt)
-        problem.outputfmt = escape(outputfmt)
-        problem.samplein = escape(samplein)
-        problem.sampleout = escape(sampleout)
-        self.insert_problem(problem)
+        problem.content_html = self.markdown.convert(content)
+        if problem.id:
+            self.update_problem(problem)
+        else:
+            self.insert_problem(problem)
         self.redirect('/problem/%d' % problem.id)

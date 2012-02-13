@@ -1,21 +1,81 @@
 {% include 'header.html' %}
 {%- if error -%}
+<div class="alert alert-error">
 <ul class="errorlist">
 {% for err in error %}
 <li>{{ err }}</li>
 {% endfor %}
 </ul>
+</div>
 {% endif %}
-<form method="POST" action="">
-{{ page.xsrf_form_html() }}
-<h3>{{ _('Add Problem') }}</h3>
-{{ _('Title') }} <input name="probtitle" type="text" {% if probtitle %}value="{{ probtitle }}" {% endif %}/> <br />
-{{ _('Short Name') }} <input name="shortname" type="text" {% if shortname %}value="{{shortname}}" {% endif %}/> <br />
-{{ _('Content') }} <textarea name="content">{% if content %}{{ content }}{% endif %}</textarea> <br />
-{{ _('Input Format') }} <textarea name="inputfmt">{% if inputfmt %}{{ inputfmt }}{% endif %}</textarea> <br />
-{{ _('Sample Input') }} <textarea name="samplein">{% if samplein %}{{ samplein }}{% endif %}</textarea> <br />
-{{ _('Output Format') }} <textarea name="outputfmt">{% if outputfmt %}{{ outputfmt }}{% endif %}</textarea> <br />
-{{ _('Sample Output') }} <textarea name="sampleout">{% if sampleout %}{{ sampleout }}{% endif %}</textarea> <br />
-<input type="submit" value="{{ _('Submit') }}" />
+<form method="POST" action="" class="form-horizontal">
+<fieldset>
+    <legend>{{ _('Add Problem') }}</legend>
+    {{ page.xsrf_form_html() }}
+    <input type="hidden" name="pid" value="{% if problem %}{{ problem.id }}{% endif %}" />
+    <div class="sep30"></div>
+    <div class="control-group">
+        <label class="control-label" for="probtitle">{{ _('Title') }}</label>
+        <div class="controls">
+            <input name="probtitle" class="input-xlarge" type="text" {% if problem.title %}value="{{ problem.title }}" {% endif %}/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="shortname">{{ _('Short Name') }}</label>
+        <div class="controls">
+            <input name="shortname" class="input-xlarge" type="text" {% if problem.shortname %}value="{{ problem.shortname }}" {% endif %}/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="timelimit">{{ _('Time Limit') }}</label>
+        <div class="controls">
+            <div class="input-append">
+                <input name="timelimit" class="span1" type="text" {% if problem.timelimit %}value="{{ problem.timelimit }}" {% else %}value="1000" {% endif %}/>
+                <span class="add-on">ms</span>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="memlimit">{{ _('Memory Limit') }}</label>
+        <div class="controls">
+            <div class="input-append">
+                <input name="memlimit" class="span1" type="text" {% if problem.memlimit %}value="{{ problem.memlimit }}" {% else %}value="128" {% endif %}/>
+                <span class="add-on">MB</span>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="content">{{ _('Content') }}</label>
+        <div class="controls">
+            <textarea name="content" class="input-xlarge" style="width:522px; height: 427px">{% if problem.content %}{{ problem.content }}{% endif %}</textarea>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="inputfmt">{{ _('Input Format') }}</label>
+        <div class="controls">
+            <textarea name="inputfmt" class="input-xlarge" style="width:522px; height: 172px">{% if problem.inputfmt %}{{ problem.inputfmt }}{% endif %}</textarea>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="samplein">{{ _('Input Sample') }}</label>
+        <div class="controls">
+            <textarea name="samplein" class="input-xlarge" style="width:522px; height: 172px">{% if problem.samplein %}{{ problem.samplein }}{% endif %}</textarea>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="outputfmt">{{ _('Output Format') }}</label>
+        <div class="controls">
+            <textarea name="outputfmt" class="input-xlarge" style="width:522px; height: 172px">{% if problem.outputfmt %}{{ problem.outputfmt }}{% endif %}</textarea>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="sampleout">{{ _('Output Sample') }}</label>
+        <div class="controls">
+            <textarea name="sampleout" class="input-xlarge" style="width:522px; height: 172px">{% if problem.sampleout %}{{ problem.sampleout }}{% endif %}</textarea>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
+    </div>
 </form>
 {% include 'footer.html' %}

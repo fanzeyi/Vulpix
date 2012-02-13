@@ -171,6 +171,7 @@ class ResetMailDBMixin(object):
         self.db.execute(sql)
 
 class Problem(BaseDBObject):
+    id = 0
     title = ""
     shortname = ""
     content = ""
@@ -179,6 +180,9 @@ class Problem(BaseDBObject):
     outputfmt = ""
     samplein = ""
     sampleout = ""
+    timelimit = 1000
+    memlimit = 128
+    tags = ""
     create = None
 
 class ProblemDBMixin(object):
@@ -189,21 +193,44 @@ class ProblemDBMixin(object):
             return [problem]
         return []
     def insert_problem(self, problem):
-        sql = """INSERT INTO `problem` (`title`, `shortname`, `content`, `content_html`, \
-                 `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `create`) \
-                 VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', UTC_TIMESTAMP())""" \
-                 % (problem.e('title'), problem.e('shortname'), problem.e('content'), problem.e('content_html'), \
-                    problem.e('inputfmt'), problem.e('outputfmt'), problem.e('samplein'), problem.e('sampleout'))
-        pid = self.db.execute(sql)
+        pid = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, `content_html`, \
+                                 `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `timelimit`, `memlimit`, `create`) \
+                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
+                              , problem.title, problem.shortname, problem.content, problem.content_html, \
+                              problem.inputfmt, problem.outputfmt, problem.samplein, problem.sampleout, \
+                              int(problem.timelimit), int(problem.memlimit))
         problem.id = pid
+    def update_problem(self, problem):
+        self.db.execute("""UPDATE `problem` SET `title` = %s, \
+                                                `shortname` = %s, \
+                                                `content` = %s, \
+                                                `content_html` = %s, \
+                                                `inputfmt` = %s, \
+                                                `outputfmt` = %s, \
+                                                `samplein` = %s, \
+                                                `sampleout` = %s, \
+                                                `timelimit` = %s, \
+                                                `memlimit` = %s \
+                                            WHERE `id` = %s""", \
+                           problem.title, problem.shortname, problem.content, problem.content_html, \
+                           problem.inputfmt, problem.outputfmt, problem.samplein, problem.sampleout, \
+                           int(problem.timelimit), int(problem.memlimit), problem.id)
     def select_problem_by_id(self, pid):
-        sql = """SELECT * FROM `problem` WHERE `id` = '%d' LIMIT 1""" % pid
+        sql = """SELECT * FROM `problem` WHERE `id` = '%d' LIMIT 1""" % int(pid)
         query = self.db.get(sql)
         if query:
             problem = Problem()
             problem._init_row(query)
             return problem
         return None
+    def select_problem_order_by_id(self, nums, start = 0):
+        sql = """SELECT * FROM `problem` LIMIT %d, %d""" % (start, nums)
+        result = []
+        rows = self.db.query(sql)
+        if rows:
+            for row in rows:
+                result.extend(self._new_problem_by_row(row))
+        return result
     def select_problem_by_create(self, nums):
         sql = """SELECT * FROM `problem` ORDER BY `id` DESC LIMIT %d""" % nums
         result = []
@@ -239,7 +266,7 @@ class NoteDBMixin(object):
             return note
         return None
     def select_note_by_mid(self, mid, start = 0):
-        sql = """SELECT * FROM `note` WHERE `member_id` = '%d' LIMIT %d, 10""" \
+        sql = """SELECT * FROM `note` WHERE `member_id` = '%d' ORDER BY `id` DESC LIMIT %d, 10""" \
                  % (int(mid), int(start))
         query = self.db.query(sql)
         result = []
@@ -248,11 +275,9 @@ class NoteDBMixin(object):
                 result.extend(self._new_problem_by_row(row))
         return result
     def insert_note(self, note):
-        sql = """INSERT INTO `note` (`title`, `content`, `member_id`, `create`, `link_problem`) \
-                 VALUES ('%s', '%s', '%s', UTC_TIMESTAMP(), '%s')""" \
-                 % (note.e('title'), note.e('content'), int(note.member_id), escape(", ".join(note.link_problem)))
-        print sql
-        nid = self.db.execute(sql)
+        nid = self.db.execute("""INSERT INTO `note` (`title`, `content`, `member_id`, `create`, `link_problem`) \
+                                 VALUES (%s, %s, %s, UTC_TIMESTAMP(), %s)""" \
+                                 , note.title, note.content, int(note.member_id), ", ".join(note.link_problem))
         note.id = nid
     def update_note(self, note):
         sql = """UPDATE `note` SET `title` = '%s', \

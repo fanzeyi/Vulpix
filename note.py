@@ -54,21 +54,22 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin):
         link_problem = self.get_arguments("link_problem[]")
         note = Note()
         error = []
-        error.extend(self._check_text_value(notetitle, "Note Title", True))
-        error.extend(self._check_text_value(content, "Content", True))
+        error.extend(self._check_text_value(notetitle, "Note Title", True, 100))
+        error.extend(self._check_text_value(content, "Content", True, 30000))
         note.title = self.xhtml_escape(notetitle)
         note.content = self.xhtml_escape(content)
         note.link_problem = [self.xhtml_escape(problem) for problem in link_problem]
         note.id = int(nid) if nid else None
         if error:
-            title = self._("Write Note")
             breadcrumb = []
             breadcrumb.append((self._('Home'), '/'))
             breadcrumb.append((self.current_user.username, '/member/%s' % self.current_user.username))
             breadcrumb.append((self._('Note'), '/member/%s/notes' % self.current_user.username))
             if note.id:
+                title = self._("Edit Note")
                 breadcrumb.append((self._('Edit Note'), '/note/create?nid=%s' % nid))
             else:
+                title = self._("Write Note")
                 breadcrumb.append((self._('Write Note'), '/note/create'))
             self.render("note_create.html", locals())
             return

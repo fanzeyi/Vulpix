@@ -14,6 +14,7 @@ import tornado.locale
 from tornado.web import HTTPError
 
 from judge import Member
+from judge.utils import unicode_len
 
 
 def unauthenticated(method):
@@ -33,9 +34,13 @@ class BaseHandler(tornado.web.RequestHandler):
     xhtml_escape = lambda self, text: tornado.escape.xhtml_escape(text) if text else text
     def prepare(self):
         pass
-    def _check_text_value(self, text, title, required = False):
+    def _check_text_value(self, text, title, required = False, max = 0):
         error = []
-        if not text:
+        if text:
+            if max:
+                if unicode_len(text) > max:
+                    error.append(self._('%s is too long.' % title))
+        else:
             if required:
                 error.append(self._('%s is Required!' % title))
         return error

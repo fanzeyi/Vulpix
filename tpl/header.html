@@ -57,20 +57,23 @@
             {{ _('Settings') }}
         </a>
     </li>
-{% if user.admin %}
-    <li>
-        <a href="/backstage">
-            <i class="icon-warning-sign icon-white"></i>
-            {{ _('Backstage') }}
-        </a>
-    </li>
-{% endif %}
     <li>
         <a href="/signout">
             <i class="icon-off icon-white"></i>
             {{ _('Sign Out') }}
         </a>
     </li>
+{% if user.admin %}
+    <li class="nav-header">
+        {{ _('Backstage') }}
+    </li>
+    <li>
+        <a href="/backstage/problem/add">
+            <i class="icon-plus icon-white"></i>
+            {{ _('Add Problem') }}
+        </a>
+    </li>
+{% endif %}
 {% else %}
     <li>
         <a href="/signin">

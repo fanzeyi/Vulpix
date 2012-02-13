@@ -1,10 +1,24 @@
 {% include 'header.html' %}
 {% if member.id == user.id %}
-<a href="/note/create">{{ _('Write Note') }}</a>
+<div class="note_action">
+    <a class="btn" href="/note/create">{{ _('Write Note') }}</a>
+</div>
 {% endif %}
-<ul>
+{% if not notes %}
+<div class="well" style="text-align:center">
+    {{ _('There are empty now. <a href="/note/create">Add</a> something here.') }}
+</div>
+{% endif %}
+<ul class="notes unstyled">
     {% for note in notes %}
-    <li><a href="/note/{{ note.id }}">{{ note.title }}</a></li>
+    <li class="cell">
+        <h3><a href="/note/{{ note.id }}">{{ note.title }}</a></h3>
+        <div class="datetime">{{ note.create }}</div>
+        <div class="summary"> 
+            {{ note.content.replace('\n', '  ')[:200] }}
+        </div>
+        <div class="more"><a href="/note/{{ note.id }}">{{ _('More..') }}</a></div>
+    </li>
     {% endfor %}
 </ul>
 {% include 'footer.html' %}

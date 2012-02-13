@@ -14,7 +14,21 @@ class ProblemHandler(BaseHandler, ProblemDBMixin):
             raise HTTPError(404)
         problem = self.select_problem_by_id(pid)
         if problem:
+            breadcrumb = []
+            breadcrumb.append((self._('Home'), '/'))
+            breadcrumb.append((self._('Problem'), '/problems'))
+            breadcrumb.append((problem.title, '/problem/%d' % problem.id))
             title = self._("Problem") + u" › " + problem.title
             self.render("problem.html", locals())
         else:
             raise HTTPError(404)
+
+class ProblemListHandler(BaseHandler, ProblemDBMixin):
+    def get(self):
+        start = self.get_argument("start", default = 0)
+        problems = self.select_problem_order_by_id(20, start)
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self._('Problem'), '/problems'))
+        title = self._("Problems")
+        self.render("problem_list.html", locals())

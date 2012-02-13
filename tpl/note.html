@@ -1,8 +1,16 @@
 {% include 'header.html' %}
-{{ _('Title') }}: {{ note.title }}<br />
-{{ _('Content') }}: {{ note.content }}<br />
-{% if note.member_id == user.id %}
-<a href="/note/create?nid={{ note.id }}">{{ _('Edit') }}</a>
-<a href="/note/{{ note.id }}/remove">{{ _('Delete') }}</a>
+{% if note.link_problem %}
+<div class="sidebar cell nopadding">
+    <div class="module_title">
+        {{ _('Related Problem') }}
+    </div>
+</div>
 {% endif %}
+<div class="note cell">
+    <h3 class="title">{{ note.title }}</h3>
+    <div class="meta">{{ note.create }} {% if note.member_id == user.id %} | <a href="/note/create?nid={{ note.id }}">{{ _('Edit') }}</a> | <a href="/note/{{ note.id }}/remove">{{ _('Delete') }}</a>{% endif %}</div>
+    <div class="content">
+    {{ note.content | replace('\n', '<br />') }}
+    </div>
+</div>
 {% include 'footer.html' %}

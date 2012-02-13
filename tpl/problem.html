@@ -1,20 +1,56 @@
 {% include 'header.html' %}
-<h3>{{ _('Title') }}</h3>
-{{ problem.title }}
-<h3>{{ _('Short Name') }}</h3>
-{{ problem.shortname }}
-<h3>{{ _('Content') }}</h3>
-{{ problem.content_html }}
-<h3>{{ _('Input Format') }}</h3>
-{{ problem.inputfmt }}
-<h3>{{ _('Sample Input') }}</h3>
-<pre>
-{{ problem.samplein }}
-</pre>
-<h3>{{ _('Output Format') }}</h3>
-{{ problem.outputfmt }}
-<h3>{{ _('Sample Output') }}</h3>
-<pre>
-{{ problem.sampleout }}
-</pre>
+<div class="cell problem nopadding">
+    <div class="line">
+        {% if user.admin %}
+        <div class="meta"><a href="/backstage/problem/add?pid={{ problem.id }}">{{ _('Edit') }}</a></div>
+        {% endif %}
+        <span class="num">#{{ problem.id }}</span>
+    </div>
+    <table class="table">
+        <tr>
+            <td>{{ _('Title') }}</td>
+            <td>{{ problem.title }}</td>
+        </tr>
+        <tr>
+            <td>{{ _('Short Name') }}</td>
+            <td>{{ problem.shortname }}</td>
+        </tr>
+        <tr>
+            <td>{{ _('Time Limit') }}</td>
+            <td>{{ problem.timelimit }} ms</td>
+        </tr>
+        <tr>
+            <td>{{ _('Memory Limit') }}</td>
+            <td>{{ problem.memlimit }} MB</td>
+        </tr>
+    </table>
+    <div class="line">
+        {{ problem.content_html }}
+    </div>
+    <table class="table">
+        <tr>
+            <td>{{ _('Input Format') }}</td>
+            <td>{{ problem.inputfmt }}</td>
+        </tr>
+        <tr>
+            <td>{{ _('Input Sample') }}</td>
+            <td><pre>{{ problem.samplein }}</pre></td>
+        </tr>
+        <tr>
+            <td>{{ _('Output Format') }}</td>
+            <td>{{ problem.outputfmt }}</td>
+        </tr>
+        <tr>
+            <td>{{ _('Output Sample') }}</td>
+            <td><pre>{{ problem.sampleout }}</pre></td>
+        </tr>
+    </table>
+    {% if user %}
+    <div class="line last">
+        <form method="POST" action="/compile" class="clean">
+            <input type="file" name="file" id="file" />
+        </form>
+    </div>
+    {% endif %}
+</div>
 {% include 'footer.html' %}
