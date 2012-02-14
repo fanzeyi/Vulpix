@@ -77,3 +77,39 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         else:
             self.insert_problem(problem)
         self.redirect('/problem/%d' % problem.id)
+
+class NodeCreateHandler(BaseHandler):
+    @backstage
+    def get(self):
+        title = self._("Add Node")
+        nid = self.get_argument('nid', default = 0)
+        if nid:
+            node = self.select_node_by_id(nid)
+            title = self._("Edit Node")
+        self.render("backstage/node_create.html", locals())
+    @backstage
+    def post(self):
+        nid = self.get_argument("nid", default = 0)
+        name = self.get_argument("name", default = None)
+        description = self.get_argument("description", default = None)
+        link = self.get_argument("link", default = None)
+        node = Node()
+        error = []
+        error.extend(self._check_text_value(name, "Node Name", True, max = 50))
+        error.extend(self._check_text_value(description, "Node Description"), True, max = 2000)
+        error.extend(self._check_text_value(link, "Node Link"), True, max = 30)
+        node.id = int(nid)
+        node.name = self.xhtml_escape(name)
+        node.description = self.xhtml_escape(description)
+        node.link = self.xhtml_escape(link)
+        if error:
+            title = self._("Add Node")
+            if node.id:
+                title = self._("Edit Node")
+            self.render("backstage/node_create.html", locals())
+            return
+        if node.id:
+            self.update_node(node)
+        else:
+            self.insert_node(node)
+        self.redirect("/forum/go/%s", node)

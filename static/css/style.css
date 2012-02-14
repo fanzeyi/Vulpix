@@ -603,6 +603,7 @@ li.last {
 
 .member_bio .line {
     margin-top: 10px;
+    padding-left: 20px;
     border-bottom: none;
     margin-bottom: 10px;
     font-size: 12px;

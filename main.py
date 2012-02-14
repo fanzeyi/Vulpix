@@ -27,6 +27,10 @@ from note import NoteHandler
 from note import CreateNoteHandler
 from note import DeleteNoteHandler
 from note import MemberNotesHandler
+from forum import ForumIndexHandler
+from forum import ForumNodeHandler
+from forum import TopicCreateHandler
+from forum import TopicHandler
 from member import MemberHandler
 from member import SigninHandler
 from member import SignupHandler
@@ -39,6 +43,7 @@ from problem import ProblemHandler
 from problem import ProblemListHandler
 from backstage import BackstageHandler
 from backstage import AddProblemHandler
+from backstage import NodeCreateHandler
 
 tornado.options.parse_command_line()
 
@@ -70,9 +75,14 @@ class Application(tornado.web.Application):
             (r'/note/create', CreateNoteHandler), 
             (r'/note/([\d]*)', NoteHandler), 
             (r'/note/([\d]*)/remove', DeleteNoteHandler), 
+            (r'/forum', ForumIndexHandler), 
+            (r'/forum/go/(.*)', ForumNodeHandler),
+            (r'/forum/new/(.*)', TopicCreateHandler), 
+            (r'/forum/t/([\d]*)', TopicHandler), 
             (r'/api/problem/get/([\d]*)', ProblemGetAPIHandler),
             (r'/backstage', BackstageHandler), 
             (r'/backstage/problem/add', AddProblemHandler), 
+            (r'/backstage/node/create', NodeCreateHandler), 
             (r'/test', TestHandler), 
         ]
         settings = {

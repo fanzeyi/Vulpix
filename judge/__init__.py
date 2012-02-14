@@ -288,3 +288,77 @@ class NoteDBMixin(object):
     def delete_note_by_nid(self, nid):
         sql = """DELETE FROM `note` WHERE `id` = '%d'""" % int(nid)
         self.db.execute(sql)
+
+class Node(BaseDBObject):
+    id = 0
+    name = ""
+    description = ""
+    link = ""
+
+class NodeDBMixin(object):
+    def select_node_by_link(self, link):
+        result = self.db.get("""SELECT * FROM `node` WHERE `link` = %s LIMIT 1""", link)
+        if result:
+            node = Node()
+            node._init_row(result)
+            return node
+        return None
+    def select_node_by_id(self, nid):
+        result = self.db.get("""SELECT * FROM `node` WHERE `id` = %s LIMIT 1""", nid)
+        if result:
+            node = Node()
+            node._init_row(result)
+            return Node
+        return None
+    def update_node(self, node):
+        self.db.execute("""UPDATE `node` SET `name` = %s, \
+                                             `description` = %s, \
+                                             `link` = %s \
+                                         WHERE `id` = %s""", \
+                        node.name, node.description, node.link, node.id)
+    def insert_node(self, node):
+        node.id = self.db.execute("""INSERT INTO `node` (`name`, `description`, `link`) \
+                                     VALUES (%s, %s, %s)""", \
+                                     node.name, node.description, node.link)
+    def delete_node(self, nid):
+        self.db.execute("""DELETE FROM `node` WHERE `id` = %s""", nid)
+
+class Topic(BaseDBObject):
+    id = 0
+    title = ""
+    content = ""
+    node_id = 0
+    member_id = 0
+    create = None
+
+class TopicDBMixin(object):
+    def _new_topic_by_row(self, row):
+        if row:
+            topic = Topic()
+            topic._init_row(row)
+            return [topic]
+        return []
+    def select_topic_by_node(self, node, start = 0, num = 15):
+        rows = self.db.query("""SELECT * FROM `topic` WHERE `node_id` = %s LIMIT %s, %s""", node, start, num)
+        result = []
+        for row in rows:
+            result.extend(self._new_topic_by_row(row))
+        return result
+    def select_topic_by_id(self, topic_id):
+        result = self.db.get("""SELECT * FROM `topic` WHERE `id` = %s""", topic_id)
+        topic = Topic()
+        if result:
+            topic._init_row(row)
+            return topic
+        return None
+    def update_topic(self, topic):
+        self.db.execute("""UPDATE `topic` SET `title` = %s, \
+                                              `content` = %s, \
+                                          WHERE `id` = %s""", \
+                           topic.title, topic.content, topic.id)
+    def insert_topic(self, topic):
+        topic.id = self.db.execute("""INSERT INTO `topic` (`title`, `content`, `node_id`, `member_id`, `create`) \
+                                                   VALUES (%s, %s, %s, %s, UTC_TIMESTAMP())""", \
+                                                   topic.title, topic.content, topic.node_id, topic.member_id)
+    def delete_topic(self, tid):
+        self.db.execute("""DELETE FROM `topic` WHERE `id` = %s""", tid)
