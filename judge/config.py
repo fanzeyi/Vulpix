@@ -2,9 +2,9 @@
 
 mysql_config = {
     'mysql_host' : 'localhost:3306', 
-    'mysql_database' : 'onlinejudge', 
-    'mysql_user' : 'root', 
-    'mysql_password' : '10121fzy', 
+    'mysql_database' : 'vulpix', 
+    'mysql_user' : 'cogs', 
+    'mysql_password' : '321bgrkymc', 
 }
 
 accept_lang = {

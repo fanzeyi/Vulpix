@@ -20,6 +20,7 @@ from judge.base import BaseHandler
 from judge.utils import escape
 from judge.config import mysql_config
 
+from api import ProblemGetAPIHandler
 from lang import SetLangeuageHandler
 from home import HomeHandler
 from note import NoteHandler
@@ -48,8 +49,7 @@ define("mysql_password", default = mysql_config['mysql_password'])
 
 class TestHandler(BaseHandler, MemberDBMixin):
     def get(self):
-        print self.select_member_by_id(1).o('tagline')
-        self.set_secure_cookie_new('test', 'test')
+        self.render('test.html', locals())
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -70,6 +70,7 @@ class Application(tornado.web.Application):
             (r'/note/create', CreateNoteHandler), 
             (r'/note/([\d]*)', NoteHandler), 
             (r'/note/([\d]*)/remove', DeleteNoteHandler), 
+            (r'/api/problem/get/([\d]*)', ProblemGetAPIHandler),
             (r'/backstage', BackstageHandler), 
             (r'/backstage/problem/add', AddProblemHandler), 
             (r'/test', TestHandler), 

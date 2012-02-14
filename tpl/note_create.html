@@ -26,6 +26,12 @@
             <textarea name="content" id="content" class="input-xlarge" rows="20" style="width:500px">{% if note.content %}{{ note.content }}{% endif %}</textarea>
         </div>
     </div>
+    <div class="control-group">
+        <label class="control-label" for="related_problem">{{ _('Related Problem') }}</label>
+        <div class="controls">
+            <input type="text" name="related_problem"  class="input-xlarge" id="related_problem" />
+        </div>
+    </div>
     <input type="hidden" name="nid" value="{% if note.id %}{{ note.id }}{% endif %}" />
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>

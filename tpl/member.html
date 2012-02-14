@@ -1,6 +1,47 @@
 {% include 'header.html' %}
-{{ _('Username') }}: {{ member.username }} <br />
-{% if member.website %}{{ _('Website') }}: <a href="{{ member.website }}" rel="nofollow">{{ member.website }}</a> <br />{% endif %}
-{% if member.tagline %}{{ _('Tagline') }}: {{ member.tagline }} <br />{% endif %}
-{% if member.bio %}{{ _('Bio') }}: {{ member.bio }} {% endif %}
+<div class="cell member_top nopadding">
+<div class="avatar">
+<img src="{{ page.get_gravatar_url(member.email, 100) }}"/>
+</div>
+<div class="profile">
+<div class="username">
+<h1>{{ member.username }}</h1>
+</div>
+<div class="tagline">
+{{ member.tagline }}
+</div>
+<div class="meta">
+{{ _('ID:') }}{{ member.id }}. {{ _('Joined at') }} {{ member.create }}
+</div>
+<div class="website">
+<i class="icon-leaf"></i>
+<a href="{{ member.website }}">{{ member.website }}</a>
+</div> 
+</div>
+</div>
+<div class="sep30"></div>
+<div class="cell sidebar member_notes nopadding">
+{% if notes %}
+<div class="module_title">
+{{ _('User Notes') }}
+</div>
+<ul class="member_notes_list">
+{% for note in notes %}
+<li{% if loop.last %} class="last"{% endif %}>
+    <div class="title"><a href="/note/{{ note.id }}">{{ note.title }}</a></div>
+</li>
+{% endfor %}
+</ul>
+{% else %}
+{{ _('This user haven\'t write any note.') }}
+{% endif %}
+</div>
+<div class="cell member_bio nopadding">
+<div class="module_title">
+Bio
+</div>
+<div class="line">
+{{ member.bio.replace("\n", "<br />") }}
+</div>
+</div>
 {% include 'footer.html' %}

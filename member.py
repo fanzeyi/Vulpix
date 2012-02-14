@@ -15,6 +15,7 @@ from tornado.web import authenticated
 
 from judge import Member
 from judge import AuthDBMixin
+from judge import NoteDBMixin
 from judge import MemberDBMixin
 from judge import ResetMailDBMixin
 from judge.base import BaseHandler
@@ -63,6 +64,7 @@ class SigninHandler(BaseHandler, AuthDBMixin, MemberDBMixin):
                 return
             self.redirect('/')
         else:
+            print "aa"
             raise HTTPError(500)
 
 class SignupHandler(BaseHandler, MemberDBMixin, AuthDBMixin,):
@@ -261,7 +263,7 @@ class ChangePasswordHandler(BaseHandler, MemberDBMixin, AuthDBMixin):
         self.set_secure_cookie('msg', 'Password Updated.')
         self.redirect('/settings')
 
-class MemberHandler(BaseHandler, MemberDBMixin):
+class MemberHandler(BaseHandler, MemberDBMixin, NoteDBMixin):
     def get(self, username):
         title = username
         username = escape_string(username.lower())
@@ -271,6 +273,7 @@ class MemberHandler(BaseHandler, MemberDBMixin):
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((member.username, '/member/%s' % member.username))
+        notes = self.select_note_by_mid(member.id, count = 5)
         self.render("member.html", locals())
 
 class ForgetPasswordHandler(BaseHandler, MemberDBMixin, ResetMailDBMixin):

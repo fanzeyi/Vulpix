@@ -279,7 +279,7 @@ nav .copyright a:hover {
 .main {
     padding-top: 40px; 
     padding-right: 20px; 
-    width: 900px; 
+    width: 96%; 
 }
 
 .table tbody tr td, .table thead tr th {
@@ -289,12 +289,12 @@ nav .copyright a:hover {
 .note_action {
     display: inline; 
     float: right; 
-    width: 230px; 
+    width: 30%; 
 }
 
 .notes li , .note{
     margin-bottom: 30px;
-    width: 620px;
+    width: 60%;
 }
 
 .notes li .datetime {
@@ -312,9 +312,12 @@ nav .copyright a:hover {
     text-align: right; 
 }
 
+.note_notice {
+    width: 60%;
+}
+
 .note {
     margin-left: 0; 
-    width: 590px; 
 }
 
 .note .meta {
@@ -329,29 +332,35 @@ nav .copyright a:hover {
 
 .sidebar {
     display: inline; 
-    width: 250px; 
+    width: 30%; 
     float: right; 
 }
 
-.sidebar .module_title {
+.cell .module_title {
     padding-top: 10px; 
     padding-left: 13px; 
     padding-bottom: 5px; 
-    font-size: 14px; 
+    font-size: 16px; 
+    font-weight: bold; 
     border-bottom: 1px solid #DDD; 
 }
 
 .problem {
-    width: 620px; 
+    width: 65%; 
     margin-bottom: 30px; 
 }
 
 .cell .line {
     font-size: 14px; 
-    line-height: 20px; 
+    line-height: 24px; 
     padding-left: 10px; 
     padding-right: 10px; 
+    padding-top: 10px;
     border-bottom: 1px solid #E2E2E2; 
+}
+
+.cell .line p {
+    line-height: 24px;
 }
 
 .cell .line:first-child {
@@ -384,6 +393,34 @@ nav .copyright a:hover {
 }
 
 .problem .last {
+    border-bottom: none; 
+}
+
+.problem_sidebar {
+    width: 30%;
+}
+
+.problem_sidebar .problemmeta{
+    width: 100%;
+}
+
+.problemmeta tr td{
+    padding-top: 10px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid #DDD;
+}
+
+.problemmeta td:first-child {
+    text-align: right;
+    border-right: 1px solid #DDD;
+    padding-right: 5px;
+}
+
+.problemmeta td:last-child {
+    padding-left: 5px;
+}
+
+.problemmeta tr:last-child td {
     border-bottom: none; 
 }
 
@@ -494,4 +531,79 @@ nav .copyright a:hover {
     display: block; 
     margin-top: 10px; 
     margin-bottom: 10px; 
+}
+
+.member_top {
+    padding: 10px 15px; 
+}
+
+.member_top .avatar {
+    float: left; 
+}
+
+.member_top .avatar img {
+    border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -o-border-radius: 4px;
+}
+
+.member_top .profile {
+    float: left; 
+    margin-left: 10px; 
+    margin-top: 5px; 
+    width: 50%; 
+}
+
+.member_top .username {
+    font-size: 30px; 
+    line-height:1; 
+    font-family: Georgia,Times New Roman,serif; 
+}
+
+.member_top .username h1:first-letter {
+    text-transform:uppercase; 
+}
+
+.member_top .tagline {
+    font-size: 16px; 
+    color: #999; 
+}
+
+.member_top .meta {
+    font-size: 12px; 
+    color: #CCC; 
+}
+
+.member_notes {
+    width: 30%; 
+}
+
+.member_notes_list {
+    list-style: none; 
+    margin-left: 0; 
+    margin-bottom: 0;
+}
+
+.member_notes_list li {
+    padding-left: 22px; 
+    margin-top: 10px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid #ddd;
+}
+
+li.last {
+    border-bottom: none;
+}
+
+.member_bio {
+    width: 65%;
+}
+
+.member_bio .line {
+    margin-top: 10px;
+    border-bottom: none;
+    margin-bottom: 10px;
+    font-size: 12px;
 }

@@ -1,11 +1,23 @@
 {% include 'header.html' %}
 <div class="cell sidebar nopadding problem_sidebar">
-    <div class="line">
-        <span class="problem_star"></span>
-    </div>
-    <div class="module_title">
-        {{ _('Related Notes') }}
-    </div>
+<table class="problemmeta">
+<tr>
+    <td style="width:40%">Title</td>
+    <td>{{ problem.title }}</td>
+</tr>
+<tr>
+    <td>Short Name</td>
+    <td>{{ problem.shortname }}</td>
+</tr>
+<tr>
+    <td>Time</td>
+    <td>{{ problem.timelimit }}ms</td>
+</tr>
+<tr>
+    <td>Memory</td>
+    <td>{{ problem.memlimit }}MB</td>
+</tr>
+</table>
 </div>
 <div class="cell problem nopadding">
     <div class="line">
@@ -14,7 +26,7 @@
         {% endif %}
         <span class="num">#{{ problem.id }}</span>
     </div>
-    <table class="table">
+<!--    <table class="table">
         <tr>
             <td>{{ _('Title') }}</td>
             <td>{{ problem.title }}</td>
@@ -31,7 +43,7 @@
             <td>{{ _('Memory Limit') }}</td>
             <td>{{ problem.memlimit }} MB</td>
         </tr>
-    </table>
+    </table>-->
     <div class="line">
         {{ problem.content_html }}
     </div>
@@ -56,7 +68,7 @@
     {% if user %}
     <div class="line last">
         <form method="POST" action="/compile" class="clean">
-            <input type="file" name="file" id="file" />
+<!--            <input type="file" name="file" id="file" />-->
         </form>
     </div>
     {% endif %}

@@ -265,9 +265,9 @@ class NoteDBMixin(object):
             note.link_problem = note.link_problem.split(", ") if note.link_problem else None
             return note
         return None
-    def select_note_by_mid(self, mid, start = 0):
-        sql = """SELECT * FROM `note` WHERE `member_id` = '%d' ORDER BY `id` DESC LIMIT %d, 10""" \
-                 % (int(mid), int(start))
+    def select_note_by_mid(self, mid, start = 0, count = 10):
+        sql = """SELECT * FROM `note` WHERE `member_id` = '%d' ORDER BY `id` DESC LIMIT %d, %d""" \
+                 % (int(mid), int(start), int(count))
         query = self.db.query(sql)
         result = []
         if query:

@@ -14,17 +14,21 @@
     <div class="profile_wrap">
         {% if user %}
         <span class="username"><a href="/member/{{ user['username'] }}">{{ user['username'] }}</a></span>
-        <span class="tagline">{{ user['tagline'] }}</span>
+        <span class="tagline" title="{{ user['tagline'] }}">{{ user['tagline'] }}</span>
         {% else %}
         <span class="username">Guest</span>
         {% endif %}
         <div class="avatar">
+            {% if user %}
+            <a href="/member/{{ user['username'] }}">
+            {% endif %}
             {% if user.email %}
             <img src="{{ page.get_gravatar_url(user.email, 45) }}" />
             {% else %}
             <img src="/static/img/avatar.png" />
             {% endif %}
             <span class="avatar_mask"></span>
+            {% if user %}</a>{% endif %}
         </div>
     </div>
 </div>
