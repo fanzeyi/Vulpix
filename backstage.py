@@ -115,4 +115,4 @@ class CreateNodeHandler(BaseHandler, NodeDBMixin):
             self.update_node(node)
         else:
             self.insert_node(node)
-        self.redirect("/forum/go/%s" % node)
+        self.redirect("/forum/go/%s" % node.link)

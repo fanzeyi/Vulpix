@@ -1,0 +1,46 @@
+{% include 'header.html' %}
+<div class="cell node nopadding">
+    {% if topics %} 
+    <ul class="topic_list">
+        {% for topic in topics %}
+        <li class="line from_{{ topic.member_id }}">
+            <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                <tbody>
+                    <tr>
+                        <td class="avatar" valign="top">
+                            <img src="{{ topic.gravatar_link }}&s=48" />
+                        </td>
+                        <td class="topic_main" valign="top">
+                            <div class="topic_title"><a href="/forum/t/{{ topic.id }}">{{ topic.title }}</a></div>
+                            <div class="topic_meta">
+                                <a href="/forum/go/{{ topic.link }}">{{ topic.name }}</a>&nbsp;•&nbsp;
+                                <a href="/member/{{ topic.username }}">{{ topic.username }}</a>&nbsp;•&nbsp;
+                                {{ topic.create }}
+                            </div>
+                        </td>
+                </tbody>
+            </table>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="nomoretopic">
+        {{ _('oooops. There have no more topic.') }}<a href="/forum/new/{{ node.link }}">{{ _('Create') }}</a> One?
+    </div>
+    {% endif %}
+</div>
+<div class="sep30"></div>
+<div class="cell nopadding">
+    <div class="module_title">
+        {{ _('Nodes') }}
+    </div>
+    <div class="line" style="border-bottom: none; ">
+    {% for node in nodes %}
+        <span class="node_cloud"><a href="/forum/go/{{ node.link }}">{{ node.name }}</a></span>
+        {%- if not loop.last -%}
+        &nbsp;•&nbsp;
+        {%- endif -%}
+    {% endfor %}
+    </div>
+</div>
+{% include 'footer.html' %}

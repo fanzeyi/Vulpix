@@ -70,7 +70,7 @@ class MemberDBMixin(object):
                                     member.admin, member.lang)
     def update_member(self, member):
         self.db.execute("""UPDATE `member`
-                           SET `passowrd` = %s, 
+                           SET `password` = %s, 
                                `email` = %s, 
                                `gravatar_link` = %s, 
                                `website` = %s, 
@@ -79,7 +79,8 @@ class MemberDBMixin(object):
                                `admin` = %s, 
                                `lang` = %s
                            WHERE `id` = %s""", member.password, member.email, member.gravatar_link, \
-                                               member.website, member.tagline, member.bio, member.admin, member.lang)
+                                               member.website, member.tagline, member.bio, \
+                                               member.admin, member.lang, member.id)
 
 class Auth(BaseDBObject):
     uid = 0
@@ -294,6 +295,18 @@ class Node(BaseDBObject):
     link = ""
 
 class NodeDBMixin(object):
+    def _new_topic_by_row(self, row):
+        if row:
+            node = Node()
+            node._init_row(row)
+            return [node]
+        return []
+    def select_nodes(self, start = 0, num = 100):
+        rows = self.db.query("""SELECT * FROM `node` LIMIT %s, %s""", start, num)
+        result = []
+        for row in rows:
+            result.extend(self._new_topic_by_row(row))
+        return result
     def select_node_by_link(self, link):
         result = self.db.get("""SELECT * FROM `node` WHERE `link` = %s LIMIT 1""", link)
         if result:
@@ -329,6 +342,7 @@ class Topic(BaseDBObject):
     node_id = 0
     member_id = 0
     create = None
+    last_reply = None
 
 class TopicDBMixin(object):
     def _new_topic_by_row(self, row):
@@ -350,7 +364,7 @@ class TopicDBMixin(object):
             result.extend(self._new_topic_by_row(row))
         return result
     def select_topic_by_id(self, topic_id):
-        result = self.db.get("""SELECT `topic`.*, `member`.`username`, `member`.`gravatar_link`
+        result = self.db.get("""SELECT `topic`.*, `member`.`username`, `member`.`gravatar_link`, `member`.`tagline`
                                 FROM `topic` 
                                 LEFT JOIN `member` ON `topic`.`member_id` = `member`.`id`
                                 WHERE `topic`.`id` = %s
@@ -360,14 +374,55 @@ class TopicDBMixin(object):
             topic._init_row(result)
             return topic
         return None
+    def select_topic_by_last_reply(self):
+        rows = self.db.query("""SELECT `topic`.*, `member`.`username`, `member`.`gravatar_link`, `node`.`name`
+                                FROM `topic`
+                                LEFT JOIN `member` ON `topic`.`member_id` = `member`.`id`
+                                LEFT JOIN `node` ON `topic`.`node_id` = `node`.`id`
+                                ORDER BY `topic`.`last_reply` LIMIT 20""")
+        result = []
+        for row in rows:
+            result.extend(self._new_topic_by_row(row))
+        return result
     def update_topic(self, topic):
         self.db.execute("""UPDATE `topic` SET `title` = %s, \
                                               `content` = %s, \
                                           WHERE `id` = %s""", \
                            topic.title, topic.content, topic.id)
+    def update_topic_last_reply(self, tid):
+        self.db.execute("""UPDATE `topic` SET `last_reply` = UTC_TIMESTAMP() WHERE `id` = %s""", tid)
     def insert_topic(self, topic):
-        topic.id = self.db.execute("""INSERT INTO `topic` (`title`, `content`, `node_id`, `member_id`, `create`) \
-                                                   VALUES (%s, %s, %s, %s, UTC_TIMESTAMP())""", \
+        topic.id = self.db.execute("""INSERT INTO `topic` (`title`, `content`, `node_id`, `member_id`, `create`, `last_reply`) \
+                                                   VALUES (%s, %s, %s, %s, UTC_TIMESTAMP(), UTC_TIMESTAMP())""", \
                                                    topic.title, topic.content, topic.node_id, topic.member_id)
     def delete_topic(self, tid):
         self.db.execute("""DELETE FROM `topic` WHERE `id` = %s""", tid)
+
+class Reply(BaseDBObject):
+    id = ""
+    content = ""
+    member_id = ""
+    topic_id = ""
+    create = None
+
+class ReplyDBMixin(object):
+    def _new_reply_by_row(self, row):
+        if row:
+            reply = Reply()
+            reply._init_row(row)
+            return [reply]
+        return []
+    def select_reply_by_topic_id(self, tid, start = 0, count = 100):
+        rows = self.db.query("""SELECT `reply`.*, `member`.`gravatar_link`, `member`.`username`
+                                FROM `reply`
+                                LEFT JOIN `member` ON `reply`.`member_id` = `member`.`id`
+                                WHERE `reply`.`topic_id` = %s LIMIT %s,%s""", tid, start, count)
+        print rows
+        result = []
+        for row in rows:
+            result.extend(self._new_reply_by_row(row))
+        return result
+    def insert_reply(self, reply):
+        self.db.execute("""INSERT INTO `reply` (`content`, `member_id`, `topic_id`, `create`)
+                                  VALUES (%s, %s, %s, UTC_TIMESTAMP())""", reply.content, reply.member_id, reply.topic_id)
+

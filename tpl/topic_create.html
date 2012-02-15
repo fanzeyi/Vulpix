@@ -1,0 +1,35 @@
+{% include 'header.html' %}
+{%- if error -%}
+<div class="alert alert-error">
+    <a class="close" data-dismiss="alert" href="#">&times;</a>
+    <ul>
+    {% for err in error %}
+    <li>{{ err }}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endif %}
+<form method="POST" action="" class="form-horizontal">
+<fieldset>
+    <legend>{% if topic.nid %}{{ _('Edit Topic') }}{% else %}{{ _('Create Topic') }}{% endif %}</legend>
+    <div class="sep30"></div>
+    {{ page.xsrf_form_html() }}
+    <div class="control-group">
+        <label class="control-label" for="title">{{ _('Title') }}</label>
+        <div class="controls">
+            <input type="text" name="title" class="input-xlarge" {% if topic.title %}value="{{ topic.title }}" {% endif %}/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="content">{{ _('Content') }}</label>
+        <div class="controls">
+            <textarea name="content" id="content" class="input-xlarge" rows="20" style="width:500px">{% if topic.content %}{{ topic.content }}{% endif %}</textarea>
+        </div>
+    </div>
+    <input type="hidden" name="nid" value="{% if topic.id %}{{ topic.id }}{% endif %}" />
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
+    </div>
+</fieldset>
+</form>
+{% include 'footer.html' %}
