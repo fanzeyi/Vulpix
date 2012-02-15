@@ -43,9 +43,21 @@
         </a>
     </li>
     <li>
-        <a href="/problems">
-            <i class="icon-heart icon-white"></i>
-            {{ _('Problems') }}
+        <a href="/problem">
+            <i class="icon-question-sign icon-white"></i>
+            {{ _('Problem') }}
+        </a>
+    </li>
+    <li>
+        <a href="/contest">
+            <i class="icon-fire icon-white"></i>
+            {{ _('Contest') }}
+        </a>
+    </li>
+    <li>
+        <a href="/submit">
+            <i class="icon-th-large icon-white"></i>
+            {{ _('Submit') }}
         </a>
     </li>
     <li>
@@ -54,10 +66,16 @@
             {{ _('Forum') }}
         </a>
     </li>
+    <li>
+        <a href="/list">
+            <i class="icon-list icon-white"></i>
+            {{ _('List') }}
+        </a>
+    </li>
 {% if user %}
     <li>
         <a href="/member/{{ user['username'] }}/notes">
-            <i class="icon-file icon-white"></i>
+            <i class="icon-pencil icon-white"></i>
             {{ _('Notes') }}
         </a>
     </li>

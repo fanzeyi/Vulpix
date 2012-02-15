@@ -71,7 +71,7 @@ class Application(tornado.web.Application):
             (r'/member/([\w\d]*)/notes', MemberNotesHandler), 
             (r'/lang/(.*)', SetLangeuageHandler), 
             (r'/problem/([\d]*)', ProblemHandler), 
-            (r'/problems', ProblemListHandler), 
+            (r'/problem', ProblemListHandler), 
             (r'/note/create', CreateNoteHandler), 
             (r'/note/([\d]*)', NoteHandler), 
             (r'/note/([\d]*)/remove', DeleteNoteHandler), 

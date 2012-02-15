@@ -1,10 +1,77 @@
 {% include 'header.html' %}
+<div class="sidebar home_sidebar">
+<div class="cell nopadding notice">
+    <div class="module_title">{{ _('Notice') }}</div>
+    <div class="inner_box">
+        <p>欢迎来到<a href="">Vulpix</a>. 这里还正在开发中. BUG提交请至<a href="/forum/go/vulpix">讨论区</a>.</p>
+    </div>
+</div>
+<div class="sep30"></div>
+<div class="cell nopadding count">
+    <div class="module_title">{{ _('Site Count') }}</div>
+    <table>
+        <tr>
+            <th>{{ _('Total Problems') }}</th>
+            <td>1</td>
+        </tr>
+        <tr>
+            <th>{{ _('Total Nodes') }}</th>
+            <td>4</td>
+        </tr>
+        <tr>
+            <th>{{ _('Total Topics') }}</th>
+            <td>1</td>
+        </tr>
+    </table>
+</div>
+</div>
 {% if newest_problem %}
-<h3>{{ _('Newest Problem') }}</h3>
-<ul>
-    {% for problem in newest_problem %}
-    <li><a href="/problem/{{ problem.id }}">{{ problem.title }}</a></li>
-    {% endfor %}
-</ul>
+<div class="cell nopadding home">
+    <div class="module_title">{{ _('Newest Problem') }}</div>
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th style="width:20px; text-align:center; ">#</th>
+                <th>{{ _('Title') }}</th>
+                <th style="width:100px">{{ _('Short Name') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for problem in newest_problem %}
+            <tr>
+                <td style="text-align:center">{{ problem.id }}</td>
+                <td><a href="/problem/{{ problem.id }}">{{ problem.title }}</a></td>
+                <td>{{ problem.shortname }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="sep30"></div>
 {% endif %}
+<div class="cell nopadding home newest_topic">
+    <div class="module_title">{{ _('Newest Discuss') }}</div>
+    <ul class="topic_list">
+        {% for topic in topics %}
+        <li class="line from_{{ topic.member_id }}">
+            <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                <tbody>
+                    <tr>
+                        <td class="avatar" valign="top">
+                            <img src="{{ topic.gravatar_link }}&s=48" />
+                        </td>
+                        <td class="topic_main" valign="top">
+                            <div class="topic_title"><a href="/forum/t/{{ topic.id }}">{{ topic.title }}</a></div>
+                            <div class="topic_meta">
+                                <a href="/forum/go/{{ topic.link }}">{{ topic.name }}</a>&nbsp;•&nbsp;
+                                <a href="/member/{{ topic.username }}">{{ topic.username }}</a>&nbsp;•&nbsp;
+                                {{ topic.create }}
+                            </div>
+                        </td>
+                </tbody>
+            </table>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% include 'footer.html' %}

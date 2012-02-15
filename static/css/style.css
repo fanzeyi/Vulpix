@@ -733,3 +733,58 @@ li.last {
 .reply_list li:last-child {
     border-bottom: none; 
 }
+
+.node_list {
+    min-height: 0; 
+    padding-bottom: 20px; 
+}
+
+.node_list .line {
+    padding-left: 20px; 
+}
+
+.form_index {
+    min-height: 0; 
+}
+
+.home {
+    width: 65%; 
+    min-height: 0; 
+}
+
+.home .table {
+    border: none; 
+    margin-bottom: 0; 
+}
+
+.home.newest_topic li:last-child {
+    border-bottom: none; 
+}
+
+.inner_box {
+    padding: 20px; 
+}
+
+.inner_box p {
+    line-height: 30px; 
+}
+
+.home_sidebar .count table {
+    margin-top: 10px; 
+    margin-bottom: 10px; 
+    width: 100%; 
+}
+
+.home_sidebar .count th {
+    text-align: right; 
+    font-weight: normal; 
+    color: #CCC; 
+}
+
+.home_sidebar .count table th {
+    width: 40%; 
+}
+
+.home_sidebar .count table td {
+    padding-left: 10px; 
+}

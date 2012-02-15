@@ -374,12 +374,12 @@ class TopicDBMixin(object):
             topic._init_row(result)
             return topic
         return None
-    def select_topic_by_last_reply(self):
+    def select_topic_by_last_reply(self, start = 0, num = 20):
         rows = self.db.query("""SELECT `topic`.*, `member`.`username`, `member`.`gravatar_link`, `node`.`name`
                                 FROM `topic`
                                 LEFT JOIN `member` ON `topic`.`member_id` = `member`.`id`
                                 LEFT JOIN `node` ON `topic`.`node_id` = `node`.`id`
-                                ORDER BY `topic`.`last_reply` LIMIT 20""")
+                                ORDER BY `topic`.`last_reply` LIMIT %s, %s""", start, num)
         result = []
         for row in rows:
             result.extend(self._new_topic_by_row(row))
