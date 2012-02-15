@@ -4,7 +4,9 @@ import functools
 from tornado.web import HTTPError
 from tornado.web import authenticated
 
+from judge import Node
 from judge import Problem
+from judge import NodeDBMixin
 from judge import ProblemDBMixin
 from judge.base import BaseHandler
 from judge.utils import escape
@@ -78,11 +80,12 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
             self.insert_problem(problem)
         self.redirect('/problem/%d' % problem.id)
 
-class NodeCreateHandler(BaseHandler):
+class CreateNodeHandler(BaseHandler, NodeDBMixin):
     @backstage
     def get(self):
         title = self._("Add Node")
         nid = self.get_argument('nid', default = 0)
+        node = None
         if nid:
             node = self.select_node_by_id(nid)
             title = self._("Edit Node")
@@ -96,8 +99,8 @@ class NodeCreateHandler(BaseHandler):
         node = Node()
         error = []
         error.extend(self._check_text_value(name, "Node Name", True, max = 50))
-        error.extend(self._check_text_value(description, "Node Description"), True, max = 2000)
-        error.extend(self._check_text_value(link, "Node Link"), True, max = 30)
+        error.extend(self._check_text_value(description, "Node Description", True, max = 2000))
+        error.extend(self._check_text_value(link, "Node Link", True, max = 30))
         node.id = int(nid)
         node.name = self.xhtml_escape(name)
         node.description = self.xhtml_escape(description)
@@ -112,4 +115,4 @@ class NodeCreateHandler(BaseHandler):
             self.update_node(node)
         else:
             self.insert_node(node)
-        self.redirect("/forum/go/%s", node)
+        self.redirect("/forum/go/%s" % node)

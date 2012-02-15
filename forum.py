@@ -17,9 +17,10 @@ class ForumNodeHandler(BaseHandler, NodeDBMixin, TopicDBMixin):
         if node:
             breadcrumb = []
             breadcrumb.append((self._('Home'), '/'))
-            breadcrumb.append((node.title, '/forum/go/%s' % node.link))
+            breadcrumb.append((self._('Forum'), '/forum'))
+            breadcrumb.append((node.name, '/forum/go/%s' % node.link))
             topics = self.select_topic_by_node(node.id)
-            title = node.title
+            title = node.name
             self.render("node.html", locals())
         else:
             raise HTTPError(404)
@@ -38,7 +39,8 @@ class TopicCreateHandler(BaseHandler, NodeDBMixin, TopicDBMixin):
                     raise HTTPError(404)
             breadcrumb = []
             breadcrumb.append((self._('Home'), '/'))
-            breadcrumb.append((node.title, '/forum/go/%s' % node.link))
+            breadcrumb.append((self._('Forum'), '/forum'))
+            breadcrumb.append((node.name, '/forum/go/%s' % node.link))
             breadcrumb.append((self._('Create Topic'), '/forum/new/%s' % node.link))
             title = self._("Create Topic")
             if topic:
@@ -69,7 +71,8 @@ class TopicCreateHandler(BaseHandler, NodeDBMixin, TopicDBMixin):
             if error:
                 breadcrumb = []
                 breadcrumb.append((self._('Home'), '/'))
-                breadcrumb.append((node.title, '/forum/go/%s' % node.link))
+                breadcrumb.append((self._('Forum'), '/forum'))
+                breadcrumb.append((node.name, '/forum/go/%s' % node.link))
                 breadcrumb.append((self._('Create Topic'), '/forum/new/%s' % node.link))
                 title = self._("Create Topic")
                 if topic:
@@ -82,7 +85,7 @@ class TopicCreateHandler(BaseHandler, NodeDBMixin, TopicDBMixin):
                 self.update_topic(topic)
             else:
                 self.insert_topic(topic)
-            self.redirect("/forum/t/%d", topic.id)
+            self.redirect("/forum/t/%d" % topic.id)
         else:
             raise HTTPError(404)
 
@@ -96,7 +99,8 @@ class TopicHandler(BaseHandler, TopicDBMixin, NodeDBMixin):
         node = self.select_node_by_id(topic.node_id)
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
-        breadcrumb.append((node.title, '/forum/go/%s' % node.link))
+        breadcrumb.append((self._('Forum'), '/forum'))
+        breadcrumb.append((node.name, '/forum/go/%s' % node.link))
         breadcrumb.append((topic.title, '/forum/t/%s' % topic.id))
         title = topic.title
         self.render("topic.html", locals())

@@ -104,9 +104,9 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def markdown(self):
         return self.application.markdown
-    def get_gravatar_url(self, email, size):
+    def get_gravatar_url(self, email):
         gravatar_id = hashlib.md5(email.lower()).hexdigest()
-        return "http://www.gravatar.com/avatar/%s?s=%d&d=mm" % (gravatar_id, size) 
+        return "http://www.gravatar.com/avatar/%s?d=mm" % (gravatar_id) 
     def render(self, tplname, args = {}):
         if 'self' in args.keys():
             args.pop('self')

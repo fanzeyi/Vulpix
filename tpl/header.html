@@ -23,7 +23,7 @@
             <a href="/member/{{ user['username'] }}">
             {% endif %}
             {% if user.email %}
-            <img src="{{ page.get_gravatar_url(user.email, 45) }}" />
+            <img src="{{ user.gravatar_link }}&s=45" />
             {% else %}
             <img src="/static/img/avatar.png" />
             {% endif %}
@@ -81,6 +81,12 @@
         <a href="/backstage/problem/add">
             <i class="icon-plus icon-white"></i>
             {{ _('Add Problem') }}
+        </a>
+    </li>
+    <li>
+        <a href="/backstage/node/create">
+            <i class="icon-plus icon-white"></i>
+            {{ _('Add Node') }}
         </a>
     </li>
 {% endif %}

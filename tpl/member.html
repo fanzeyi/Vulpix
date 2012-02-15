@@ -1,7 +1,7 @@
-{% include 'header.html' %}
+ include 'header.html' %}
 <div class="cell member_top nopadding">
-<div class="avatar">
-<img src="{{ page.get_gravatar_url(member.email, 100) }}"/>
+<div class="avatar" width="100px">
+<img src="{{ member.gravatar_link }}&s=100"/>
 </div>
 <div class="profile">
 <div class="username">

@@ -1,0 +1,61 @@
+{% include 'header.html' %}
+<div class="cell node nopadding">
+    <div class="line new_topic">
+        {% if user %}
+        <a href="/forum/new/{{ node.link }}" class="btn">{{ _('Create New Topic') }}</a>
+        {% endif %}
+    </div>
+    {% if topics %} 
+    <ul class="topic_list">
+        {% for topic in topics %}
+        <li class="line from_{{ topic.member_id }}">
+            <table cellspacing="0" cellpadding="0" width="100%" border="0">
+                <tbody>
+                    <tr>
+                        <td class="avatar" valign="top">
+                            <img src="{{ topic.gravatar_link }}&s=48" />
+                        </td>
+                        <td class="topic_main" valign="top">
+                            <div class="topic_title"><a href="/forum/t/{{ topic.id }}">{{ topic.title }}</a></div>
+                            <div class="topic_meta">
+                                <a href="/forum/go/{{ topic.link }}">{{ topic.name }}</a>&nbsp;•&nbsp;
+                                <a href="/member/{{ topic.username }}">{{ topic.username }}</a>&nbsp;•&nbsp;
+                                {{ topic.create }}
+                            </div>
+                        </td>
+                </tbody>
+            </table>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="nomoretopic">
+        {{ _('oooops. There have no more topic.') }}<a href="/forum/new/{{ node.link }}">{{ _('Create') }}</a> One?
+    </div>
+    {% endif %}
+</div>
+<div class="sep30"></div>
+{% if user %}
+<form method="POST" action="/forum/new/{{ node.link }}" class="form-horizontal">
+    <fieldset>
+        <legend>{{ _('Create New Topic') }}</legend>
+        {{ page.xsrf_form_html() }}
+        <div class="control-group">
+            <label class="control-label" for="title">{{ _('Title') }}</label>
+            <div class="controls">
+                <input name="title" class="input-xlarge" type="text" style="width: 80%"/>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="title">{{ _('Content') }}</label>
+            <div class="controls">
+                <textarea name="content" class="input-xlarge" style="width: 80%; height: 300px"></textarea>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
+        </div>
+    </fieldset>
+</form>
+{% endif %}
+{% include 'footer.html' %}

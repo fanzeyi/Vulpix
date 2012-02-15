@@ -123,6 +123,7 @@ class SignupHandler(BaseHandler, MemberDBMixin, AuthDBMixin,):
         member.password = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
         member.username = usr
         member.email = email
+        member.gravatar_link = self.get_gravatar_url(email)
         self.insert_member(member)
         auth = self.create_auth(member.id)
         self.set_cookie('auth', auth.secret)
@@ -217,6 +218,7 @@ class SettingsHandler(BaseHandler, MemberDBMixin):
             return 
         member = self.select_member_by_id(self.current_user['id'])
         member.email = email
+        member.gravatar_link = self.get_gravatar_url(email)
         member.website = website
         member.tagline = tagline
         member.bio = bio

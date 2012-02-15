@@ -43,7 +43,7 @@ from problem import ProblemHandler
 from problem import ProblemListHandler
 from backstage import BackstageHandler
 from backstage import AddProblemHandler
-from backstage import NodeCreateHandler
+from backstage import CreateNodeHandler
 
 tornado.options.parse_command_line()
 
@@ -82,7 +82,7 @@ class Application(tornado.web.Application):
             (r'/api/problem/get/([\d]*)', ProblemGetAPIHandler),
             (r'/backstage', BackstageHandler), 
             (r'/backstage/problem/add', AddProblemHandler), 
-            (r'/backstage/node/create', NodeCreateHandler), 
+            (r'/backstage/node/create', CreateNodeHandler), 
             (r'/test', TestHandler), 
         ]
         settings = {

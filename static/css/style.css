@@ -4,6 +4,7 @@ body {
 
 body.logined {
     margin-left: 260px; 
+    margin-bottom: 30px; 
 }
 
 .logined form {
@@ -607,4 +608,72 @@ li.last {
     border-bottom: none;
     margin-bottom: 10px;
     font-size: 12px;
+}
+
+.node .new_topic {
+    margin-top: 5px; 
+    text-align: right; 
+    padding-bottom: 10px; 
+}
+
+.node .nomoretopic {
+    text-align: center; 
+    padding-top: 17px; 
+}
+
+.topic_list {
+    list-style: none; 
+    margin-left: 0; 
+}
+
+.topic_list > li.line {
+    padding: 10px !important; 
+}
+
+.topic_list li.line table {
+    height: 48px;
+    line-height: 16px; 
+}
+
+.topic_list li.line .avatar {
+    width: 48px; 
+    padding: 1px; 
+}
+
+.topic_list li.line .topic_main {
+    padding-left: 10px; 
+}
+
+.topic_list li.line .topic_title {
+    padding-top: 3px; 
+    font-size: 16px; 
+    line-height: 130%; 
+}
+
+.topic_list li.line .topic_meta {
+    padding-top: 10px; 
+    color: #CCC; 
+    display: block; 
+    font-size: 10px; 
+    font-weight: bold; 
+}
+
+.topic {
+    width: 65%; 
+}
+
+.topic .module_title {
+    font-size: 20px; 
+    font-weight: 500; 
+    line-height: 150%; 
+}
+
+.topic .content {
+    padding: 10px 20px; 
+    line-height: 180%; 
+    overflow: hidden; 
+}
+
+.topic_sidebar .line {
+    border-bottom: none; 
 }

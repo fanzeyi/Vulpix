@@ -63,25 +63,23 @@ class MemberDBMixin(object):
         return None
     def insert_member(self, member):
         member.username_lower = member.username.lower()
-        sql = """INSERT INTO `member` (`username`, `username_lower`, `password`, `email`, \
-                 `create`, `website`, `tagline`, `bio`, `admin`, `lang`) \
-                VALUES ('%s', '%s', '%s', '%s', UTC_TIMESTAMP(), '%s', '%s', '%s', '%d', '%d')""" \
-                % (member.e('username'), member.e('username_lower'), member.e('password'), member.e('email'), \
-                   member.e('website'), member.e('tagline'), member.e('bio'), member.admin, member.lang)
-        uid = self.db.execute(sql)
-        member.id = uid
+        member.id = self.db.execute("""INSERT INTO `member` (`username`, `username_lower`, `password`, `email`, `gravatar_link`, `create`, `website`, `tagline`, `bio`, `admin`, `lang`)
+                                       VALUES (%s, %s, %s, %s, %s, UTC_TIMESTAMP(), %s, %s, %s, %s, %s)""", \
+                                    member.username, member.username_lower, member.password, member.email, \
+                                    member.gravatar_link, member.website, member.tagline, member.bio, \
+                                    member.admin, member.lang)
     def update_member(self, member):
-        sql = """UPDATE `member` SET `password` = '%s', \
-                                     `email` = '%s', \
-                                     `website` = '%s', \
-                                     `tagline` = '%s', \
-                                     `bio` = '%s', \
-                                     `admin` = '%d', \
-                                     `lang` = '%d' \
-                                 WHERE `id` = '%d'""" \
-                 % (member.e('password'), member.e('email'), member.e('website'), member.e('tagline'), member.e('bio'), \
-                    int(member.admin), int(member.lang), member.id)
-        self.db.execute(sql)
+        self.db.execute("""UPDATE `member`
+                           SET `passowrd` = %s, 
+                               `email` = %s, 
+                               `gravatar_link` = %s, 
+                               `website` = %s, 
+                               `tagline` = %s, 
+                               `bio` = %s, 
+                               `admin` = %s, 
+                               `lang` = %s
+                           WHERE `id` = %s""", member.password, member.email, member.gravatar_link, \
+                                               member.website, member.tagline, member.bio, member.admin, member.lang)
 
 class Auth(BaseDBObject):
     uid = 0
@@ -305,10 +303,11 @@ class NodeDBMixin(object):
         return None
     def select_node_by_id(self, nid):
         result = self.db.get("""SELECT * FROM `node` WHERE `id` = %s LIMIT 1""", nid)
+        node = None
         if result:
             node = Node()
             node._init_row(result)
-            return Node
+            return node
         return None
     def update_node(self, node):
         self.db.execute("""UPDATE `node` SET `name` = %s, \
@@ -339,16 +338,26 @@ class TopicDBMixin(object):
             return [topic]
         return []
     def select_topic_by_node(self, node, start = 0, num = 15):
-        rows = self.db.query("""SELECT * FROM `topic` WHERE `node_id` = %s LIMIT %s, %s""", node, start, num)
+        rows = self.db.query("""SELECT `topic`. * , `member`.`username`, `member`.`gravatar_link` , `node`.`name` , `node`.`link`
+                                FROM `topic`
+                                LEFT JOIN `member` ON `topic`.`member_id` = `member`.`id`
+                                LEFT JOIN `node` ON `topic`.`node_id` = `node`.`id`
+                                WHERE `node_id` = %s
+                                ORDER BY `create` DESC
+                                LIMIT %s, %s""", node, start, num)
         result = []
         for row in rows:
             result.extend(self._new_topic_by_row(row))
         return result
     def select_topic_by_id(self, topic_id):
-        result = self.db.get("""SELECT * FROM `topic` WHERE `id` = %s""", topic_id)
+        result = self.db.get("""SELECT `topic`.*, `member`.`username`, `member`.`gravatar_link`
+                                FROM `topic` 
+                                LEFT JOIN `member` ON `topic`.`member_id` = `member`.`id`
+                                WHERE `topic`.`id` = %s
+                                LIMIT 1""", topic_id)
         topic = Topic()
         if result:
-            topic._init_row(row)
+            topic._init_row(result)
             return topic
         return None
     def update_topic(self, topic):

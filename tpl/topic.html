@@ -1,0 +1,15 @@
+{% include 'header.html' %}
+<div class="cell sidebar nopadding topic_sidebar">
+    <div class="line">
+        <span class="avatar"><img src="{{ topic.gravatar_link }}&s=80" /></span>
+    </div>
+</div>
+<div class="cell nopadding topic">
+    <div class="module_title">
+        {{ topic.title }}
+    </div>
+    <div class="content">
+        {{ topic.content.replace('\n', '<br />') }}
+    </div>
+</div>
+{% include 'footer.html' %}
