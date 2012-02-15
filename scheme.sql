@@ -1,23 +1,22 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.9
+-- version 3.3.2deb1ubuntu1
 -- http://www.phpmyadmin.net
 --
--- 主机: localhost
--- 生成日期: 2012 年 02 月 15 日 02:19
--- 服务器版本: 5.5.20
--- PHP 版本: 5.3.10
+-- ホスト: localhost
+-- 生成時間: 2012 年 2 月 15 日 20:59
+-- サーバのバージョン: 5.1.41
+-- PHP のバージョン: 5.3.2-1ubuntu4.13
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
 
 --
--- 数据库: `onlinejudge`
+-- データベース: `vulpix`
 --
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `auth`
+-- テーブルの構造 `auth`
 --
 
 CREATE TABLE IF NOT EXISTS `auth` (
@@ -30,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `auth` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `member`
+-- テーブルの構造 `member`
 --
 
 CREATE TABLE IF NOT EXISTS `member` (
@@ -39,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `member` (
   `username_lower` varchar(200) NOT NULL,
   `password` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
+  `gravatar_link` text NOT NULL,
   `create` datetime NOT NULL,
   `website` varchar(200) DEFAULT NULL,
   `tagline` text,
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `member` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `node`
+-- テーブルの構造 `node`
 --
 
 CREATE TABLE IF NOT EXISTS `node` (
@@ -60,12 +60,12 @@ CREATE TABLE IF NOT EXISTS `node` (
   `description` text NOT NULL,
   `link` text NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `note`
+-- テーブルの構造 `note`
 --
 
 CREATE TABLE IF NOT EXISTS `note` (
@@ -76,12 +76,12 @@ CREATE TABLE IF NOT EXISTS `note` (
   `create` datetime NOT NULL,
   `link_problem` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `problem`
+-- テーブルの構造 `problem`
 --
 
 CREATE TABLE IF NOT EXISTS `problem` (
@@ -99,12 +99,27 @@ CREATE TABLE IF NOT EXISTS `problem` (
   `tags` mediumtext,
   `create` datetime NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- テーブルの構造 `reply`
+--
+
+CREATE TABLE IF NOT EXISTS `reply` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` mediumtext NOT NULL,
+  `member_id` int(11) NOT NULL,
+  `topic_id` int(11) NOT NULL,
+  `create` datetime NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `reset_mail`
+-- テーブルの構造 `reset_mail`
 --
 
 CREATE TABLE IF NOT EXISTS `reset_mail` (
@@ -117,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `reset_mail` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `topic`
+-- テーブルの構造 `topic`
 --
 
 CREATE TABLE IF NOT EXISTS `topic` (
@@ -127,21 +142,22 @@ CREATE TABLE IF NOT EXISTS `topic` (
   `node_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
   `create` datetime NOT NULL,
+  `last_reply` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
 
 --
--- 限制导出的表
+-- ダンプしたテーブルの制約
 --
 
 --
--- 限制表 `auth`
+-- テーブルの制約 `auth`
 --
 ALTER TABLE `auth`
   ADD CONSTRAINT `auth_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `member` (`id`);
 
 --
--- 限制表 `reset_mail`
+-- テーブルの制約 `reset_mail`
 --
 ALTER TABLE `reset_mail`
   ADD CONSTRAINT `reset_mail_ibfk_1` FOREIGN KEY (`uid`) REFERENCES `member` (`id`);
