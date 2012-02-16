@@ -379,7 +379,7 @@ class TopicDBMixin(object):
                                 FROM `topic`
                                 LEFT JOIN `member` ON `topic`.`member_id` = `member`.`id`
                                 LEFT JOIN `node` ON `topic`.`node_id` = `node`.`id`
-                                ORDER BY `topic`.`last_reply` LIMIT %s, %s""", start, num)
+                                ORDER BY `topic`.`last_reply` DESC LIMIT %s, %s""", start, num)
         result = []
         for row in rows:
             result.extend(self._new_topic_by_row(row))
@@ -417,7 +417,6 @@ class ReplyDBMixin(object):
                                 FROM `reply`
                                 LEFT JOIN `member` ON `reply`.`member_id` = `member`.`id`
                                 WHERE `reply`.`topic_id` = %s LIMIT %s,%s""", tid, start, count)
-        print rows
         result = []
         for row in rows:
             result.extend(self._new_reply_by_row(row))

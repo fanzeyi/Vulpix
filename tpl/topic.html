@@ -1,5 +1,5 @@
 {% include 'header.html' %}
-<div class="cell sidebar nopadding topic_sidebar">
+<!-- <div class="cell sidebar nopadding topic_sidebar">
     <div class="line">
         <div class="avatar">
             <img src="{{ topic.gravatar_link }}&s=80" />
@@ -9,10 +9,12 @@
             <div class="tagline" title="{{ topic.tagline }}">{{ topic.tagline }}</div>
         </div>
     </div>
-</div>
+</div>-->
 <div class="cell nopadding topic">
     <div class="module_title">
-        {{ topic.title }}
+        <div class="avatar"><img src="{{ topic.gravatar_link }}&s=80" /></div>
+        <div class="topic_title">{{ topic.title }}</div>
+        <div class="topic_meta">By <a href="/member/{{ topic.username }}">{{ topic.username }}</a> at {{ topic.create }}</div>
     </div>
     <div class="content">
         {{ topic.content.replace('\n', '<br />') }}
@@ -32,7 +34,10 @@
                             <img src="{{ reply.gravatar_link }}&s=48" />
                         </td>
                         <td class="reply_main" valign="top">
-                            <div class="reply_user"><a href="/member/{{ reply.username }}">{{ reply.username }}</a></div>
+                            <div class="reply_user">
+                                <a href="/member/{{ reply.username }}">{{ reply.username }}</a>
+                                <div class="create">{{ reply.create }}</div>
+                            </div>
                             <div class="reply_content">
                                 {{ reply.content }}
                             </div>

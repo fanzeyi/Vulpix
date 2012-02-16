@@ -624,6 +624,7 @@ li.last {
 .topic_list {
     list-style: none; 
     margin-left: 0; 
+    margin-bottom: 0;
 }
 
 .topic_list > li.line {
@@ -659,19 +660,32 @@ li.last {
 }
 
 .topic {
-    width: 65%; 
+    min-height: 0; 
 }
 
 .topic .module_title {
     font-size: 20px; 
     font-weight: 500; 
     line-height: 150%; 
+    min-height: 80px; 
 }
 
 .topic .content {
     padding: 10px 20px; 
     line-height: 180%; 
     overflow: hidden; 
+}
+
+.topic .module_title .avatar {
+    float: right; 
+    padding-right: 10px; 
+    height: 90px; 
+    width: 90px; 
+}
+
+.topic .module_title .topic_meta {
+    color: #CCC; 
+    font-size: 12px; 
 }
 
 .topic_sidebar .line {
@@ -715,11 +729,18 @@ li.last {
 .reply_list {
     list-style: none; 
     margin-left: 0; 
+    margin-bottom: 0; 
 }
 
 .reply_list li .avatar {
     width: 48px; 
     line-height: 10px; 
+}
+
+.reply_list li .create {
+    float: right; 
+    font-size: 12px; 
+    color: #CCC; 
 }
 
 .reply_list li .reply_main {
@@ -782,7 +803,7 @@ li.last {
 }
 
 .home_sidebar .count table th {
-    width: 40%; 
+    width: 50%; 
 }
 
 .home_sidebar .count table td {
