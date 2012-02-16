@@ -16,7 +16,7 @@ class ProblemHandler(BaseHandler, ProblemDBMixin):
         if problem:
             breadcrumb = []
             breadcrumb.append((self._('Home'), '/'))
-            breadcrumb.append((self._('Problem'), '/problems'))
+            breadcrumb.append((self._('Problem'), '/problem'))
             breadcrumb.append((problem.title, '/problem/%d' % problem.id))
             title = self._("Problem") + u" › " + problem.title
             self.render("problem.html", locals())
@@ -29,6 +29,6 @@ class ProblemListHandler(BaseHandler, ProblemDBMixin):
         problems = self.select_problem_order_by_id(20, start)
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
-        breadcrumb.append((self._('Problem'), '/problems'))
+        breadcrumb.append((self._('Problem'), '/problem'))
         title = self._("Problems")
         self.render("problem_list.html", locals())

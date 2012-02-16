@@ -406,15 +406,14 @@ nav .copyright a:hover {
 }
 
 .problemmeta tr td{
-    padding-top: 10px;
-    padding-bottom: 9px;
-    border-bottom: 1px solid #DDD;
+    padding-top: 8px;
+    padding-bottom: 6px;
 }
 
 .problemmeta td:first-child {
     text-align: right;
-    border-right: 1px solid #DDD;
     padding-right: 5px;
+    color: #CCC; 
 }
 
 .problemmeta td:last-child {

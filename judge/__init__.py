@@ -214,6 +214,9 @@ class ProblemDBMixin(object):
                            problem.title, problem.shortname, problem.content, problem.content_html, \
                            problem.inputfmt, problem.outputfmt, problem.samplein, problem.sampleout, \
                            int(problem.timelimit), int(problem.memlimit), problem.id)
+    def count_problem(self):
+        count = self.db.get("""SELECT COUNT(*) FROM `problem`""")
+        return count["COUNT(*)"]
     def select_problem_by_id(self, pid):
         sql = """SELECT * FROM `problem` WHERE `id` = '%d' LIMIT 1""" % int(pid)
         query = self.db.get(sql)
@@ -301,6 +304,9 @@ class NodeDBMixin(object):
             node._init_row(row)
             return [node]
         return []
+    def count_node(self):
+        count = self.db.get("""SELECT COUNT(*) FROM `node`""")
+        return count["COUNT(*)"]
     def select_nodes(self, start = 0, num = 100):
         rows = self.db.query("""SELECT * FROM `node` LIMIT %s, %s""", start, num)
         result = []
@@ -351,6 +357,9 @@ class TopicDBMixin(object):
             topic._init_row(row)
             return [topic]
         return []
+    def count_topic(self):
+        count = self.db.get("""SELECT COUNT(*) FROM `topic`""")
+        return count["COUNT(*)"]
     def select_topic_by_node(self, node, start = 0, num = 15):
         rows = self.db.query("""SELECT `topic`. * , `member`.`username`, `member`.`gravatar_link` , `node`.`name` , `node`.`link`
                                 FROM `topic`

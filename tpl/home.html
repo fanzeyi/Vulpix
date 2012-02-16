@@ -12,22 +12,22 @@
     <table>
         <tr>
             <th>{{ _('Total Problems') }}</th>
-            <td>1</td>
+            <td>{{ problem_count }}</td>
         </tr>
         <tr>
             <th>{{ _('Total Nodes') }}</th>
-            <td>4</td>
+            <td>{{ node_count }}</td>
         </tr>
         <tr>
             <th>{{ _('Total Topics') }}</th>
-            <td>1</td>
+            <td>{{ topic_count }}</td>
         </tr>
     </table>
 </div>
 </div>
 {% if newest_problem %}
 <div class="cell nopadding home">
-    <div class="module_title">{{ _('Newest Problem') }}</div>
+    <div class="module_title">{{ _('Latest Problem') }}</div>
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
@@ -50,7 +50,7 @@
 <div class="sep30"></div>
 {% endif %}
 <div class="cell nopadding home newest_topic">
-    <div class="module_title">{{ _('Newest Discuss') }}</div>
+    <div class="module_title">{{ _('Latest Discuss') }}</div>
     <ul class="topic_list">
         {% for topic in topics %}
         <li class="line from_{{ topic.member_id }}">
