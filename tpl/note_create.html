@@ -35,8 +35,8 @@
                 {% if related_problem %}
                 {% for problem in related_problem %}
                 <li class="related">
-                    <a href="/problem/{{ problem.nid }}">{{ problem.title }}</a>
-                    <a class="close" href="#" value="{{ problem.nid }}" data-missed="alert"><i class="icon-remove-sign"></i></a>
+                    <a href="/problem/{{ problem.nid }}" target="_blank" style="float:left">{{ problem.title }}</a>
+                    <a class="close" href="#" value="{{ problem.nid }}" data-dismiss="alert"><i class="icon-remove-sign"></i></a>
                 </li>
                 {% endfor%}
                 {% endif %}

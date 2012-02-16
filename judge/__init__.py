@@ -472,3 +472,42 @@ class RelatedProblemDBMixin(object):
         self.db.execute("""DELETE * FROM `related_problem` WHERE `nid` = %s""", nid)
     def delete_related_problem_by_pid(self, pid):
         self.db.execute("""DELETE * FROM `related_problem` WHERE `pid` = %s""", pid)
+
+class Submit(BaseDBObject):
+    id = ""
+    problem_id = 0
+    member_id = 0
+    status = 0  # wrong answer = 0, accepted = 1, Time Limit Exceeded = 2, Memory Limit Exceeded = 3, Runtime Error = 4, Comiple Error = 5
+    testpoint = ""
+    score = 0
+    costtime = 0   # ms
+    costmemory = 0 # kb
+    lang = 0 # 
+
+class SubmitDBMixin(object):
+    def _new_submit_by_row(row):
+        if row:
+            submit = Submit()
+            submit._init_row(row)
+            return [submit]
+        return []
+    def select_submit_desc(self, start = 0, max = 20):
+        rows = self.db.query("""SELECT `submit`.*, `problem`.`title`, `member`.`username`
+                                FROM `submit` 
+                                LEFT JOIN `member` ON `submit`.`member_id` = `member`.`id`
+                                LEFT JOIN `problem` ON `submit`.`problem_id` = `problem`.`id`
+                                ORDER BY `id` DESC LIMIT %s, %s""", start, max)
+    def select_submit_by_member_id_desc(self, mid, start = 0, max = 20):
+        rows = self.db.query("""SELECT * FROM `submit` WHERE `member_id` = %s ORDER BY `id` DESC LIMIT %s, %s""", mid, start, max)
+        result = []
+        if rows:
+            for row in rows:
+                result.extend(self._new_submit_by_row(row))
+        return result
+    def select_submit_by_problem_id_desc(self, pid, start = 0, max = 20):
+        rows = self.db.query("""SELECT * FROM `submit` WHERE `problem_id` = %s ORDER BY `id` DESC LIMIT %s, %s""", pid, start, max)
+        result = []
+        if rows:
+            for row in rows:
+                result.extend(self._new_submit_by_row(row))
+        return result

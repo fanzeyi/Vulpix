@@ -41,6 +41,7 @@ from member import ChangePasswordHandler
 from member import ForgetPasswordHandler
 from problem import ProblemHandler
 from problem import ProblemListHandler
+from problem import SubmitListHandler
 from backstage import BackstageHandler
 from backstage import AddProblemHandler
 from backstage import CreateNodeHandler
@@ -72,6 +73,7 @@ class Application(tornado.web.Application):
             (r'/lang/(.*)', SetLangeuageHandler), 
             (r'/problem/([\d]*)', ProblemHandler), 
             (r'/problem', ProblemListHandler), 
+            (r'/submit', SubmitListHandler), 
             (r'/note/create', CreateNoteHandler), 
             (r'/note/([\d]*)', NoteHandler), 
             (r'/note/([\d]*)/remove', DeleteNoteHandler), 

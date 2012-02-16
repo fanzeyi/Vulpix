@@ -2,7 +2,9 @@
 
 from tornado.web import HTTPError
 
+from judge import Submit
 from judge import Problem
+from judge import SubmitDBMixin
 from judge import ProblemDBMixin
 from judge import RelatedProblemDBMixin
 from judge.base import BaseHandler
@@ -34,3 +36,13 @@ class ProblemListHandler(BaseHandler, ProblemDBMixin):
         breadcrumb.append((self._('Problem'), '/problem'))
         title = self._("Problems")
         self.render("problem_list.html", locals())
+
+class SubmitListHandler(BaseHandler, SubmitDBMixin):
+    def get(self):
+        start = self.get_argument("start", default = 0)
+        submits = self.select_submit_desc(start = start)
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self._('Submit'), '/submit'))
+        title = self._("Submit")
+        self.render("submit.html", locals())
