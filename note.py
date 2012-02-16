@@ -60,8 +60,8 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin, ProblemDBMixin, RelatedProblem
         link_problem = self.get_arguments("link_problem[]")
         note = Note()
         error = []
-        error.extend(self._check_text_value(notetitle, "Note Title", True, 100))
-        error.extend(self._check_text_value(content, "Content", True, 30000))
+        error.extend(self._check_text_value(notetitle, self._("Note Title"), True, 100))
+        error.extend(self._check_text_value(content, self._("Content"), True, 30000))
         note.title = self.xhtml_escape(notetitle)
         note.content = self.xhtml_escape(content)
         note.link_problem = [self.xhtml_escape(problem) for problem in link_problem]

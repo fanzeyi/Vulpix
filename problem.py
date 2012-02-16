@@ -34,7 +34,7 @@ class ProblemListHandler(BaseHandler, ProblemDBMixin):
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((self._('Problem'), '/problem'))
-        title = self._("Problems")
+        title = self._("Problem")
         self.render("problem_list.html", locals())
 
 class SubmitListHandler(BaseHandler, SubmitDBMixin):

@@ -6,70 +6,181 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: 0.0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-11 15:08+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2012-02-17 01:04+0800\n"
+"PO-Revision-Date: 2012-02-17 01:04+0800\n"
+"Last-Translator: Zeray Rice <fanzeyi1994@gmail.com>\n"
+"Language-Team: Zeray Rice <fanzeyi1994@gmail.com>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: main.py:39 tpl/header.html:12 tpl/header.html:14
+#: backstage.py:28 tpl/header.html:98
+msgid "Backstage"
+msgstr "后台"
+
+#: backstage.py:34 backstage.py:73 tpl/header.html:103
+#: tpl/backstage/index.html:3 tpl/backstage/problem_add.html:13
+msgid "Add Problem"
+msgstr "添加题目"
+
+#: backstage.py:55 forum.py:75 tpl/node.html:45 tpl/note_create.html:18
+#: tpl/topic_create.html:18 tpl/home.html:35 tpl/problem_list.html:6
+#: tpl/backstage/problem_add.html:18 tpl/backstage/node_create.html:18
+msgid "Title"
+msgstr "标题"
+
+#: backstage.py:56 tpl/home.html:36 tpl/problem_list.html:7
+#: tpl/backstage/problem_add.html:24
+msgid "Short Name"
+msgstr "英文名"
+
+#: backstage.py:57 note.py:64 forum.py:76 tpl/node.html:51
+#: tpl/note_create.html:24 tpl/topic_create.html:24
+#: tpl/backstage/problem_add.html:48 tpl/problem.html:47
+msgid "Content"
+msgstr "内容"
+
+#: backstage.py:58 tpl/backstage/problem_add.html:54 tpl/problem.html:53
+msgid "Input Format"
+msgstr "输入格式"
+
+#: backstage.py:59 tpl/backstage/problem_add.html:66 tpl/problem.html:59
+msgid "Output Format"
+msgstr "输出格式"
+
+#: backstage.py:60 tpl/problem.html:65
+msgid "Sample Input"
+msgstr "样例输入"
+
+#: backstage.py:61 tpl/problem.html:71
+msgid "Sample Output"
+msgstr "样例输出"
+
+#: backstage.py:86 backstage.py:109 tpl/header.html:109
+#: tpl/backstage/node_create.html:13
+msgid "Add Node"
+msgstr "添加节点"
+
+#: backstage.py:91 backstage.py:111
+msgid "Edit Node"
+msgstr "编辑节点"
+
+#: backstage.py:101
+msgid "Node Name"
+msgstr "节点名称"
+
+#: backstage.py:102
+msgid "Node Description"
+msgstr "节点描述"
+
+#: backstage.py:103
+msgid "Node Link"
+msgstr "节点链接"
+
+#: note.py:26 note.py:42 note.py:71 note.py:116 problem.py:21 problem.py:35
+#: problem.py:45 member.py:151 member.py:214 member.py:276 home.py:14
+#: home.py:16 forum.py:18 forum.py:27 forum.py:50 forum.py:82 forum.py:111
+#: forum.py:133 tpl/header.html:44
 msgid "Home"
 msgstr "首页"
 
-#: member.py:23 member.py:49
+#: note.py:28 note.py:44 note.py:73 note.py:118
+msgid "Note"
+msgstr "笔记"
+
+#: note.py:49 note.py:76 note.py:77 tpl/note_create.html:14
+msgid "Edit Note"
+msgstr "编辑笔记"
+
+#: note.py:52 note.py:53 note.py:79 note.py:80 tpl/note_create.html:14
+#: tpl/member_note.html:4
+msgid "Write Note"
+msgstr "写新笔记"
+
+#: note.py:63
+msgid "Note Title"
+msgstr "笔记标题"
+
+#: note.py:121
+msgid "'s Note"
+msgstr "的笔记"
+
+#: judge/base/__init__.py:42
+#, python-format
+msgid "%s is too long."
+msgstr "%s 太长了。"
+
+#: judge/base/__init__.py:45
+#, python-format
+msgid "%s is Required!"
+msgstr "请填写 %s"
+
+#: problem.py:22 problem.py:24 problem.py:36 tpl/header.html:50
+#: tpl/submit.html:8
+msgid "Problem"
+msgstr "题目"
+
+#: problem.py:46 problem.py:47 tpl/node.html:57 tpl/note_create.html:48
+#: tpl/topic_create.html:31 tpl/header.html:62
+#: tpl/backstage/problem_add.html:78 tpl/backstage/node_create.html:38
+#: tpl/topic.html:80 tpl/problem.html:98
+msgid "Submit"
+msgstr "提交"
+
+#: member.py:30 member.py:54 tpl/signup.html:47 tpl/header.html:117
+#: tpl/signin.html:40
 msgid "Sign In"
 msgstr "登录"
 
-#: member.py:34 member.py:45
+#: member.py:41 member.py:50
 msgid "Wrong Username and password combination."
-msgstr "用户名或密码错误。"
+msgstr "用户名密码错误。"
 
-#: member.py:47
+#: member.py:52 member.py:299
 msgid "A username can only contain letters and digits."
-msgstr "用户名只能包含数字或英文字母。"
+msgstr "用户名只能由数字和字母组成。"
 
-#: member.py:68 member.py:118
+#: member.py:73 member.py:119 tpl/signup.html:44 tpl/header.html:123
+#: tpl/signin.html:43
 msgid "Sign Up"
 msgstr "注册"
 
-#: member.py:79
+#: member.py:84
 msgid "A username should be between 3 and 15 characters long."
-msgstr "用户名长度不能超过15个字符或低于3个字符。"
+msgstr "用户名长度只能在3和15之间。"
 
-#: member.py:88
+#: member.py:91
 msgid "That username is taken. Please choose another."
-msgstr "用户名已经被注册过了。"
+msgstr "用户名已被占用，请选择其他的。"
 
-#: member.py:92
+#: member.py:95 member.py:301
 msgid "A username is required!"
-msgstr "请填写你的用户名。"
+msgstr "请填写用户名。"
 
-#: member.py:95 member.py:219 member.py:232
+#: member.py:98 member.py:238 member.py:249 member.py:366
 msgid "A password should be between 6 and 32 characters long."
-msgstr "密码长度不能超过32个字符或低于6个字符。"
+msgstr "密码长度只能在6和32之间。"
 
-#: member.py:99
+#: member.py:102
 msgid "A password is required!"
-msgstr "请填写你的密码。"
+msgstr "请填写密码。"
 
-#: member.py:102 member.py:164
+#: member.py:105 member.py:166
 msgid "Email address cannot be longer than 100 characters long."
-msgstr "邮箱地址长度不能超过100个字符。"
+msgstr "Email地址不能超过100个字符。"
 
-#: member.py:114 member.py:176
+#: member.py:115 member.py:176 member.py:309
 msgid "Your Email address is invalid."
-msgstr "你的邮箱地址不合法。"
+msgstr "Email地址不合法。"
 
-#: member.py:116 member.py:178
+#: member.py:117 member.py:178 member.py:311
 msgid "Email Address is required!"
-msgstr "请填写你的邮箱地址。"
+msgstr "请填写Email地址。"
 
-#: member.py:149 member.py:198 tpl/header.html:12
+#: member.py:145 member.py:153 member.py:212 member.py:216 tpl/header.html:87
 msgid "Settings"
 msgstr "设置"
 
@@ -79,73 +190,306 @@ msgstr "签名长度不能超过70个字符。"
 
 #: member.py:186
 msgid "Website address cannot be longer than 200 characters long."
-msgstr "网站地址长度不能超过200个字符。"
+msgstr "网站地址不能超过200个字符。"
 
 #: member.py:191
 msgid "Website address is invalid."
 msgstr "网站地址不合法。"
 
-#: member.py:194
-msgid "Bio cannot be longer than 2000 characters long."
-msgstr "个人介绍长度不能超过2000个字符。"
+#: member.py:201 member.py:203
+msgid "Wrong Language select."
+msgstr "错误的语言选择。"
 
-#: member.py:227
+#: member.py:206
+msgid "Bio cannot be longer than 2000 characters long."
+msgstr "自我介绍不能超过200个字符。"
+
+#: member.py:244
 msgid "Wrong password."
 msgstr "错误的密码。"
 
-#: member.py:229
+#: member.py:246
 msgid "Current password is required."
-msgstr "请输入你的当前密码。"
+msgstr "请输入旧密码。"
 
-#: member.py:236
+#: member.py:253
 msgid "New password is required."
-msgstr "请输入你的新密码。"
+msgstr "请输入更改的新密码。"
 
-#: member.py:238 tpl/settings_changepass.html:9 tpl/settings.html:21
+#: member.py:255 tpl/settings_changepass.html:13
+#: tpl/settings_changepass.html:29 tpl/settings.html:71
 msgid "Change Password"
 msgstr "修改密码"
 
-#: tpl/member.html:2 tpl/signup.html:11 tpl/settings.html:14
-#: tpl/signin.html:11
-msgid "Username"
-msgstr "用户名"
+#: member.py:284 member.py:319
+msgid "Forget Password"
+msgstr "忘记密码"
 
-#: tpl/member.html:3 tpl/settings.html:16
-msgid "Website"
-msgstr "网站"
+#: member.py:297
+msgid "Sorry, We couldn't find you."
+msgstr "对不起，这个用户名不存在。"
 
-#: tpl/member.html:4 tpl/settings.html:17
-msgid "Tagline"
-msgstr "签名"
+#: member.py:307
+msgid "Wrong Username and Email combination."
+msgstr "用户名或Email错误"
 
-#: tpl/member.html:5 tpl/settings.html:18
-msgid "Bio"
-msgstr "个人介绍"
+#: member.py:317
+msgid "You can only request one reset mail in a day."
+msgstr "你一天只能请求一封密码恢复邮件。"
 
-#: tpl/signup.html:12 tpl/signin.html:12
-msgid "Password"
-msgstr "密码"
+#: member.py:345 member.py:370 tpl/reset.html:14
+msgid "Reset Password"
+msgstr "重设密码"
 
-#: tpl/signup.html:13 tpl/settings.html:15
-msgid "Email"
-msgstr "邮箱"
+#: member.py:363
+msgid "Two passwords do not match."
+msgstr "两项密码不相同。"
 
-#: tpl/settings_changepass.html:12 tpl/settings.html:24
+#: forum.py:16 forum.py:19 forum.py:28 forum.py:51 forum.py:83 forum.py:112
+#: forum.py:134 tpl/header.html:68
+msgid "Forum"
+msgstr "讨论"
+
+#: forum.py:53 forum.py:54 forum.py:85 forum.py:86 tpl/topic_create.html:14
+msgid "Create Topic"
+msgstr "创建新主题"
+
+#: forum.py:56 forum.py:88 tpl/topic_create.html:14
+msgid "Edit Topic"
+msgstr "编辑主题"
+
+#: forum.py:126
+msgid "Reply"
+msgstr "回复"
+
+#: tpl/node.html:5 tpl/node.html:41
+msgid "Create New Topic"
+msgstr "创建新主题"
+
+#: tpl/node.html:33 tpl/forum.html:28
+msgid "oooops. There have no more topic."
+msgstr "杯具了，这里没有更多的主题显示了。"
+
+#: tpl/node.html:33
+msgid "Create"
+msgstr "创建"
+
+#: tpl/member.html:14
+msgid "ID:"
+msgstr "ID:"
+
+#: tpl/member.html:14
+msgid "Joined at"
+msgstr "加入于"
+
+#: tpl/member.html:26
+msgid "User Notes"
+msgstr "笔记"
+
+#: tpl/note_create.html:30 tpl/note.html:5
+msgid "Related Problem"
+msgstr "相关题目"
+
+#: tpl/note_create.html:33
+msgid "Add"
+msgstr "增加"
+
+#: tpl/forum.html:35
+msgid "Nodes"
+msgstr "节点"
+
+#: tpl/home.html:4
+msgid "Notice"
+msgstr "公告"
+
+#: tpl/home.html:11
+msgid "Site Count"
+msgstr "运行状态"
+
+#: tpl/home.html:14
+msgid "Total Problems"
+msgstr "题目总数"
+
+#: tpl/home.html:18
+msgid "Total Nodes"
+msgstr "节点总数"
+
+#: tpl/home.html:22
+msgid "Total Topics"
+msgstr "主题总数"
+
+#: tpl/home.html:30
+msgid "Latest Problem"
+msgstr "最新题目"
+
+#: tpl/home.html:53
+msgid "Latest Discuss"
+msgstr "最新讨论"
+
+#: tpl/settings_changepass.html:17 tpl/settings.html:75
 msgid "Current Password"
 msgstr "当前密码"
 
-#: tpl/settings_changepass.html:13 tpl/settings.html:25
+#: tpl/settings_changepass.html:23 tpl/settings.html:81 tpl/reset.html:16
 msgid "New Password"
 msgstr "新密码"
 
-#: tpl/header.html:12
+#: tpl/header.html:56
+msgid "Contest"
+msgstr "比赛"
+
+#: tpl/header.html:74
+msgid "List"
+msgstr "列表"
+
+#: tpl/header.html:81
+msgid "Notes"
+msgstr "笔记"
+
+#: tpl/header.html:93
 msgid "Sign Out"
 msgstr "登出"
 
-#: tpl/header.html:14
-msgid "Sign in"
-msgstr "登入"
+#: tpl/header.html:130
+msgid "Help"
+msgstr "帮助"
 
-#: tpl/header.html:14
-msgid "Sign up"
-msgstr "注册"
+#: tpl/submit.html:6
+msgid "Status"
+msgstr "状态"
+
+#: tpl/submit.html:7
+msgid "Test Point"
+msgstr "测试点"
+
+#: tpl/submit.html:9
+msgid "User"
+msgstr "用户"
+
+#: tpl/submit.html:10
+msgid "Score"
+msgstr "成绩"
+
+#: tpl/submit.html:11
+msgid "Time"
+msgstr "耗时"
+
+#: tpl/submit.html:12
+msgid "Memory"
+msgstr "内存"
+
+#: tpl/backstage/problem_add.html:30
+msgid "Time Limit"
+msgstr "时间限制"
+
+#: tpl/backstage/problem_add.html:39
+msgid "Memory Limit"
+msgstr "内存限制"
+
+#: tpl/backstage/problem_add.html:60
+msgid "Input Sample"
+msgstr "样例输入"
+
+#: tpl/backstage/problem_add.html:72
+msgid "Output Sample"
+msgstr "样例输出"
+
+#: tpl/backstage/node_create.html:24
+msgid "Link"
+msgstr "链接"
+
+#: tpl/backstage/node_create.html:30
+msgid "Description"
+msgstr "描述"
+
+#: tpl/forget.html:11
+msgid "Username"
+msgstr "用户名"
+
+#: tpl/forget.html:12 tpl/settings.html:23
+msgid "Email"
+msgstr ""
+
+#: tpl/settings.html:19
+msgid "Basic Settings"
+msgstr "基本设置"
+
+#: tpl/settings.html:29
+msgid "Website"
+msgstr "网站"
+
+#: tpl/settings.html:35
+msgid "Tagline"
+msgstr "签名"
+
+#: tpl/settings.html:41
+msgid "Code Language"
+msgstr "编程语言"
+
+#: tpl/settings.html:59
+msgid "Bio"
+msgstr "自我介绍"
+
+#: tpl/settings.html:65
+msgid "Save Changes"
+msgstr "保存设置"
+
+#: tpl/settings.html:87
+msgid "Change Passowrd"
+msgstr "更改密码"
+
+#: tpl/note.html:14 tpl/problem.html:31
+msgid "Edit"
+msgstr "编辑"
+
+#: tpl/note.html:14
+msgid "Delete"
+msgstr "删除"
+
+#: tpl/member_note.html:9
+msgid "There are empty now. <a href=\"/note/create\">Add</a> something here."
+msgstr "这里什么还没有。 <a href=\"/note/create\">添加</a>点什么吧。"
+
+#: tpl/member_note.html:20
+msgid "More.."
+msgstr "更多.."
+
+#: tpl/topic.html:53
+msgid "No Reply Yet"
+msgstr "还没有回复"
+
+#: tpl/topic.html:71
+msgid "Add Reply"
+msgstr "回复"
+
+#: tpl/reset.html:3
+msgid "You have reseted your password successfully."
+msgstr "修改密码成功。"
+
+#: tpl/reset.html:4
+msgid "Sign in Now"
+msgstr "现在就登入。"
+
+#: tpl/reset.html:17
+msgid "Repeat Password"
+msgstr "重复密码"
+
+#: tpl/problem.html:5
+msgid "Meta"
+msgstr "信息"
+
+#: tpl/problem.html:38
+msgid "Related Notes"
+msgstr "相关笔记"
+
+#: tpl/problem.html:80
+msgid "Submit Problem"
+msgstr "提交题目"
+
+#: tpl/problem.html:83
+msgid "Code File"
+msgstr "代码文件"
+
+#: tpl/problem.html:89
+msgid "Language"
+msgstr "编程语言"

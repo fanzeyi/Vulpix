@@ -72,8 +72,8 @@ class TopicCreateHandler(BaseHandler, NodeDBMixin, TopicDBMixin):
             content = self.get_argument("content", default = None)
             topic = Topic()
             error = []
-            error.extend(self._check_text_value(title, "Title", True, max = 200))
-            error.extend(self._check_text_value(content, "Content", True, max = 4000))
+            error.extend(self._check_text_value(title, self._("Title"), True, max = 200))
+            error.extend(self._check_text_value(content, self._("Content"), True, max = 4000))
             topic.title = self.xhtml_escape(title)
             topic.content = self.xhtml_escape(content)
             topic.id = tid
