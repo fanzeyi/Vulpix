@@ -1,8 +1,15 @@
 {% include 'header.html' %}
 <div class="cell sidebar nopadding problem_sidebar">
+    <div class="module_title">
+        {{ _('Meta') }}
+    </div>
 <table class="problemmeta">
 <tr>
-    <td style="width:40%">Title</td>
+    <td style="width:40%">ID</td>
+    <td>{{ problem.id }}</td>
+</tr>
+<tr>
+    <td>Title</td>
     <td>{{ problem.title }}</td>
 </tr>
 <tr>
@@ -18,59 +25,68 @@
     <td>{{ problem.memlimit }}MB</td>
 </tr>
 </table>
+{% if user.admin %}
+<div class="line">
+<a href="/backstage/problem/add?pid={{ problem.id }}">{{ _('Edit') }}</a>
+</div>
+{% endif %}
 </div>
 <div class="cell problem nopadding">
-    <div class="line">
-        {% if user.admin %}
-        <div class="meta"><a href="/backstage/problem/add?pid={{ problem.id }}">{{ _('Edit') }}</a></div>
-        {% endif %}
-        <span class="num">#{{ problem.id }}</span>
+    <div class="module_title">
+        {{ _('Content') }}
     </div>
-<!--    <table class="table">
-        <tr>
-            <td>{{ _('Title') }}</td>
-            <td>{{ problem.title }}</td>
-        </tr>
-        <tr>
-            <td>{{ _('Short Name') }}</td>
-            <td>{{ problem.shortname }}</td>
-        </tr>
-        <tr>
-            <td>{{ _('Time Limit') }}</td>
-            <td>{{ problem.timelimit }} ms</td>
-        </tr>
-        <tr>
-            <td>{{ _('Memory Limit') }}</td>
-            <td>{{ problem.memlimit }} MB</td>
-        </tr>
-    </table>-->
     <div class="line">
         {{ problem.content_html }}
     </div>
-    <table class="table">
-        <tr>
-            <td>{{ _('Input Format') }}</td>
-            <td>{{ problem.inputfmt }}</td>
-        </tr>
-        <tr>
-            <td>{{ _('Input Sample') }}</td>
-            <td><pre>{{ problem.samplein }}</pre></td>
-        </tr>
-        <tr>
-            <td>{{ _('Output Format') }}</td>
-            <td>{{ problem.outputfmt }}</td>
-        </tr>
-        <tr>
-            <td>{{ _('Output Sample') }}</td>
-            <td><pre>{{ problem.sampleout }}</pre></td>
-        </tr>
-    </table>
-    {% if user %}
-    <div class="line last">
-        <form method="POST" action="/compile" class="clean">
-<!--            <input type="file" name="file" id="file" />-->
-        </form>
+    <div class="module_title">
+        {{ _('Input Format') }}
     </div>
-    {% endif %}
+    <div class="line">
+        {{ problem.inputfmt }}
+    </div>
+    <div class="module_title">
+        {{ _('Output Format') }}
+    </div>
+    <div class="line">
+        {{ problem.outputfmt }}
+    </div>
+    <div class="module_title">
+        {{ _('Sample Input') }}
+    </div>
+    <div class="line">
+        <pre>{{ problem.samplein }}</pre>
+    </div>
+    <div class="module_title">
+        {{ _('Sample Output') }}
+    </div>
+    <div class="line">
+        <pre>{{ problem.sampleout }}</pre>
+    </div>
 </div>
+{% if user %}
+<form class="form-horizontal problem">
+    <fieldset>
+        <legend>{{ _('Submit Problem') }}</legend>
+        <div class="sep30"></div>
+        <div class="control-group">
+            <label class="control-label" for="codefile">{{ _('Code File') }}</label>
+            <div class="controls">
+                <input name="codefile" type="file" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="lang">{{ _('Language') }}</label>
+            <input type="hidden" name="lang" value="{{ user.lang }}"/>
+            <div class="controls btn-group" id="lang_select">
+                <a href="#" id="pascal" class="btn{% if user.lang == 1 %} btn-success{% endif %}">Pascal</a>
+                <a href="#" id="c" class="btn{% if user.lang == 2 %} btn-success{% endif %}">C</a>
+                <a href="#" id="cpp" class="btn{% if user.lang == 3 %} btn-success{% endif %}">C++</a>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit"  class="btn btn-primary">{{ _('Submit') }}</button>
+        </div>
+    </fieldset>
+</form>
+{% endif %}
 {% include 'footer.html' %}

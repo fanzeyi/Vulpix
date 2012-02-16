@@ -20,6 +20,7 @@ form .form-actions {
 
 form fieldset legend {
     padding-left: 20px; 
+    margin-bottom: 0px; 
 }
 
 form.clean {
@@ -351,6 +352,19 @@ nav .copyright a:hover {
     margin-bottom: 30px; 
 }
 
+.cell.problem .line {
+    padding-left: 20px; 
+    padding-bottom: 10px; 
+}
+
+.cell.problem pre {
+    min-height: 50px; 
+}
+
+.cell.problem .line:last-child {
+    border-bottom: none; 
+}
+
 .cell .line {
     font-size: 14px; 
     line-height: 24px; 
@@ -421,7 +435,7 @@ nav .copyright a:hover {
 }
 
 .problemmeta tr:last-child td {
-    border-bottom: none; 
+    border-bottom: 1px solid #DDD; 
 }
 
 .codehilitetable tr td {
