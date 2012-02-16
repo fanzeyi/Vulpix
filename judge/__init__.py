@@ -434,3 +434,41 @@ class ReplyDBMixin(object):
         self.db.execute("""INSERT INTO `reply` (`content`, `member_id`, `topic_id`, `create`)
                                   VALUES (%s, %s, %s, UTC_TIMESTAMP())""", reply.content, reply.member_id, reply.topic_id)
 
+
+class RelatedProblem(BaseDBObject):
+    pid = 0
+    nid = 0
+
+class RelatedProblemDBMixin(object):
+    def _new_related_problem_by_row(self, row):
+        if row:
+            related_problem = RelatedProblem()
+            related_problem._init_row(row)
+            return [related_problem]
+        return []
+    def select_related_problem_by_pid(self, pid, start = 0, max = 5):
+        rows = self.db.query("""SELECT `related_problem`.*, `note`.`title`, `note`.`content`, `note`.`member_id`, `member`.`username`
+                                FROM `related_problem` 
+                                LEFT JOIN `note` ON `related_problem`.`nid` = `note`.`id`
+                                LEFT JOIN `member` ON `note`.`member_id` = `member`.`id`
+                                WHERE `pid` = %s LIMIT %s, %s""", pid, start, max)
+        result = []
+        for row in rows:
+            result.extend(self._new_related_problem_by_row(row))
+        return result
+    def select_related_problem_by_nid(self, nid, start = 0, max = 20):
+        rows = self.db.query("""SELECT `related_problem`.*, `problem`.`title`
+                                FROM `related_problem`
+                                LEFT JOIN `problem` ON `related_problem`.`pid` = `problem`.`id`
+                                WHERE `nid` = %s LIMIT %s, %s""", nid, start, max)
+        result = []
+        for row in rows:
+            result.extend(self._new_related_problem_by_row(row))
+        return result
+    def insert_related_problem(self, related_problem):
+        self.db.execute("""INSERT INTO `related_problem` (`pid`, `nid`) VALUES (%s, %s)""", \
+                        related_problem.pid, related_problem.nid)
+    def delete_related_problem_by_nid(self, nid):
+        self.db.execute("""DELETE * FROM `related_problem` WHERE `nid` = %s""", nid)
+    def delete_related_problem_by_pid(self, pid):
+        self.db.execute("""DELETE * FROM `related_problem` WHERE `pid` = %s""", pid)

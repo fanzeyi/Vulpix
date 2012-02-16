@@ -5,7 +5,7 @@
         {{ _('Related Problem') }}
     </div>
     {% for problem in related_problem %}
-    <div class="line"><a href="/problem/{{ problem.id }}">{{ problem.title }}</a></div>
+    <div class="line"><a href="/problem/{{ problem.pid }}">{{ problem.title }}</a></div>
     {% endfor %}
 </div>
 {% endif %}

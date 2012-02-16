@@ -1,5 +1,6 @@
 {% include 'header.html' %}
-<div class="cell sidebar nopadding problem_sidebar">
+<div class="sidebar">
+<div class="cell nopadding problem_sidebar">
     <div class="module_title">
         {{ _('Meta') }}
     </div>
@@ -28,6 +29,16 @@
 {% if user.admin %}
 <div class="line">
 <a href="/backstage/problem/add?pid={{ problem.id }}">{{ _('Edit') }}</a>
+</div>
+{% endif %}
+</div>
+<div class="sep30"></div>
+{% if related_note %}
+<div class="cell nopadding">
+    <div class="module_title">{{ _('Related Notes') }}</div>
+    {% for note in related_note %}
+    <div class="line"><a href="/note/{{ note.nid }}">{{ note.title }}</a></div>
+    {% endfor %}
 </div>
 {% endif %}
 </div>

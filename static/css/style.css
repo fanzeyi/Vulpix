@@ -411,10 +411,6 @@ nav .copyright a:hover {
     border-bottom: none; 
 }
 
-.problem_sidebar {
-    width: 30%;
-}
-
 .problem_sidebar .problemmeta{
     width: 100%;
 }

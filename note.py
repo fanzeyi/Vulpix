@@ -4,13 +4,15 @@ from tornado.web import HTTPError
 from tornado.web import authenticated
 
 from judge import Note
+from judge import RelatedProblem
 from judge import NoteDBMixin
 from judge import MemberDBMixin
 from judge import ProblemDBMixin
+from judge import RelatedProblemDBMixin
 from judge.base import BaseHandler
 from judge.utils import escape
 
-class NoteHandler(BaseHandler, NoteDBMixin, MemberDBMixin, ProblemDBMixin):
+class NoteHandler(BaseHandler, NoteDBMixin, MemberDBMixin, RelatedProblemDBMixin):
     def get(self, nid):
         try:
             nid = int(nid)
@@ -25,15 +27,12 @@ class NoteHandler(BaseHandler, NoteDBMixin, MemberDBMixin, ProblemDBMixin):
             breadcrumb.append((member.username, '/member/%s' % member.username))
             breadcrumb.append((self._('Note'), '/member/%s/notes' % member.username))
             breadcrumb.append((note.title, '/note/%d' % note.id))
-            related_problem = []
-            if note.link_problem:
-                for pid in note.link_problem:
-                    related_problem.append(self.select_problem_by_id(pid))
+            related_problem = self.select_related_problem_by_nid(note.id)
             self.render("note.html", locals())
         else:
             raise HTTPError(404)
 
-class CreateNoteHandler(BaseHandler, NoteDBMixin):
+class CreateNoteHandler(BaseHandler, NoteDBMixin, ProblemDBMixin, RelatedProblemDBMixin):
     @authenticated
     def get(self):
         nid = self.get_argument("nid", default = None)
@@ -48,6 +47,7 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin):
             if note.member_id != self.current_user['id']:
                 raise HTTPError(403)
             breadcrumb.append((self._('Edit Note'), '/note/create?nid=%s' % nid))
+            related_problem = self.select_related_problem_by_nid(nid)
         else:
             breadcrumb.append((self._('Write Note'), '/note/create'))
         title = self._("Write Note")
@@ -78,6 +78,9 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin):
             else:
                 title = self._("Write Note")
                 breadcrumb.append((self._('Write Note'), '/note/create'))
+            related_problem = []
+            for pid in note.link_problem:
+                related_problem.append(self.select_problem_by_id(pid))
             self.render("note_create.html", locals())
             return
         note.member_id = self.current_user['id']
@@ -85,6 +88,11 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin):
             self.update_note(note)
         else:
             self.insert_note(note)
+        for pid in note.link_problem:
+            related = RelatedProblem()
+            related.pid = pid
+            related.nid = note.id
+            self.insert_related_problem(related)
         self.redirect("/note/%d" % note.id)
 
 class DeleteNoteHandler(BaseHandler, NoteDBMixin):
