@@ -6,10 +6,11 @@ from tornado.web import authenticated
 from judge import Note
 from judge import NoteDBMixin
 from judge import MemberDBMixin
+from judge import ProblemDBMixin
 from judge.base import BaseHandler
 from judge.utils import escape
 
-class NoteHandler(BaseHandler, NoteDBMixin, MemberDBMixin):
+class NoteHandler(BaseHandler, NoteDBMixin, MemberDBMixin, ProblemDBMixin):
     def get(self, nid):
         try:
             nid = int(nid)
@@ -24,6 +25,10 @@ class NoteHandler(BaseHandler, NoteDBMixin, MemberDBMixin):
             breadcrumb.append((member.username, '/member/%s' % member.username))
             breadcrumb.append((self._('Note'), '/member/%s/notes' % member.username))
             breadcrumb.append((note.title, '/note/%d' % note.id))
+            related_problem = []
+            if note.link_problem:
+                for pid in note.link_problem:
+                    related_problem.append(self.select_problem_by_id(pid))
             self.render("note.html", locals())
         else:
             raise HTTPError(404)
@@ -33,6 +38,7 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin):
     def get(self):
         nid = self.get_argument("nid", default = None)
         note = None
+        note_page = True
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((self.current_user.username, '/member/%s' % self.current_user.username))
@@ -65,6 +71,7 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin):
             breadcrumb.append((self._('Home'), '/'))
             breadcrumb.append((self.current_user.username, '/member/%s' % self.current_user.username))
             breadcrumb.append((self._('Note'), '/member/%s/notes' % self.current_user.username))
+            note_page = True
             if note.id:
                 title = self._("Edit Note")
                 breadcrumb.append((self._('Edit Note'), '/note/create?nid=%s' % nid))

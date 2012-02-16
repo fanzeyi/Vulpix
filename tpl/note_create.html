@@ -9,7 +9,7 @@
     </ul>
 </div>
 {% endif %}
-<form method="POST" action="" class="form-horizontal">
+<form method="POST" action="" class="form-horizontal new_note">
 <fieldset>
     <legend>{% if note.nid %}{{ _('Edit Note') }}{% else %}{{ _('Write Note') }}{% endif %}</legend>
     <div class="sep30"></div>
@@ -30,6 +30,9 @@
         <label class="control-label" for="related_problem">{{ _('Related Problem') }}</label>
         <div class="controls">
             <input type="text" name="related_problem"  class="input-xlarge" id="related_problem" />
+            <a href="#" class="btn" id="related_problem_submit">{{ _('Add') }}</a>
+            <ul id="related_problem_list">
+            </ul>
         </div>
     </div>
     <input type="hidden" name="nid" value="{% if note.id %}{{ note.id }}{% endif %}" />

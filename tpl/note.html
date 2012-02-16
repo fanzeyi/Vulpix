@@ -1,9 +1,12 @@
 {% include 'header.html' %}
-{% if note.link_problem or true %}
+{% if related_problem %}
 <div class="sidebar cell nopadding">
     <div class="module_title">
         {{ _('Related Problem') }}
     </div>
+    {% for problem in related_problem %}
+    <div class="line"><a href="/problem/{{ problem.id }}">{{ problem.title }}</a></div>
+    {% endfor %}
 </div>
 {% endif %}
 <div class="note cell">

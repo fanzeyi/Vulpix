@@ -20,8 +20,8 @@
 </div>
 </div>
 <div class="sep30"></div>
-<div class="cell sidebar member_notes nopadding">
 {% if notes %}
+<div class="cell sidebar member_notes nopadding">
 <div class="module_title">
 {{ _('User Notes') }}
 </div>
@@ -32,10 +32,8 @@
 </li>
 {% endfor %}
 </ul>
-{% else %}
-{{ _('This user haven\'t write any note.') }}
-{% endif %}
 </div>
+{% endif %}
 <div class="cell member_bio nopadding">
 <div class="module_title">
 Bio
