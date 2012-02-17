@@ -181,6 +181,7 @@ class Problem(BaseDBObject):
     sampleout = ""
     timelimit = 1000
     memlimit = 128
+    testpointnum = 0
     tags = ""
     create = None
 
@@ -193,11 +194,11 @@ class ProblemDBMixin(object):
         return []
     def insert_problem(self, problem):
         pid = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, `content_html`, \
-                                 `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `timelimit`, `memlimit`, `create`) \
-                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
+                                 `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `timelimit`, `memlimit`, `testpoint`, `create`) \
+                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
                               , problem.title, problem.shortname, problem.content, problem.content_html, \
                               problem.inputfmt, problem.outputfmt, problem.samplein, problem.sampleout, \
-                              int(problem.timelimit), int(problem.memlimit))
+                              int(problem.timelimit), int(problem.memlimit), int(problem.testpoint))
         problem.id = pid
     def update_problem(self, problem):
         self.db.execute("""UPDATE `problem` SET `title` = %s, \
@@ -209,11 +210,12 @@ class ProblemDBMixin(object):
                                                 `samplein` = %s, \
                                                 `sampleout` = %s, \
                                                 `timelimit` = %s, \
-                                                `memlimit` = %s \
+                                                `memlimit` = %s, \
+                                                `testpoint` = %s 
                                             WHERE `id` = %s""", \
                            problem.title, problem.shortname, problem.content, problem.content_html, \
                            problem.inputfmt, problem.outputfmt, problem.samplein, problem.sampleout, \
-                           int(problem.timelimit), int(problem.memlimit), problem.id)
+                           int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), problem.id)
     def count_problem(self):
         count = self.db.get("""SELECT COUNT(*) FROM `problem`""")
         return count["COUNT(*)"]
@@ -483,6 +485,9 @@ class Submit(BaseDBObject):
     costtime = 0   # ms
     costmemory = 0 # kb
     lang = 0 # 
+    user_agent = ""
+    ip = ""
+    create = None
 
 class SubmitDBMixin(object):
     def _new_submit_by_row(row):
