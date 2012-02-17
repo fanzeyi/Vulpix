@@ -479,12 +479,13 @@ class Submit(BaseDBObject):
     id = ""
     problem_id = 0
     member_id = 0
-    status = 0  # wrong answer = 0, accepted = 1, Time Limit Exceeded = 2, Memory Limit Exceeded = 3, Runtime Error = 4, Comiple Error = 5
+    status = 0  # unjudged = 0, accepted = 1, Wrong Answer = 2, Time Limit Exceeded = 3, Memory Limit Exceeded = 4, Runtime Error = 5, Comiple Error = 6
     testpoint = ""
     score = 0
     costtime = 0   # ms
     costmemory = 0 # kb
     lang = 0 # 
+    timestamp = 0
     user_agent = ""
     ip = ""
     create = None
@@ -496,6 +497,13 @@ class SubmitDBMixin(object):
             submit._init_row(row)
             return [submit]
         return []
+    def insert_submit(self, submit):
+        submit.id = self.db.execute("""INSERT INTO `submit` (`problem_id`, `member_id`, `status`, `testpoint`, 
+                                                             `score`, `costtime`, `costmemory`, `lang`, `timestamp`, 
+                                                             `user_agent`, `ip`, `create`)
+                                       VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
+                                    , submit.problem_id, submit.member_id, submit.status, submit.testpoint, submit.score, \
+                                    submit.costtime, submit.costmemory, submit.lang, submit.timestamp, submit.user_agent, submit.ip)
     def select_submit_desc(self, start = 0, max = 20):
         rows = self.db.query("""SELECT `submit`.*, `problem`.`title`, `member`.`username`
                                 FROM `submit` 

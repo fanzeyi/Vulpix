@@ -94,6 +94,7 @@ class Application(tornado.web.Application):
             'template_path' : os.path.join(os.path.dirname(__file__), 'tpl'),
             'static_path' : os.path.join(os.path.dirname(__file__), "static"),
             'i18n_path' : os.path.join(os.path.dirname(__file__), 'i18n'), 
+            'code_save_path' : '/home/fanzeyi/vulpix/code', 
             'xsrf_cookies' : True,
             'cookie_secret' : '32954k1s668c4ad48dad436vd0402905',
             'bcrypt_salt' : '$2a$04$WL.FEXqZFwMOso3dsXOwuO', 

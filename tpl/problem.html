@@ -75,10 +75,11 @@
     </div>
 </div>
 {% if user %}
-<form class="form-horizontal problem">
+<form enctype="multipart/form-data" method="POST" action="" class="form-horizontal problem">
     <fieldset>
         <legend>{{ _('Submit Problem') }}</legend>
         <div class="sep30"></div>
+        {{ page.xsrf_form_html() }}
         <div class="control-group">
             <label class="control-label" for="codefile">{{ _('Code File') }}</label>
             <div class="controls">
@@ -89,9 +90,9 @@
             <label class="control-label" for="lang">{{ _('Language') }}</label>
             <input type="hidden" name="lang" value="{{ user.lang }}"/>
             <div class="controls btn-group" id="lang_select">
-                <a href="#" id="pascal" class="btn{% if user.lang == 1 %} btn-success{% endif %}">Pascal</a>
-                <a href="#" id="c" class="btn{% if user.lang == 2 %} btn-success{% endif %}">C</a>
-                <a href="#" id="cpp" class="btn{% if user.lang == 3 %} btn-success{% endif %}">C++</a>
+                <a href="#" id="1" class="btn{% if user.lang == 1 %} btn-success{% endif %}">Pascal</a>
+                <a href="#" id="2" class="btn{% if user.lang == 2 %} btn-success{% endif %}">C</a>
+                <a href="#" id="3" class="btn{% if user.lang == 3 %} btn-success{% endif %}">C++</a>
             </div>
         </div>
         <div class="form-actions">
