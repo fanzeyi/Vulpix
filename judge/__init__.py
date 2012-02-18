@@ -479,7 +479,7 @@ class Submit(BaseDBObject):
     id = ""
     problem_id = 0
     member_id = 0
-    status = 0  # wrong answer = 0, accepted = 1, Time Limit Exceeded = 2, Memory Limit Exceeded = 3, Runtime Error = 4, Comiple Error = 5
+    status = 0 # Pending = 0, Accepted = 1, Wrong Answer = 2, Time Limit Exceeded = 3, Memory Limit Exceeded = 4, Runtime Error = 5, Comiple Error = 6
     testpoint = ""
     score = 0
     costtime = 0   # ms
@@ -490,7 +490,7 @@ class Submit(BaseDBObject):
     create = None
 
 class SubmitDBMixin(object):
-    def _new_submit_by_row(row):
+    def _new_submit_by_row(self, row):
         if row:
             submit = Submit()
             submit._init_row(row)
@@ -502,6 +502,11 @@ class SubmitDBMixin(object):
                                 LEFT JOIN `member` ON `submit`.`member_id` = `member`.`id`
                                 LEFT JOIN `problem` ON `submit`.`problem_id` = `problem`.`id`
                                 ORDER BY `id` DESC LIMIT %s, %s""", start, max)
+        result = []
+        if rows:
+            for row in rows:
+                result.extend(self._new_submit_by_row(row))
+        return result
     def select_submit_by_member_id_desc(self, mid, start = 0, max = 20):
         rows = self.db.query("""SELECT * FROM `submit` WHERE `member_id` = %s ORDER BY `id` DESC LIMIT %s, %s""", mid, start, max)
         result = []

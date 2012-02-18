@@ -17,7 +17,7 @@
         {% for submit in submits %}
         <tr>
             <td style="text-align:center">{{ submit.id }}</td>
-            <td><a href="/submit/{{ submit.id }}">{{ submit.status }}</a></td>
+            <td><a href="/submit/{{ submit.id }}">{{ submit.status | submitstatus }}</a></td>
             <td>{{ submit.testpoint }}</td>
             <td><a href="/problem/{{ submit.problem_id }}">{{ submit.title }}</a></td>
             <td><a href="/member/{{ submit.username }}">{{ submit.username }}</a></td>

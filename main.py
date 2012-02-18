@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import re
 import sys
 import markdown
 import datetime
@@ -20,6 +21,7 @@ from config import mysql_config
 from judge import MemberDBMixin
 from judge.base import BaseHandler
 from judge.utils import escape
+from judge.filters import filters
 
 from api import ProblemGetAPIHandler
 from lang import SetLangeuageHandler
@@ -92,7 +94,9 @@ class Application(tornado.web.Application):
         tornado.locale.set_default_locale('zh_CN')
         tornado.locale.load_gettext_translations(self.settings['i18n_path'], "onlinejudge")
         self.markdown = markdown.Markdown(['codehilite(force_linenos=True)', 'tables'], safe_mode=True)
-        self.jinja2 = Environment(loader = FileSystemLoader(self.settings['template_path']))
+        jinja_env = Environment(loader = FileSystemLoader(self.settings['template_path']))
+        jinja_env.filters.update(filters)
+        self.jinja2 = jinja_env
         self.db = tornado.database.Connection(
                   host=options.mysql_host, database=options.mysql_database,
                   user=options.mysql_user, password=options.mysql_password)
