@@ -2,6 +2,8 @@
 
 import os
 import time
+import base64
+import requests
 
 from tornado.web import HTTPError
 from tornado.web import authenticated
@@ -14,6 +16,30 @@ from judge import RelatedProblemDBMixin
 from judge.base import BaseHandler
 
 class ProblemHandler(BaseHandler, ProblemDBMixin, RelatedProblemDBMixin, SubmitDBMixin):
+    @staticmethod
+    def _array_encode(arr):
+        sa = []
+        for k in arr:
+            sa.append(base64.b64encode(str(k)))
+            sa.append(base64.b64encode(str(arr[k])))
+        s = "?".join(sa)
+        return base64.b64encode(s)
+    @staticmethod
+    def _array_decode(s):
+        arr = {}
+        s = base64.b64decode(s)
+        sa = s.split("?")
+        for k, v in zip(sa[::2], sa[1::2]):
+            arr[base64.b64decode(k)] = base64.b64decode(v)
+        return arr
+    @staticmethod
+    def _set_status(submit, status):
+        if submit.status == None:
+            submit.status = status
+    def _send_request(self, data):
+        self.require_setting("judger")
+        req = requests.post(self.settings['judger'], { 'query' : self._array_encode(data)})
+        return self._array_decode(req.content[8:])
     def get(self, pid):
         try:
             pid = int(pid)
@@ -52,6 +78,11 @@ class ProblemHandler(BaseHandler, ProblemDBMixin, RelatedProblemDBMixin, SubmitD
             else:
                 if lang not in ['1', '2', '3']:
                     error.append(self._('Error Code Language Select'))
+                else:
+                    # query grader status
+                    result = self._send_request({'action' : 'state'})
+                    if result['state'] != 'free':
+                        error.append(self._("No Free Judger!"))
         if error:
             breadcrumb = []
             breadcrumb.append((self._('Home'), '/'))
@@ -77,6 +108,53 @@ class ProblemHandler(BaseHandler, ProblemDBMixin, RelatedProblemDBMixin, SubmitD
         submit.timestamp = timestamp
         self.insert_submit(submit)
         self.redirect("/submit")
+        self._send_request({'action' : 'lock'})
+        result = self._send_request({'action' : 'compile', \
+                                     'pname' : problem.shortname, \
+                                     'language' : int(lang) - 1, \
+                                     'uid'  : self.current_user.id, \
+                                     'code'  : codefile.body, \
+                                     'src'  : '%s%s' % (problem.shortname, fileext)})
+        if result['compilesucc'] != '1':
+            # Compile error
+            submit.status = 6
+            submit.msg = result['msg']
+            self.update_submit(submit)
+            self._send_request({'action' : 'unlock', 'uid' : submit.member_id})
+            return
+        submit.status = None
+        for i in range(problem.testpoint):
+            result = self._send_request({'action' : 'grade', \
+                                         'pname'  : problem.shortname, \
+                                         'memorylimit' : problem.memlimit, \
+                                         'plugin' : 1, \
+                                         'grade' : i + 1, 
+                                         'timelimit' : problem.timelimit, \
+                                         'uid' : self.current_user.id})
+            submit.costtime += int(float(result['rtime']))
+            submit.costmemory += int(float(result['memory']))
+            if result['timeout']:
+                self._set_status(submit, 3)
+                submit.testpoint = submit.testpoint + "T"
+            elif result['memoryout']:
+                self._set_status(submit, 4)
+                submit.testpoint = submit.testpoint + "M"
+            elif result['runerr']:
+                self._set_status(submit, 5)
+                submit.testpoint = submit.testpoint + "E"
+            elif result['noreport']:
+                self._set_status(submit, 2)
+                submit.testpoint = submit.testpoint + "R"
+            elif str(result['score']) != '0':
+                self._set_status(submit, 2)
+                submit.testpoint = submit.testpoint + "W"
+            else:
+                submit.score += int(float(result['score']))
+                submit.testpoint = submit.testpoint + "A"
+        self._set_status(submit, 1)
+        submit.score = submit.score * 10
+        self.update_submit(submit)
+        self._send_request({'action' : 'unlock', 'uid' : submit.member_id})
 
 class ProblemListHandler(BaseHandler, ProblemDBMixin):
     def get(self):

@@ -181,7 +181,7 @@ class Problem(BaseDBObject):
     sampleout = ""
     timelimit = 1000
     memlimit = 128
-    testpointnum = 0
+    testpoint = 0
     tags = ""
     create = None
 
@@ -486,6 +486,7 @@ class Submit(BaseDBObject):
     costmemory = 0 # kb
     lang = 0 # 
     timestamp = 0
+    msg = ""
     user_agent = ""
     ip = ""
     create = None
@@ -504,6 +505,22 @@ class SubmitDBMixin(object):
                                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
                                     , submit.problem_id, submit.member_id, submit.status, submit.testpoint, submit.score, \
                                     submit.costtime, submit.costmemory, submit.lang, submit.timestamp, submit.user_agent, submit.ip)
+    def update_submit(self, submit):
+        self.db.execute("""UPDATE `submit` SET `problem_id` = %s, \
+                                               `member_id` = %s, \
+                                               `status` = %s, \
+                                               `testpoint` = %s, \
+                                               `score` = %s, \
+                                               `costtime` = %s, \
+                                               `costmemory` = %s, \
+                                               `lang` = %s, \
+                                               `timestamp` = %s, \
+                                               `msg` = %s, \
+                                               `user_agent` = %s, \
+                                               `ip` = %s 
+                                           WHERE `id` = %s""", \
+                        submit.problem_id, submit.member_id, submit.status, submit.testpoint, submit.score, submit.costtime, \
+                        submit.costmemory, submit.lang, submit.timestamp, submit.msg, submit.user_agent, submit.ip, submit.id)
     def select_submit_desc(self, start = 0, max = 20):
         rows = self.db.query("""SELECT `submit`.*, `problem`.`title`, `member`.`username`
                                 FROM `submit` 

@@ -2,6 +2,7 @@
 
 import os
 import sys
+import time
 import markdown
 import datetime
 from jinja2 import Environment, FileSystemLoader
@@ -12,6 +13,8 @@ import tornado.ioloop
 import tornado.options
 import tornado.database
 import tornado.httpserver
+import tornado.httpclient
+from tornado.web import asynchronous
 from tornado.options import define
 from tornado.options import options
 
@@ -54,8 +57,14 @@ define("mysql_user",     default = mysql_config['mysql_user'])
 define("mysql_password", default = mysql_config['mysql_password'])
 
 class TestHandler(BaseHandler, MemberDBMixin):
+    @asynchronous
     def get(self):
         self.render('test.html', locals())
+        http = tornado.httpclient.AsyncHTTPClient()
+        http.fetch("http://127.0.0.1/", self._on_test)
+    def _on_test(self, response):
+        time.sleep(20)
+        print "hi"
 
 class Application(tornado.web.Application):
     def __init__(self):
@@ -100,6 +109,7 @@ class Application(tornado.web.Application):
             'bcrypt_salt' : '$2a$04$WL.FEXqZFwMOso3dsXOwuO', 
             'default_mail' : 'no-reply@fanhe.org', 
             'mail_server' : '127.0.0.1', 
+            'judger' : 'http://127.0.0.1:8889/', 
             'debug'   : True,
         }
         tornado.web.Application.__init__(self, handlers, **settings)
