@@ -5,9 +5,11 @@ from tornado.web import HTTPError
 from tornado.web import authenticated
 
 from judge import Node
+from judge import Contest
 from judge import Problem
 from judge import NodeDBMixin
 from judge import ProblemDBMixin
+from judge import ContestDBMixin
 from judge.base import BaseHandler
 from judge.utils import escape
 
@@ -119,3 +121,15 @@ class CreateNodeHandler(BaseHandler, NodeDBMixin):
         else:
             self.insert_node(node)
         self.redirect("/forum/go/%s" % node.link)
+
+class CreateContestHandler(BaseHandler, ContestDBMixin):
+    @backstage
+    def get(self):
+        title = self._("Add Contest")
+        cid = self.get_argument("cid", default = 0)
+        contest = None
+        if cid:
+            contest = self.select_contest_by_id(cid)
+            title = self._("Edit Contest")
+            contest_problem = self.select_contest_problem_by_cid(contest.id)
+        self.render("backstage/contest_create.html", locals())

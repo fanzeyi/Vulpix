@@ -1,0 +1,33 @@
+{% include 'header.html' %}
+{%- if error -%}
+<div class="alert alert-error">
+<ul class="errorlist">
+{% for err in error %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+<form method="POST" action="" class="form-horizontal">
+<fieldset>
+    <legend>{{ title }}</legend>
+    {{ page.xsrf_form_html() }}
+    <input type="hidden" name="nid" value="{% if contest %}{{ contest.id }}{% endif %}" />
+    <div class="sep30"></div>
+    <div class="control-group">
+        <label class="control-label" for="probtitle">{{ _('Title') }}</label>
+        <div class="controls">
+            <input name="name" class="input-xlarge" type="text" {% if contst.name %}value="{{ contest.name }}" {% endif %}/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="shortname">{{ _('Description') }}</label>
+        <div class="controls">
+            <textarea name="description" class="input-xlarge">{{ contest.description }}</textarea>
+        </div>
+    </div>
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
+    </div>
+</form>
+{% include 'footer.html' %}

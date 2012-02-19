@@ -48,6 +48,7 @@ from problem import SubmitListHandler
 from backstage import BackstageHandler
 from backstage import AddProblemHandler
 from backstage import CreateNodeHandler
+from backstage import CreateContestHandler
 
 tornado.options.parse_command_line()
 
@@ -88,6 +89,7 @@ class Application(tornado.web.Application):
             (r'/backstage', BackstageHandler), 
             (r'/backstage/problem/add', AddProblemHandler), 
             (r'/backstage/node/create', CreateNodeHandler), 
+            (r'/backstage/contest/create', CreateContestHandler), 
             (r'/test', TestHandler), 
         ]
         tornado.web.Application.__init__(self, handlers, **site_config)

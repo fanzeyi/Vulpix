@@ -182,6 +182,7 @@ class Problem(BaseDBObject):
     timelimit = 1000
     memlimit = 128
     testpointnum = 0
+    invisible = 0
     tags = ""
     create = None
 
@@ -479,11 +480,12 @@ class Submit(BaseDBObject):
     id = ""
     problem_id = 0
     member_id = 0
-    status = 0 # Pending = 0, Accepted = 1, Wrong Answer = 2, Time Limit Exceeded = 3, Memory Limit Exceeded = 4, Runtime Error = 5, Comiple Error = 6
+    status = 0 # Pending = 0, Accepted = 1, Wrong Answer = 2, Time Limit Exceeded = 3, Memory Limit Exceeded = 4, Runtime Error = 5, Compile Error = 6
     testpoint = ""
     score = 0
     costtime = 0   # ms
     costmemory = 0 # kb
+    timestamp = None
     lang = 0 # 
     user_agent = ""
     ip = ""
@@ -520,4 +522,72 @@ class SubmitDBMixin(object):
         if rows:
             for row in rows:
                 result.extend(self._new_submit_by_row(row))
+        return result
+
+class Contest(BaseDBObject):
+    id = ""
+    name = ""
+    description = ""
+    start_time = None
+    end_time = None
+    invisible = 0 # 0 - visible   1 - invisible
+    create = None
+
+class ContestProblem(BaseDBObject):
+    cid = 0
+    pid = 0
+
+class ContestSubmit(BaseDBObject):
+    id = ""
+    contest_id = 0
+    problem_id = 0
+    member_id = 0
+    status = 0 # Pending = 0, Accepted = 1, Wrong Answer = 2, Time Limit Exceeded = 3, Memory Limit Exceeded = 4, Runtime Error = 5, Compile Error = 6
+    testpoint = ""
+    score = 0
+    costtime = 0   # ms
+    costmemory = 0 # kb
+    timestamp = None
+    lang = 0 # 
+    user_agent = ""
+    ip = ""
+    create = None
+
+
+class ContestDBMixin(object):
+    def _new_contest_by_row(row):
+        if row:
+            contest = Contest()
+            contest._init_row(row)
+            return [contest]
+        return []
+    def _new_contest_problem_by_row(row):
+        if row:
+            contest_problem = ContestProblem()
+            contest._init_row(row)
+            return [contest]
+        return []
+    def select_contest_visible(start = 0, max = 20):
+        rows = self.db.query("""SELECT * FROM `contest` WHERE `invisible` = 0 LIMIT %s, %s""", start, max)
+        result = []
+        if rows:
+            for row in rows:
+                result.extend(self._new_contest_by_row(row))
+        return result
+    def select_contest_by_id(cid):
+        row = self.db.get("""SELECT * FROM `contest` WHERE `id` = %s""", cid)
+        if row:
+            contest = Contest()
+            contest._init_row(row)
+            return contest
+        return None
+    def select_contest_problem_by_cid(cid):
+        rows = self.db.query("""SELECT `contest_problem`.*, `problem`.`title`
+                                FROM `contest_problem`
+                                LEFT JOIN `problem` ON `contest_problem`.`pid` = `problem`.`id`
+                                WHERE `cid` = %s""", cid)
+        result = []
+        if rows:
+            for row in rows:
+                result.extend(self._new_contest_problem_by_row(row))
         return result
