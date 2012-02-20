@@ -17,13 +17,16 @@
         <div class="topic_meta">By <a href="/member/{{ topic.username }}">{{ topic.username }}</a> at {{ topic.create }}</div>
     </div>
     <div class="content">
-        {{ topic.content.replace('\n', '<br />') }}
+        {{ topic.content | autolink | replace('\n', '<br />') }}
     </div>
 </div>
 
 <div class="sep30"></div>
 {% if replies %}
 <div class="cell nopadding topic">
+    <div class="line reply_meta">
+        {{ reply_count }} Replies
+    </div>
     <ul class="reply_list">
         {% for reply in replies %}
         <li class="line from_{{ topic.member_id }}">
@@ -39,7 +42,7 @@
                                 <div class="create">{{ reply.create }}</div>
                             </div>
                             <div class="reply_content">
-                                {{ reply.content }}
+                                {{ reply.content | autolink | replace('\n', '<br />') }}
                             </div>
                         </td>
                 </tbody>

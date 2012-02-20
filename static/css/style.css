@@ -378,10 +378,6 @@ nav .copyright a:hover {
     line-height: 24px;
 }
 
-.cell .line:first-child {
-    padding-top: 5px; 
-}
-
 .cell .line .meta {
     float: right; 
     display: inline; 
