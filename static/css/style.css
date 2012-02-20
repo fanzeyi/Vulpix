@@ -815,13 +815,13 @@ li.last {
     padding-left: 10px; 
 }
 
-.new_note #related_problem_list {
+#related_problem_list {
     list-style: none; 
     margin-left: 0; 
     margin-top: 10px; 
 }
 
-.new_note #related_problem_list .related {
+#related_problem_list .related {
     background-color: #EEE; 
     border-radius: 4px; 
     padding: 4px 4px 2px 10px; 
@@ -829,15 +829,15 @@ li.last {
     margin-right: 4px; 
 }
 
-.new_note #related_problem_list .related:hover {
+#related_problem_list .related:hover {
     background: #DDD; 
 }
 
-.new_note #related_problem_list .related a {
+#related_problem_list .related a {
     color: black; 
 }
 
-.new_note #related_problem_list .related a.close {
+#related_problem_list .related a.close {
     color: black; 
     line-height: 14px; 
     height: 14px; 

@@ -46,13 +46,13 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         timelimit = self.get_argument('timelimit', default = 1000)
         memlimit = self.get_argument('memlimit', default = 1000)
         testpoint = self.get_argument('testpoint', default = None)
+        invisible = self.get_argument('invisible', default = 0)
         content = self.get_argument('content', default = None)
         inputfmt = self.get_argument('inputfmt', default = '')
         outputfmt = self.get_argument('outputfmt', default = '')
         samplein = self.get_argument('samplein', default = '')
         sampleout = self.get_argument('sampleout', default = '')
         pid = self.get_argument('pid', default = 0)
-        print pid
         problem = Problem()
         error = []
         error.extend(self._check_text_value(probtitle, self._("Title"), True))
@@ -69,11 +69,14 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         problem.timelimit = self.xhtml_escape(timelimit)
         problem.memlimit = self.xhtml_escape(memlimit)
         problem.testpoint = self.xhtml_escape(testpoint)
+        problem.invisible = self.xhtml_escape(invisible)
         problem.content = self.xhtml_escape(content)
         problem.inputfmt = self.xhtml_escape(inputfmt)
         problem.outputfmt = self.xhtml_escape(outputfmt)
         problem.samplein = self.xhtml_escape(samplein)
         problem.sampleout = self.xhtml_escape(sampleout)
+        if invisible not in ['1', '0', 0]:
+            error.append(self._("Invisible is Invalid!"))
         if error:
             title = self._("Add Problem")
             self.render("backstage/problem_add.html", locals())
@@ -133,3 +136,7 @@ class CreateContestHandler(BaseHandler, ContestDBMixin):
             title = self._("Edit Contest")
             contest_problem = self.select_contest_problem_by_cid(contest.id)
         self.render("backstage/contest_create.html", locals())
+    @backstage
+    def post(self):
+        self.write(str(self.request.headers))
+        print self.request

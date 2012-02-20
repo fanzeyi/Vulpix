@@ -15,9 +15,9 @@
     <input type="hidden" name="nid" value="{% if contest %}{{ contest.id }}{% endif %}" />
     <div class="sep30"></div>
     <div class="control-group">
-        <label class="control-label" for="probtitle">{{ _('Title') }}</label>
+        <label class="control-label" for="title">{{ _('Title') }}</label>
         <div class="controls">
-            <input name="name" class="input-xlarge" type="text" {% if contst.name %}value="{{ contest.name }}" {% endif %}/>
+            <input name="title" class="input-xlarge" type="text" {% if contest.name %}value="{{ contest.name }}" {% endif %}/>
         </div>
     </div>
     <div class="control-group">
@@ -26,8 +26,90 @@
             <textarea name="description" class="input-xlarge">{{ contest.description }}</textarea>
         </div>
     </div>
+    <div class="control-group">
+        <label class="control-label" for="start_time">{{ _('Start Time') }}</label>
+        <div class="controls">
+            <input name="start_time" class="input-xlarge" type="test" {% if contest.start_time %}value="{{ contest.start_time }}" {% endif %}/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="end_time">{{ _('End Time') }}</label>
+        <div class="controls">
+            <input name="end_time" class="input-xlarge" type="test" {% if contest.end_time %}value="{{ contest.end_time }}" {% endif %}/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="invisible"></label>
+        <div class="controls">
+            <label class="checkbox"><input type="checkbox" name="invisible" value="1">Invisible</label>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="related_problem">{{ _('Related Problem') }}</label>
+        <div class="controls">
+            <input type="text" name="related_problem"  class="input-xlarge" id="related_problem" />
+            <a href="#" class="btn" id="related_problem_submit">{{ _('Add') }}</a>
+            <ul id="related_problem_list">
+                {% if related_problem %}
+                {% for problem in related_problem %}
+                <li class="related">
+                    <a href="/problem/{{ problem.nid }}" target="_blank" style="float:left">{{ problem.title }}</a>
+                    <a class="close" href="#" value="{{ problem.nid }}" data-dismiss="alert"><i class="icon-remove-sign"></i></a>
+                </li>
+                {% endfor%}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
     </div>
 </form>
+<script type="text/javascript">
+$(document).ready(function () {
+    var related_list = new Array(); 
+    function add_related_problem() {
+        var val = $("#related_problem").val(); 
+        if(val.search("^-?\\d+$") == 0) {
+            if($.inArray(val, related_list) != -1) {
+                return false; 
+            }
+            $.get('/api/problem/get/' + val, null, function(text) {
+                $('#related_problem_list').append('<li class="related"><a href="/problem/' + val + '" target="_blank">' + text + '</a><a class="close" data-dismiss="alert" value="' + val + '" href="#"><i class="icon-remove-sign"></i></a></li>'); 
+                $('form.new_note').append('<input id="related_' + val + '" type="hidden" name="link_problem[]" value="' + val + '" />'); 
+                related_list.push(val); 
+                $('#related_problem').val(''); 
+                $('#related_problem').prop('disabled', false); 
+                $('#related_problem_submit').removeClass('disabled'); 
+                $('.related .close').click(function () {
+                    var pid = $(this).attr('value');
+                    var index = related_list.indexOf(val); 
+                    related_list.splice(index, 1); 
+                    $('#related_' + pid).remove(); 
+                }); 
+            }); 
+            $('#related_problem_submit').addClass('disabled'); 
+            $('#related_problem').prop('disabled', true); 
+        }
+    }
+    $('form').ajaxError(function() {
+        $('#related_problem_submit').removeClass('disabled'); 
+        $('#related_problem').prop('disabled', false); 
+    }); 
+    $('.disabled').click(function() {
+        return false; 
+    }); 
+    $('#related_problem').keypress(function (e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if(code == 13) {
+            add_related_problem(); 
+            return false; 
+        }
+    }); 
+    $("#related_problem_submit").click(function () {
+        add_related_problem(); 
+        return false; 
+    }); 
+}); 
+</script>
 {% include 'footer.html' %}

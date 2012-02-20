@@ -17,6 +17,8 @@ class ProblemHandler(BaseHandler, ProblemDBMixin, RelatedProblemDBMixin):
             raise HTTPError(404)
         problem = self.select_problem_by_id(pid)
         if problem:
+            if problem.invisible and (self.current_user == None or self.current_user.admin == 0):
+                    raise HTTPError(404)
             breadcrumb = []
             breadcrumb.append((self._('Home'), '/'))
             breadcrumb.append((self._('Problem'), '/problem'))

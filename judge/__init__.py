@@ -195,28 +195,30 @@ class ProblemDBMixin(object):
         return []
     def insert_problem(self, problem):
         pid = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, `content_html`, \
-                                 `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `timelimit`, `memlimit`, `testpoint`, `create`) \
-                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
+                                 `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `timelimit`, `memlimit`, `testpoint`, `invisible`, `create`) \
+                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
                               , problem.title, problem.shortname, problem.content, problem.content_html, \
                               problem.inputfmt, problem.outputfmt, problem.samplein, problem.sampleout, \
-                              int(problem.timelimit), int(problem.memlimit), int(problem.testpoint))
+                              int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), int(problem.invisible))
         problem.id = pid
     def update_problem(self, problem):
-        self.db.execute("""UPDATE `problem` SET `title` = %s, \
-                                                `shortname` = %s, \
-                                                `content` = %s, \
-                                                `content_html` = %s, \
-                                                `inputfmt` = %s, \
-                                                `outputfmt` = %s, \
-                                                `samplein` = %s, \
-                                                `sampleout` = %s, \
-                                                `timelimit` = %s, \
-                                                `memlimit` = %s, \
-                                                `testpoint` = %s 
+        self.db.execute("""UPDATE `problem` SET `title` = %s, 
+                                                `shortname` = %s, 
+                                                `content` = %s, 
+                                                `content_html` = %s, 
+                                                `inputfmt` = %s, 
+                                                `outputfmt` = %s,
+                                                `samplein` = %s, 
+                                                `sampleout` = %s, 
+                                                `timelimit` = %s, 
+                                                `memlimit` = %s, 
+                                                `testpoint` = %s, 
+                                                `invisible` = %s
                                             WHERE `id` = %s""", \
                            problem.title, problem.shortname, problem.content, problem.content_html, \
                            problem.inputfmt, problem.outputfmt, problem.samplein, problem.sampleout, \
-                           int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), problem.id)
+                           int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), int(problem.invisible), \
+                           problem.id)
     def count_problem(self):
         count = self.db.get("""SELECT COUNT(*) FROM `problem`""")
         return count["COUNT(*)"]

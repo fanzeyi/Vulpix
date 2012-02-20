@@ -15,19 +15,19 @@
     <input type="hidden" name="nid" value="{% if node %}{{ node.id }}{% endif %}" />
     <div class="sep30"></div>
     <div class="control-group">
-        <label class="control-label" for="probtitle">{{ _('Title') }}</label>
+        <label class="control-label" for="name">{{ _('Title') }}</label>
         <div class="controls">
             <input name="name" class="input-xlarge" type="text" {% if node.name %}value="{{ node.name }}" {% endif %}/>
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" for="shortname">{{ _('Link') }}</label>
+        <label class="control-label" for="link">{{ _('Link') }}</label>
         <div class="controls">
             <input name="link" class="input-xlarge" type="text" {% if node.link %}value="{{ node.link }}" {% endif %}/>
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label" for="timelimit">{{ _('Description') }}</label>
+        <label class="control-label" for="description">{{ _('Description') }}</label>
         <div class="controls">
             <div class="input-append">
                 <textarea name="description" class="input-xlarge">{% if node.description %}{{ node.description }}{% endif %}</textarea>

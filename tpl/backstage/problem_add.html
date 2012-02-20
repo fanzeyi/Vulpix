@@ -51,6 +51,12 @@
         </div>
     </div>
     <div class="control-group">
+        <label class="control-label" for="invisible"></label>
+        <div class="controls">
+            <label class="checkbox"><input type="checkbox" name="invisible" value="1" {% if problem.invisible %}checked{% endif %}>Invisible</label>
+        </div>
+    </div>
+    <div class="control-group">
         <label class="control-label" for="content">{{ _('Content') }}</label>
         <div class="controls">
             <textarea name="content" class="input-xlarge" style="width:522px; height: 427px">{% if problem.content %}{{ problem.content }}{% endif %}</textarea>

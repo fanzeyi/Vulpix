@@ -1,4 +1,9 @@
 {% include 'header.html' %}
+{% if problem.invisible %}
+<div class="alert alert-info">
+    {{ _('This Problem is Invisible!') }}
+</div>
+{% endif %}
 <div class="sidebar">
 <div class="cell nopadding problem_sidebar">
     <div class="module_title">

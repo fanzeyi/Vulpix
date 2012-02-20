@@ -38,11 +38,13 @@
         </thead>
         <tbody>
             {% for problem in newest_problem %}
+            {% if problem.invisible == 0 or user.admin == 1%}
             <tr>
                 <td style="text-align:center">{{ problem.id }}</td>
                 <td><a href="/problem/{{ problem.id }}">{{ problem.title }}</a></td>
                 <td>{{ problem.shortname }}</td>
             </tr>
+            {% endif %}
             {% endfor %}
         </tbody>
     </table>
