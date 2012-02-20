@@ -107,6 +107,7 @@ class TopicHandler(BaseHandler, TopicDBMixin, NodeDBMixin, ReplyDBMixin):
         topic = self.select_topic_by_id(tid)
         node = self.select_node_by_id(topic.node_id)
         replies = self.select_reply_by_topic_id(tid)
+        reply_count = len(replies)
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((self._('Forum'), '/forum'))

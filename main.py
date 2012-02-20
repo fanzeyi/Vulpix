@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import os
+import re
 import sys
 import markdown
 import datetime
@@ -15,10 +15,13 @@ import tornado.httpserver
 from tornado.options import define
 from tornado.options import options
 
+from config import site_config
+from config import mysql_config
+
 from judge import MemberDBMixin
 from judge.base import BaseHandler
 from judge.utils import escape
-from judge.config import mysql_config
+from judge.filters import filters
 
 from api import ProblemGetAPIHandler
 from lang import SetLangeuageHandler
@@ -45,6 +48,7 @@ from problem import SubmitListHandler
 from backstage import BackstageHandler
 from backstage import AddProblemHandler
 from backstage import CreateNodeHandler
+from backstage import CreateContestHandler
 
 tornado.options.parse_command_line()
 
@@ -85,27 +89,16 @@ class Application(tornado.web.Application):
             (r'/backstage', BackstageHandler), 
             (r'/backstage/problem/add', AddProblemHandler), 
             (r'/backstage/node/create', CreateNodeHandler), 
+            (r'/backstage/contest/create', CreateContestHandler), 
             (r'/test', TestHandler), 
         ]
-        settings = {
-            'site_title' : u'Online Judge',
-            'base_domain' : 'me.fanhe.org:8080', 
-            'login_url' : '/signin',
-            'template_path' : os.path.join(os.path.dirname(__file__), 'tpl'),
-            'static_path' : os.path.join(os.path.dirname(__file__), "static"),
-            'i18n_path' : os.path.join(os.path.dirname(__file__), 'i18n'), 
-            'xsrf_cookies' : True,
-            'cookie_secret' : '32954k1s668c4ad48dad436vd0402905',
-            'bcrypt_salt' : '$2a$04$WL.FEXqZFwMOso3dsXOwuO', 
-            'default_mail' : 'no-reply@fanhe.org', 
-            'mail_server' : '127.0.0.1', 
-            'debug'   : True,
-        }
-        tornado.web.Application.__init__(self, handlers, **settings)
+        tornado.web.Application.__init__(self, handlers, **site_config)
         tornado.locale.set_default_locale('zh_CN')
         tornado.locale.load_gettext_translations(self.settings['i18n_path'], "onlinejudge")
         self.markdown = markdown.Markdown(['codehilite(force_linenos=True)', 'tables'], safe_mode=True)
-        self.jinja2 = Environment(loader = FileSystemLoader(self.settings['template_path']))
+        jinja_env = Environment(loader = FileSystemLoader(self.settings['template_path']))
+        jinja_env.filters.update(filters)
+        self.jinja2 = jinja_env
         self.db = tornado.database.Connection(
                   host=options.mysql_host, database=options.mysql_database,
                   user=options.mysql_user, password=options.mysql_password)
