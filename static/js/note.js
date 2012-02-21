@@ -1,5 +1,8 @@
 $(document).ready(function () {
     var related_list = new Array(); 
+    $.each($('input[name="link_problem[]"]'), function(i, v) {
+        related_list.push(v.value); 
+    }); 
     function add_related_problem() {
         var val = $("#related_problem").val(); 
         if(val.search("^-?\\d+$") == 0) {
@@ -8,7 +11,7 @@ $(document).ready(function () {
             }
             $.get('/api/problem/get/' + val, null, function(text) {
                 $('#related_problem_list').append('<li class="related"><a href="/problem/' + val + '" target="_blank">' + text + '</a><a class="close" data-dismiss="alert" value="' + val + '" href="#"><i class="icon-remove-sign"></i></a></li>'); 
-                $('form.new_note').append('<input id="related_' + val + '" type="hidden" name="link_problem[]" value="' + val + '" />'); 
+                $('form.form-horizontal').append('<input id="related_' + val + '" type="hidden" name="link_problem[]" value="' + val + '" />'); 
                 related_list.push(val); 
                 $('#related_problem').val(''); 
                 $('#related_problem').prop('disabled', false); 

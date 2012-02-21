@@ -528,7 +528,7 @@ class SubmitDBMixin(object):
 
 class Contest(BaseDBObject):
     id = ""
-    name = ""
+    title = ""
     description = ""
     start_time = None
     end_time = None
@@ -555,35 +555,42 @@ class ContestSubmit(BaseDBObject):
     ip = ""
     create = None
 
-
 class ContestDBMixin(object):
-    def _new_contest_by_row(row):
+    def _new_contest_by_row(self, row):
         if row:
             contest = Contest()
             contest._init_row(row)
             return [contest]
         return []
-    def _new_contest_problem_by_row(row):
+    def _new_contest_problem_by_row(self, row):
         if row:
             contest_problem = ContestProblem()
             contest._init_row(row)
             return [contest]
         return []
-    def select_contest_visible(start = 0, max = 20):
+    def insert_contest(self, contest):
+        contest.id = self.db.execute("""INSERT INTO `contest` (`title`, `description`, `start_time`, 
+                                                               `end_time`, `invisible`, `create`)
+                                               VALUES (%s, %s, %s, %s, %s, UTC_TIMESTAMP())""", \
+                                     contest.title, contest.description, contest.start_time, contest.end_time, \
+                                     contest.invisible)
+    def insert_contest_problem(self, cid, pid):
+        self.db.execute("""INSERT INTO `contest_problem` (`cid`, `pid`) VALUES (%s, %s)""", int(cid), int(pid))
+    def select_contest_visible(self, start = 0, max = 20):
         rows = self.db.query("""SELECT * FROM `contest` WHERE `invisible` = 0 LIMIT %s, %s""", start, max)
         result = []
         if rows:
             for row in rows:
                 result.extend(self._new_contest_by_row(row))
         return result
-    def select_contest_by_id(cid):
+    def select_contest_by_id(self, cid):
         row = self.db.get("""SELECT * FROM `contest` WHERE `id` = %s""", cid)
         if row:
             contest = Contest()
             contest._init_row(row)
             return contest
         return None
-    def select_contest_problem_by_cid(cid):
+    def select_contest_problem_by_cid(self, cid):
         rows = self.db.query("""SELECT `contest_problem`.*, `problem`.`title`
                                 FROM `contest_problem`
                                 LEFT JOIN `problem` ON `contest_problem`.`pid` = `problem`.`id`

@@ -17,7 +17,7 @@
     <div class="control-group">
         <label class="control-label" for="title">{{ _('Title') }}</label>
         <div class="controls">
-            <input name="title" class="input-xlarge" type="text" {% if contest.name %}value="{{ contest.name }}" {% endif %}/>
+            <input name="title" class="input-xlarge" type="text" {% if contest.title %}value="{{ contest.title }}" {% endif %}/>
         </div>
     </div>
     <div class="control-group">
@@ -29,19 +29,19 @@
     <div class="control-group">
         <label class="control-label" for="start_time">{{ _('Start Time') }}</label>
         <div class="controls">
-            <input name="start_time" class="input-xlarge" type="test" {% if contest.start_time %}value="{{ contest.start_time }}" {% endif %}/>
+            <input name="start_time" id="start_time" class="input-xlarge" type="test" {% if contest.start_time %}value="{{ contest.start_time }}" {% endif %}/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label" for="end_time">{{ _('End Time') }}</label>
         <div class="controls">
-            <input name="end_time" class="input-xlarge" type="test" {% if contest.end_time %}value="{{ contest.end_time }}" {% endif %}/>
+            <input name="end_time" id="end_time" class="input-xlarge" type="test" {% if contest.end_time %}value="{{ contest.end_time }}" {% endif %}/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label" for="invisible"></label>
         <div class="controls">
-            <label class="checkbox"><input type="checkbox" name="invisible" value="1">Invisible</label>
+            <label class="checkbox"><input type="checkbox" name="invisible" value="1" {% if contest.invisible %}checked{% endif %}>Invisible</label>
         </div>
     </div>
     <div class="control-group">
@@ -61,55 +61,13 @@
             </ul>
         </div>
     </div>
+{% if related_problem %}
+{% for problem in related_problem %}
+<input id="related_{{ problem.id }}" type="hidden" name="link_problem[]" value="{{ problem.id }}" />
+{% endfor %}
+{% endif %}
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
     </div>
 </form>
-<script type="text/javascript">
-$(document).ready(function () {
-    var related_list = new Array(); 
-    function add_related_problem() {
-        var val = $("#related_problem").val(); 
-        if(val.search("^-?\\d+$") == 0) {
-            if($.inArray(val, related_list) != -1) {
-                return false; 
-            }
-            $.get('/api/problem/get/' + val, null, function(text) {
-                $('#related_problem_list').append('<li class="related"><a href="/problem/' + val + '" target="_blank">' + text + '</a><a class="close" data-dismiss="alert" value="' + val + '" href="#"><i class="icon-remove-sign"></i></a></li>'); 
-                $('form.new_note').append('<input id="related_' + val + '" type="hidden" name="link_problem[]" value="' + val + '" />'); 
-                related_list.push(val); 
-                $('#related_problem').val(''); 
-                $('#related_problem').prop('disabled', false); 
-                $('#related_problem_submit').removeClass('disabled'); 
-                $('.related .close').click(function () {
-                    var pid = $(this).attr('value');
-                    var index = related_list.indexOf(val); 
-                    related_list.splice(index, 1); 
-                    $('#related_' + pid).remove(); 
-                }); 
-            }); 
-            $('#related_problem_submit').addClass('disabled'); 
-            $('#related_problem').prop('disabled', true); 
-        }
-    }
-    $('form').ajaxError(function() {
-        $('#related_problem_submit').removeClass('disabled'); 
-        $('#related_problem').prop('disabled', false); 
-    }); 
-    $('.disabled').click(function() {
-        return false; 
-    }); 
-    $('#related_problem').keypress(function (e) {
-        var code = (e.keyCode ? e.keyCode : e.which);
-        if(code == 13) {
-            add_related_problem(); 
-            return false; 
-        }
-    }); 
-    $("#related_problem_submit").click(function () {
-        add_related_problem(); 
-        return false; 
-    }); 
-}); 
-</script>
 {% include 'footer.html' %}

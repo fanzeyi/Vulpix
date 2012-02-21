@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import datetime
 import functools
 from tornado.web import HTTPError
 from tornado.web import authenticated
@@ -125,18 +126,60 @@ class CreateNodeHandler(BaseHandler, NodeDBMixin):
             self.insert_node(node)
         self.redirect("/forum/go/%s" % node.link)
 
-class CreateContestHandler(BaseHandler, ContestDBMixin):
+class CreateContestHandler(BaseHandler, ProblemDBMixin, ContestDBMixin):
     @backstage
     def get(self):
         title = self._("Add Contest")
         cid = self.get_argument("cid", default = 0)
         contest = None
+        related_js = True
+        timepicker_js = True
         if cid:
             contest = self.select_contest_by_id(cid)
             title = self._("Edit Contest")
-            contest_problem = self.select_contest_problem_by_cid(contest.id)
+            related_problem = self.select_contest_problem_by_cid(contest.id)
         self.render("backstage/contest_create.html", locals())
     @backstage
     def post(self):
-        self.write(str(self.request.headers))
-        print self.request
+        title = self.get_argument("title", default = "")
+        description = self.get_argument("description", default = "")
+        start_time = self.get_argument("start_time", default = "")
+        end_time = self.get_argument("end_time", default = "")
+        invisible = self.get_argument("invisible", default = 0)
+        cid = self.get_argument("cid", default = None)
+        related_problem = self.get_arguments("link_problem[]")
+        contest = Contest()
+        contest.id = cid
+        error = []
+        error.extend(self._check_text_value(title, self._("Title"), required = True, max = 100))
+        error.extend(self._check_text_value(description, self._("Description"), max = 2000))
+        try:
+            start_datetime = datetime.datetime.strptime(start_time, "%m/%d/%Y %H:%M")
+            end_datetime = datetime.datetime.strptime(end_time, "%m/%d/%Y %H:%M")
+        except ValueError:
+            error.append(self._("Start/End Time Format is Invalid."))
+        contest.title = self.xhtml_escape(title)
+        contest.description = self.xhtml_escape(description)
+        contest.start_time = self.xhtml_escape(start_time)
+        contest.end_time = self.xhtml_escape(end_time)
+        contest.invisible = self.xhtml_escape(invisible)
+        contest.related_problem = related_problem
+        if error:
+            title = self._("Add Contest")
+            related_js = True
+            timepicker_js = True
+            related_problem = []
+            for pid in contest.related_problem:
+                related_problem.append(self.select_problem_by_id(pid))
+            self.render("backstage/contest_create.html", locals())
+            return
+        contest.start_time = start_datetime
+        contest.end_time = end_datetime
+        if contest.id:
+            self.update_contest(contest)
+            self.delete_contest_problem_by_cid(contest.id)
+        else:
+            self.insert_contest(contest)
+        for pid in contest.related_problem:
+            self.insert_contest_problem(pid, contest.id)
+        self.redirect("/contest/%d" % contest.id)

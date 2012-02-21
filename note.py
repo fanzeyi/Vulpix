@@ -37,7 +37,7 @@ class CreateNoteHandler(BaseHandler, NoteDBMixin, ProblemDBMixin, RelatedProblem
     def get(self):
         nid = self.get_argument("nid", default = None)
         note = None
-        note_page = True
+        related_js = True
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((self.current_user.username, '/member/%s' % self.current_user.username))
