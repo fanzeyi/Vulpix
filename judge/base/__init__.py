@@ -3,6 +3,7 @@
 import smtplib
 import hashlib
 import datetime
+import traceback
 import functools
 from email.mime.text import MIMEText
 from MySQLdb import escape_string
@@ -124,3 +125,14 @@ class BaseHandler(tornado.web.RequestHandler):
             return value
         x = SecureCookie.unserialize(data, self.settings['cookie_secret'])
         return x[name]
+    def write_error(self, status_code, **kwargs):
+        if status_code == 404:
+            self.render('404.html')
+            return
+        elif status_code == 500:
+            error = []
+            for line in traceback.format_exception(*kwargs['exc_info']):
+                error.append(line)
+            error = "\n".join(error)
+            self.render('500.html', locals())
+            return

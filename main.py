@@ -63,6 +63,14 @@ class TestHandler(BaseHandler, MemberDBMixin):
     def get(self):
         self.render('test.html', locals())
 
+class NotFoundHandler(BaseHandler):
+    def get(self, url):
+        raise tornado.web.HTTPError(404)
+
+class ServerErrorHandler(BaseHandler):
+    def get(self):
+        raise tornado.web.HTTPError(500)
+
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
@@ -95,6 +103,8 @@ class Application(tornado.web.Application):
             (r'/backstage/node/create', CreateNodeHandler), 
             (r'/backstage/contest/create', CreateContestHandler), 
             (r'/test', TestHandler), 
+            (r'/500', ServerErrorHandler), 
+            (r'/(.*)', NotFoundHandler), 
         ]
         tornado.web.Application.__init__(self, handlers, **site_config)
         tornado.locale.set_default_locale('zh_CN')
