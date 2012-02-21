@@ -2,9 +2,12 @@
 
 import re
 import sys
+import httplib
 import markdown
 import datetime
 from jinja2 import Environment, FileSystemLoader
+
+httplib.responses[418] = "I'm a teapot"
 
 import tornado.web
 import tornado.locale
@@ -71,6 +74,10 @@ class ServerErrorHandler(BaseHandler):
     def get(self):
         raise tornado.web.HTTPError(500)
 
+class TeapotHandler(BaseHandler):
+    def get(self):
+        raise tornado.web.HTTPError(418)
+
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = [
@@ -104,6 +111,7 @@ class Application(tornado.web.Application):
             (r'/backstage/contest/create', CreateContestHandler), 
             (r'/test', TestHandler), 
             (r'/500', ServerErrorHandler), 
+            (r'/418', TeapotHandler), 
             (r'/(.*)', NotFoundHandler), 
         ]
         tornado.web.Application.__init__(self, handlers, **site_config)

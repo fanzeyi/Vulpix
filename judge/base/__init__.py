@@ -2,6 +2,7 @@
 
 import smtplib
 import hashlib
+import httplib
 import datetime
 import traceback
 import functools
@@ -136,3 +137,5 @@ class BaseHandler(tornado.web.RequestHandler):
             error = "\n".join(error)
             self.render('500.html', locals())
             return
+        msg = httplib.responses[status_code]
+        self.render('error.html', locals())
