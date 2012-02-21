@@ -843,3 +843,15 @@ li.last {
     height: 14px; 
     padding-left: 4px; 
 }
+
+.contest_list .table {
+    margin-bottom: 0; 
+}
+
+.contest_list .table tr:first-child td, .contest_list .table tr:first-child th {
+    border-top: none; 
+}
+
+.contest_list .cell {
+    margin-bottom: 40px; 
+}
