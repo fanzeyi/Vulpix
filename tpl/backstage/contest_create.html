@@ -29,13 +29,13 @@
     <div class="control-group">
         <label class="control-label" for="start_time">{{ _('Start Time') }}</label>
         <div class="controls">
-            <input name="start_time" id="start_time" class="input-xlarge" type="test" {% if contest.start_time %}value="{{ contest.start_time }}" {% endif %}/>
+            <input name="start_time" id="start_time" class="input-xlarge" type="test" {% if contest.start_time %}value="{% if contest.end_time is string %}{{ contest.start_time }}{% else %}{{ contest.start_time | datetimeformat }}{% endif %}" {% endif %}/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label" for="end_time">{{ _('End Time') }}</label>
         <div class="controls">
-            <input name="end_time" id="end_time" class="input-xlarge" type="test" {% if contest.end_time %}value="{{ contest.end_time }}" {% endif %}/>
+            <input name="end_time" id="end_time" class="input-xlarge" type="test" {% if contest.end_time %}value="{% if contest.end_time is string %}{{ contest.end_time }}{% else %}{{ contest.end_time | datetimeformat }}{% endif %}" {% endif %}/>
         </div>
     </div>
     <div class="control-group">
@@ -63,7 +63,7 @@
     </div>
 {% if related_problem %}
 {% for problem in related_problem %}
-<input id="related_{{ problem.id }}" type="hidden" name="link_problem[]" value="{{ problem.id }}" />
+<input id="related_{{ problem.id }}" type="hidden" name="link_problem[]" value="{{ problem.pid }}" />
 {% endfor %}
 {% endif %}
     <div class="form-actions">

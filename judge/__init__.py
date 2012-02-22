@@ -474,9 +474,9 @@ class RelatedProblemDBMixin(object):
         self.db.execute("""INSERT INTO `related_problem` (`pid`, `nid`) VALUES (%s, %s)""", \
                         related_problem.pid, related_problem.nid)
     def delete_related_problem_by_nid(self, nid):
-        self.db.execute("""DELETE * FROM `related_problem` WHERE `nid` = %s""", nid)
+        self.db.execute("""DELETE FROM `related_problem` WHERE `nid` = %s""", nid)
     def delete_related_problem_by_pid(self, pid):
-        self.db.execute("""DELETE * FROM `related_problem` WHERE `pid` = %s""", pid)
+        self.db.execute("""DELETE FROM `related_problem` WHERE `pid` = %s""", pid)
 
 class Submit(BaseDBObject):
     id = ""
@@ -549,8 +549,9 @@ class ContestSubmit(BaseDBObject):
     score = 0
     costtime = 0   # ms
     costmemory = 0 # kb
-    timestamp = None
     lang = 0 # 
+    timestamp = None
+    msg = ""
     user_agent = ""
     ip = ""
     create = None
@@ -565,8 +566,14 @@ class ContestDBMixin(object):
     def _new_contest_problem_by_row(self, row):
         if row:
             contest_problem = ContestProblem()
-            contest._init_row(row)
-            return [contest]
+            contest_problem._init_row(row)
+            return [contest_problem]
+        return []
+    def _new_contest_submit_by_row(self, row):
+        if row:
+            contest_submit = ContestSubmit()
+            contest_submit._init_row(row)
+            return [contest_submit]
         return []
     def insert_contest(self, contest):
         contest.id = self.db.execute("""INSERT INTO `contest` (`title`, `description`, `start_time`, 
@@ -576,6 +583,24 @@ class ContestDBMixin(object):
                                      contest.invisible)
     def insert_contest_problem(self, cid, pid):
         self.db.execute("""INSERT INTO `contest_problem` (`cid`, `pid`) VALUES (%s, %s)""", int(cid), int(pid))
+    def update_contest(self, contest):
+        self.db.execute("""UPDATE `contest` SET `title` = %s, 
+                                                `description` = %s, 
+                                                `start_time` = %s, 
+                                                `end_time` = %s, 
+                                                `invisible` = %s
+                                            WHERE `id` = %s""" \
+                        , contest.title, contest.description, contest.start_time, contest.end_time, \
+                        contest.invisible, contest.id)
+    def delete_contest_problem_by_cid(self, cid):
+        self.db.execute("""DELETE FROM `contest_problem` WHERE `cid` = %s""", cid)
+    def select_contest(self, start = 0, max = 20):
+        rows = self.db.query("""SELECT * FROM `contest` LIMIT %s, %s""", start, max)
+        result = []
+        if rows:
+            for row in rows:
+                result.extend(self._new_contest_by_row(row))
+        return result
     def select_contest_visible(self, start = 0, max = 20):
         rows = self.db.query("""SELECT * FROM `contest` WHERE `invisible` = 0 LIMIT %s, %s""", start, max)
         result = []
@@ -600,3 +625,18 @@ class ContestDBMixin(object):
             for row in rows:
                 result.extend(self._new_contest_problem_by_row(row))
         return result
+    def select_contest_submit_by_cid_and_uid(self, cid, uid):
+        rows = self.db.query("""SELECT `contest_problem`.*, `problem`.`title`, `problem`.`shortname`
+                                FROM `contest_problem`
+                                LEFT JOIN `problem` ON `contest_problem`.`pid` = `problem`.`id`
+                                WHERE `cid` = %s""", cid)
+        result = []
+        if rows:
+            for row in rows:
+                contest_problem = self._new_contest_problem_by_row(row) 
+                query = self.db.get("""SELECT * FROM `contest_submit` WHERE `member_id` = %s AND `problem_id` = %s ORDER BY `id` DESC LIMIT 1""", uid, contest_problem[0].pid)
+                contest_problem[0].submit = ContestSubmit()
+                contest_problem[0].submit._init_row(query)
+                result.extend(contest_problem)
+        return result
+

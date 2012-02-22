@@ -2,7 +2,7 @@
 <div class="contest_list">
     {% if contests %}
     {% for contest in contests %} 
-    <div class="cell nopadding">
+    <div class="cell nopadding" id="contest_{{ contest.id }}">
         <table class="table">
             <tr>
                 <th style="width:100px">{{ _('Title') }}</th>
@@ -18,10 +18,10 @@
             </tr>
             <tr>
                 <th>{{ _('Status') }}</th>
-                <td></td>
+                <td>{{ contest | get_contest_status }}</td>
             </tr>
             <tr>
-                <td colspan="2"><a href="/contest/{{ contest.id }}">{{ _('Enter Contest') }}</a></td>
+                <td colspan="2"><a href="/contest/{{ contest.id }}">{{ _('Enter Contest') }}</a>{% if user.admin %} • <a href="/backstage/contest/create?cid={{ contest.id }}">Edit Contest</a>{% endif %}</td>
             </tr>
         </table>
     </div>

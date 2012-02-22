@@ -2,6 +2,7 @@
 
 import re
 import string
+import datetime
 
 # Configuration for urlize() function
 LEADING_PUNCTUATION  = ['(', '<', '&lt;']
@@ -81,7 +82,24 @@ def autolink(text, trim_url_limit=None, nofollow=False):
                 words[i] = lead + middle + trail
     return ''.join(words)
 
+def datetimeformat(value, format='%m/%d/%Y %H:%M'):
+    return value.strftime(format)
+
+def get_contest_status(contest):
+    if contest.invisible:
+        return "Invisible"
+    now = datetime.datetime.now()
+    if now >= contest.start_time and now <= contest.end_time:
+        return "Running"
+    if now <= contest.start_time:
+        return "Waiting"
+    if now >= contest.end_time:
+        return "Finished"
+    return "Unknown"
+
 filters = {
     'submitstatus' :  submitstatus, 
-    'autolink'     :  autolink, 
+    'autolink'     :  autolink,
+    'datetimeformat' : datetimeformat, 
+    'get_contest_status' : get_contest_status, 
 }

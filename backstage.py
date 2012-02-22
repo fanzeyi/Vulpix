@@ -158,6 +158,9 @@ class CreateContestHandler(BaseHandler, ProblemDBMixin, ContestDBMixin):
             end_datetime = datetime.datetime.strptime(end_time, "%m/%d/%Y %H:%M")
         except ValueError:
             error.append(self._("Start/End Time Format is Invalid."))
+        else:
+            if start_datetime > end_datetime:
+                error.append(self._("Start/End Time is invalid."))
         contest.title = self.xhtml_escape(title)
         contest.description = self.xhtml_escape(description)
         contest.start_time = self.xhtml_escape(start_time)
@@ -180,6 +183,7 @@ class CreateContestHandler(BaseHandler, ProblemDBMixin, ContestDBMixin):
             self.delete_contest_problem_by_cid(contest.id)
         else:
             self.insert_contest(contest)
+        print contest.related_problem
         for pid in contest.related_problem:
-            self.insert_contest_problem(pid, contest.id)
-        self.redirect("/contest/%d" % contest.id)
+            self.insert_contest_problem(cid = contest.id, pid = pid)
+        self.redirect("/contest/%d" % int(contest.id))

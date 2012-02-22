@@ -844,14 +844,19 @@ li.last {
     padding-left: 4px; 
 }
 
-.contest_list .table {
+.contest_list .table, .contest .table {
     margin-bottom: 0; 
 }
 
-.contest_list .table tr:first-child td, .contest_list .table tr:first-child th {
+.contest_list .table tr:first-child td, .contest_list .table tr:first-child th, .contest .table tr:first-child td, .contest .table tr:first-child th  {
     border-top: none; 
 }
 
 .contest_list .cell {
     margin-bottom: 40px; 
+}
+
+.contest.cell .line {
+    border-bottom: none; 
+    border-top: 1px solid #E2E2E2; 
 }
