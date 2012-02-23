@@ -357,10 +357,6 @@ nav .copyright a:hover {
     padding-bottom: 10px; 
 }
 
-.cell.problem pre {
-    min-height: 50px; 
-}
-
 .cell.problem .line:last-child {
     border-bottom: none; 
 }

@@ -21,6 +21,7 @@ class BaseDBObject(object):
         return ""
 
 class Member(BaseDBObject):
+    id = 0
     username = ""
     username_lower = ""
     password = ""
@@ -28,6 +29,7 @@ class Member(BaseDBObject):
     website = ""
     tagline = ""
     bio = ""
+    gravatar_link = ""
     create = None
     admin = 0
     lang = 1
@@ -164,13 +166,16 @@ class Problem(BaseDBObject):
     title = ""
     shortname = ""
     content = ""
-    content_html = ""
     timelimit = 1000
     memlimit = 128
     testpointnum = 0
     invisible = 0
     tags = ""
     create = None
+
+class ProblemTag(BaseDBObject):
+    problem_id = 0
+    tagname = ""
 
 class ProblemDBMixin(object):
     def _new_problem_by_row(self, row):
@@ -179,12 +184,16 @@ class ProblemDBMixin(object):
             problem._init_row(row)
             return [problem]
         return []
+    def insert_problem_tag(self, tagname, problem_id):
+        self.db.execute("""INSERT INTO `problem_tag` (`problem_id`, `tagname`) VAlUES (%s, %s)""", tagname, int(problem_id))
     def insert_problem(self, problem):
         problem.id = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, \
                                      `timelimit`, `memlimit`, `testpoint`, `invisible`, `create`) \
                                      VALUES (%s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
                                      , problem.title, problem.shortname, problem.content, \
                                      int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), int(problem.invisible))
+    def delete_problem_tag_by_problem_id(self, problem_id):
+        self.db.execute("""DELETE FROM `problem_tag` WHERE `problem_id` = %s""", int(problem_id))
     def update_problem(self, problem):
         self.db.execute("""UPDATE `problem` SET `title` = %s, 
                                                 `shortname` = %s, 
@@ -203,6 +212,13 @@ class ProblemDBMixin(object):
     def count_visible_problem(self):
         count = self.db.get("""SELECT COUNT(*) FROM `problem` WHERE `invisible` = 0""")
         return count["COUNT(*)"]
+    def select_problem_tag_by_pid(self, pid):
+        query = self.db.query("""SELECT * FROM `problem_tag` WHERE `problem_id` = %s""", pid)
+        result = []
+        if query:
+            for row in query:
+                result.append(row['tagname'])
+        return result
     def select_problem_by_id(self, pid):
         query = self.db.get("""SELECT * FROM `problem` WHERE `id` = %s LIMIT 1""" , int(pid))
         if query:
@@ -210,14 +226,21 @@ class ProblemDBMixin(object):
             problem._init_row(query)
             return problem
         return None
-    def select_problem_order_by_id(self, nums, start = 0):
+    def select_problem_order_by_id(self, nums = 10, start = 0):
         rows = self.db.query("""SELECT * FROM `problem` LIMIT %s, %s""", int(start), int(nums))
         result = []
         if rows:
             for row in rows:
                 result.extend(self._new_problem_by_row(row))
         return result
-    def select_problem_by_create(self, nums):
+    def select_problem_order_by_id_visible(self, nums = 10, start = 0):
+        rows = self.db.query("""SELECT * FROM `problem` WHERE `invisible` = 0 LIMIT %s, %s""", int(start), int(nums))
+        result = []
+        if rows:
+            for row in rows:
+                result.extend(self._new_problem_by_row(row))
+        return result
+    def select_problem_by_create(self, nums = 10):
         rows = self.db.query("""SELECT * FROM `problem` ORDER BY `id` DESC LIMIT %s""", nums)
         result = []
         if rows:
@@ -231,14 +254,12 @@ class Note(BaseDBObject):
     content = ""
     member_id = 0
     create = ""
-    link_problem = ""
 
 class NoteDBMixin(object):
     def _new_problem_by_row(self, row):
         if row:
             note = Note()
             note._init_row(row)
-            note.link_problem = note.link_problem.split(", ") if note.link_problem else None
             return [note]
         return []
     def select_note_by_id(self, nid):
@@ -246,7 +267,6 @@ class NoteDBMixin(object):
         if query:
             note = Note()
             note._init_row(query)
-            note.link_problem = note.link_problem.split(", ") if note.link_problem else None
             return note
         return None
     def select_note_by_mid(self, mid, start = 0, count = 10):
@@ -258,9 +278,9 @@ class NoteDBMixin(object):
                 result.extend(self._new_problem_by_row(row))
         return result
     def insert_note(self, note):
-        note.id = self.db.execute("""INSERT INTO `note` (`title`, `content`, `member_id`, `create`, `link_problem`)
-                                     VALUES (%s, %s, %s, UTC_TIMESTAMP(), %s)""" \
-                                  , note.title, note.content, int(note.member_id), ", ".join(note.link_problem))
+        note.id = self.db.execute("""INSERT INTO `note` (`title`, `content`, `member_id`, `create`)
+                                     VALUES (%s, %s, %s, UTC_TIMESTAMP())""" \
+                                  , note.title, note.content, int(note.member_id))
     def update_note(self, note):
         self.db.execute("""UPDATE `note` SET `title`   = %s, 
                                              `content` = %s

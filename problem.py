@@ -36,15 +36,17 @@ class ProblemListHandler(BaseHandler, ProblemDBMixin):
             start = int(start)
         except ValueError:
             start = 0
-        problems = self.select_problem_order_by_id(20, start)
+        problems = self.select_problem_order_by_id(10, start)
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((self._('Problem'), '/problem'))
         title = self._("Problem")
         if self.current_user and self.current_user.admin:
             count = self.count_problem()
+            problems = self.select_problem_order_by_id(10, start)
         else:
             count = self.count_visible_problem()
+            problems = self.select_problem_order_by_id_visible(10, start)
         pages = self.get_page_count(count)
         self.render("problem_list.html", locals())
 

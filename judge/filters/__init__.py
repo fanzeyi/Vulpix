@@ -129,7 +129,7 @@ def get_page_nav(pages, start):
         result.append(activebutton(now))
         if now + 1 < pages:
             result.append(button(now + 1))
-    if now + 1 < pages - 1:
+    if pages - 1 > 3 and now + 1 < pages - 1:
         result.append(dotdot(1))
         result.append(button(pages - 1))
     return result

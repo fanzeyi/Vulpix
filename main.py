@@ -127,5 +127,5 @@ class Application(tornado.web.Application):
 
 if __name__ == '__main__':
     http_server = tornado.httpserver.HTTPServer(Application())
-    http_server.listen(int(8080))
+    http_server.listen(int(sys.argv[-1]))
     tornado.ioloop.IOLoop.instance().start()

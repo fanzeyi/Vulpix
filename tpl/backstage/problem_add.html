@@ -62,8 +62,30 @@
             <textarea name="content" class="input-xlarge" style="width:522px; height: 427px">{% if problem.content %}{{ problem.content }}{% endif %}</textarea>
         </div>
     </div>
+    <div class="control-group">
+        <label class="control-label" for="problem_tag">{{ _('Problem Tag') }}</label>
+        <div class="controls">
+            <input type="text" name="problem_tag"  class="input-xlarge" id="problem_tag" />
+            <a href="#" class="btn" id="problem_tag_submit">{{ _('Add') }}</a>
+            <ul id="problem_tag_list">
+                {% if tags %}
+                {% for tag in tags %}
+                <li class="tag">
+                    <a href="/tag/{{ tag }}" target="_blank" style="float:left">{{ tag }}</a>
+                    <a class="close" href="#" value="{{ tag }}" data-dismiss="alert"><i class="icon-remove-sign"></i></a>
+                </li>
+                {% endfor%}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
     </div>
+{% if tags %}
+{% for tag in tags %}
+    <input type="hidden" name="tags[]" value="{{ tag }}" id="tag_{{ tag }}" />
+{% endfor %}
+{% endif %}
 </form>
 {% include 'footer.html' %}

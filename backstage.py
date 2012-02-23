@@ -40,6 +40,7 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         if pid:
             problem = self.select_problem_by_id(pid)
             problem.content = self.xhtml_escape(problem.content)
+            tags = self.select_problem_tag_by_pid(problem.id)
         self.render("backstage/problem_add.html", locals())
     @backstage
     def post(self):
@@ -51,6 +52,8 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         invisible = self.get_argument('invisible', default = 0)
         content = self.get_argument('content', default = None)
         pid = self.get_argument('pid', default = 0)
+        tags = self.get_arguments('tags[]')
+        tags = map(self.xhtml_escape, tags)
         problem = Problem()
         error = []
         error.extend(self._check_text_value(probtitle, self._("Title"), True))
@@ -74,8 +77,11 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         problem.content = content
         if problem.id:
             self.update_problem(problem)
+            self.delete_problem_tag_by_problem_id(problem.id)
         else:
             self.insert_problem(problem)
+        for tag in tags:
+            self.insert_problem_tag(tag, problem.id)
         self.redirect('/problem/%d' % problem.id)
 
 class CreateNodeHandler(BaseHandler, NodeDBMixin):
