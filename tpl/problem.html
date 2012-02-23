@@ -52,31 +52,7 @@
         {{ _('Content') }}
     </div>
     <div class="line">
-        {{ problem.content_html }}
-    </div>
-    <div class="module_title">
-        {{ _('Input Format') }}
-    </div>
-    <div class="line">
-        {{ problem.inputfmt }}
-    </div>
-    <div class="module_title">
-        {{ _('Output Format') }}
-    </div>
-    <div class="line">
-        {{ problem.outputfmt }}
-    </div>
-    <div class="module_title">
-        {{ _('Sample Input') }}
-    </div>
-    <div class="line">
-        <pre>{{ problem.samplein }}</pre>
-    </div>
-    <div class="module_title">
-        {{ _('Sample Output') }}
-    </div>
-    <div class="line">
-        <pre>{{ problem.sampleout }}</pre>
+        {{ problem.content | autolink | replace('\n', '<br/>')}}
     </div>
 </div>
 {% if user %}

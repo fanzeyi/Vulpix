@@ -39,6 +39,7 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         problem = None
         if pid:
             problem = self.select_problem_by_id(pid)
+            problem.content = self.xhtml_escape(problem.content)
         self.render("backstage/problem_add.html", locals())
     @backstage
     def post(self):
@@ -49,10 +50,6 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         testpoint = self.get_argument('testpoint', default = None)
         invisible = self.get_argument('invisible', default = 0)
         content = self.get_argument('content', default = None)
-        inputfmt = self.get_argument('inputfmt', default = '')
-        outputfmt = self.get_argument('outputfmt', default = '')
-        samplein = self.get_argument('samplein', default = '')
-        sampleout = self.get_argument('sampleout', default = '')
         pid = self.get_argument('pid', default = 0)
         problem = Problem()
         error = []
@@ -60,10 +57,6 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         error.extend(self._check_text_value(shortname, self._("Short Name"), True))
         error.extend(self._check_text_value(content, self._("Content"), True))
         error.extend(self._check_text_value(testpoint, self._("Test Point"), True))
-        error.extend(self._check_text_value(inputfmt, self._("Input Format")))
-        error.extend(self._check_text_value(outputfmt, self._("Output Format")))
-        error.extend(self._check_text_value(samplein, self._("Sample Input")))
-        error.extend(self._check_text_value(sampleout, self._("Sample Output")))
         problem.id = int(pid)
         problem.title = self.xhtml_escape(probtitle)
         problem.shortname = self.xhtml_escape(shortname)
@@ -71,18 +64,14 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         problem.memlimit = self.xhtml_escape(memlimit)
         problem.testpoint = self.xhtml_escape(testpoint)
         problem.invisible = self.xhtml_escape(invisible)
-        problem.content = self.xhtml_escape(content)
-        problem.inputfmt = self.xhtml_escape(inputfmt)
-        problem.outputfmt = self.xhtml_escape(outputfmt)
-        problem.samplein = self.xhtml_escape(samplein)
-        problem.sampleout = self.xhtml_escape(sampleout)
         if invisible not in ['1', '0', 0]:
             error.append(self._("Invisible is Invalid!"))
         if error:
+            problem.content = self.xhtml_escape(content)
             title = self._("Add Problem")
             self.render("backstage/problem_add.html", locals())
             return
-        problem.content_html = self.markdown.convert(content)
+        problem.content = content
         if problem.id:
             self.update_problem(problem)
         else:

@@ -38,26 +38,22 @@ class MemberDBMixin(object):
         member._init_row(row)
         return member
     def select_member_by_id(self, mid):
-        sql = """SELECT * FROM `member` WHERE `id` = '%d'""" % int(mid)
-        result = self.db.get(sql)
+        result = self.db.get("""SELECT * FROM `member` WHERE `id` = %s""", int(mid))
         if result:
             return self._new_member_by_row(result)
         return None
     def select_member_by_username(self, username):
-        sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' LIMIT 1""" % (escape(username.lower()))
-        result = self.db.get(sql)
+        result = self.db.get("""SELECT * FROM `member` WHERE `username_lower` = %s LIMIT 1""", username.lower())
         if result:
             return self._new_member_by_row(result)
         return None
     def select_member_by_usr_pwd(self, usr, pwd):
-        sql = """SELECT * FROM `member` WHERE `username_lower` = '%s' AND `password` = '%s' LIMIT 1""" % (escape(usr.lower()), escape(pwd))
-        result = self.db.get(sql)
+        result = self.db.get("""SELECT * FROM `member` WHERE `username_lower` = %s AND `password` = %s LIMIT 1""", usr.lower(), pwd)
         if result:
             return self._new_member_by_row(result)
         return None
     def select_member_by_email(self, email):
-        sql = """SELECT * FROM `member` WHERE `email` = '%s' LIMIT 1""" % (escape(email.lower()))
-        result = self.db.get(sql)
+        result = self.db.get("""SELECT * FROM `member` WHERE `email` = %s LIMIT 1""", email.lower())
         if result:
             return self._new_member_by_row(result)
         return None
@@ -95,34 +91,30 @@ class AuthDBMixin(object):
             return [auth]
         return []
     def select_auth_by_uid(self, uid):
-        sql = """SELECT * FROM `auth` WHERE `uid` = '%d'""" % int(uid)
-        rows = self.db.query(sql)
+        rows = self.db.query("""SELECT * FROM `auth` WHERE `uid` = %s""", int(uid))
         result = []
         for row in rows:
             result.extend(self._new_auth_by_row(row))
         return result
     def select_auth_by_secret(self, secret):
-        sql = """SELECT * FROM `auth` WHERE `secret` = '%s' LIMIT 1""" % escape(secret)
-        result = self._new_auth_by_row(self.db.get(sql))
+        result = self.db.get("""SELECT * FROM `auth` WHERE `secret` = %s LIMIT 1""", secret)
         if result:
-            return result[0]
+            auth = Auth()
+            auth._init_row(result)
+            return auth
         return None
     def create_auth(self, uid):
         random = binascii.b2a_hex(uuid.uuid4().bytes)
-        sql = """INSERT INTO `auth` (`uid`, `secret`, `create`) \
-                 VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
-                 % (int(uid), random)
-        self.db.execute(sql)
+        self.db.execute("""INSERT INTO `auth` (`uid`, `secret`, `create`) VALUES (%s, %s, UTC_TIMESTAMP())""" \
+                        , int(uid), random)
         auth = Auth()
         auth.uid = uid
         auth.secret = random
         return auth
     def delete_auth_by_uid(self, uid):
-        sql = """DELETE FROM `auth` WHERE `uid` = '%d'""" % int(uid)
-        self.db.execute(sql)
+        self.db.execute("""DELETE FROM `auth` WHERE `uid` = %s""", int(uid))
     def delete_auth_by_secret(self, secret):
-        sql = """DELETE FROM `auth` WHERE `secret` = '%s'""" % (escape(secret))
-        self.db.execute(sql)
+        self.db.execute("""DELETE FROM `auth` WHERE `secret` = %s""", secret)
 
 class ResetMail(BaseDBObject):
     uid = 0
@@ -137,37 +129,35 @@ class ResetMailDBMixin(object):
             return [auth]
         return []
     def select_reset_mail_by_uid(self, uid):
-        sql = """SELECT * FROM `reset_mail` WHERE `uid` = '%d'""" % int(uid)
         result = []
-        rows = self.db.query(sql)
+        rows = self.db.query("""SELECT * FROM `reset_mail` WHERE `uid` = %s""", int(uid))
         for row in rows:
             result.extend(self._new_reset_mail_by_row(row))
         return result
     def select_reset_mail_last_by_uid(self, uid):
-        sql = """SELECT * FROM `reset_mail` WHERE `uid` = '%d' ORDER BY `create` DESC LIMIT 1""" % int(uid)
-        auth = self._new_reset_mail_by_row(self.db.get(sql))
-        if auth:
-            return auth[0]
+        result = self.db.get("""SELECT * FROM `reset_mail` WHERE `uid` = %s ORDER BY `create` DESC LIMIT 1""", int(uid))
+        if result:
+            reset_mail = ResetMail()
+            reset_mail._init_row(result)
+            return reset_mail
         return None
     def select_reset_mail_by_secret(self, secret):
-        sql = """SELECT * FROM `reset_mail` WHERE `secret` = '%s' LIMIT 1""" % escape(secret)
-        result = self._new_reset_mail_by_row(self.db.get(sql))
+        result = self.db.get("""SELECT * FROM `reset_mail` WHERE `secret` = %s LIMIT 1""", secret)
         if result:
-            return result[0]
+            reset_mail = ResetMail()
+            reset_mail._init_row(result)
+            return reset_mail
         return None
     def create_reset_mail(self, uid):
         random = binascii.b2a_hex(uuid.uuid4().bytes)
-        sql = """INSERT INTO `reset_mail` (`uid`, `secret`, `create`) \
-                 VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
-                % (int(uid), random)
-        self.db.execute(sql)
+        self.db.execute("""INSERT INTO `reset_mail` (`uid`, `secret`, `create`) VALUES (%s, %s, UTC_TIMESTAMP())""" \
+                        , int(uid), random)
         reset_mail = ResetMail()
         reset_mail.uid = uid
         reset_mail.secret = random
         return reset_mail
     def delete_reset_mail_by_secret(self, secret):
-        sql = """DELETE FROM `reset_mail` WHERE `secret` = '%s'""" % (escape(secret))
-        self.db.execute(sql)
+        self.db.execute("""DELETE FROM `reset_mail` WHERE `secret` = %s""", secret)
 
 class Problem(BaseDBObject):
     id = 0
@@ -175,10 +165,6 @@ class Problem(BaseDBObject):
     shortname = ""
     content = ""
     content_html = ""
-    inputfmt = ""
-    outputfmt = ""
-    samplein = ""
-    sampleout = ""
     timelimit = 1000
     memlimit = 128
     testpointnum = 0
@@ -194,54 +180,43 @@ class ProblemDBMixin(object):
             return [problem]
         return []
     def insert_problem(self, problem):
-        pid = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, `content_html`, \
-                                 `inputfmt`, `outputfmt`, `samplein`, `sampleout`, `timelimit`, `memlimit`, `testpoint`, `invisible`, `create`) \
-                                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
-                              , problem.title, problem.shortname, problem.content, problem.content_html, \
-                              problem.inputfmt, problem.outputfmt, problem.samplein, problem.sampleout, \
-                              int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), int(problem.invisible))
-        problem.id = pid
+        problem.id = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, \
+                                     `timelimit`, `memlimit`, `testpoint`, `invisible`, `create`) \
+                                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
+                                     , problem.title, problem.shortname, problem.content, problem.content_html, \
+                                     int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), int(problem.invisible))
     def update_problem(self, problem):
         self.db.execute("""UPDATE `problem` SET `title` = %s, 
                                                 `shortname` = %s, 
                                                 `content` = %s, 
-                                                `content_html` = %s, 
-                                                `inputfmt` = %s, 
-                                                `outputfmt` = %s,
-                                                `samplein` = %s, 
-                                                `sampleout` = %s, 
                                                 `timelimit` = %s, 
                                                 `memlimit` = %s, 
                                                 `testpoint` = %s, 
                                                 `invisible` = %s
                                             WHERE `id` = %s""", \
-                           problem.title, problem.shortname, problem.content, problem.content_html, \
-                           problem.inputfmt, problem.outputfmt, problem.samplein, problem.sampleout, \
+                           problem.title, problem.shortname, problem.content, \
                            int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), int(problem.invisible), \
                            problem.id)
     def count_problem(self):
         count = self.db.get("""SELECT COUNT(*) FROM `problem`""")
         return count["COUNT(*)"]
     def select_problem_by_id(self, pid):
-        sql = """SELECT * FROM `problem` WHERE `id` = '%d' LIMIT 1""" % int(pid)
-        query = self.db.get(sql)
+        query = self.db.get("""SELECT * FROM `problem` WHERE `id` = %s LIMIT 1""" , int(pid))
         if query:
             problem = Problem()
             problem._init_row(query)
             return problem
         return None
     def select_problem_order_by_id(self, nums, start = 0):
-        sql = """SELECT * FROM `problem` LIMIT %d, %d""" % (start, nums)
+        rows = self.db.query("""SELECT * FROM `problem` LIMIT %s, %s""", start, nums)
         result = []
-        rows = self.db.query(sql)
         if rows:
             for row in rows:
                 result.extend(self._new_problem_by_row(row))
         return result
     def select_problem_by_create(self, nums):
-        sql = """SELECT * FROM `problem` ORDER BY `id` DESC LIMIT %d""" % nums
+        rows = self.db.query("""SELECT * FROM `problem` ORDER BY `id` DESC LIMIT %s""", nums)
         result = []
-        rows = self.db.query(sql)
         if rows:
             for row in rows:
                 result.extend(self._new_problem_by_row(row))
@@ -264,8 +239,7 @@ class NoteDBMixin(object):
             return [note]
         return []
     def select_note_by_id(self, nid):
-        sql = """SELECT * FROM `note` WHERE `id` = '%d' LIMIT 1""" % int(nid)
-        query = self.db.get(sql)
+        query = self.db.get("""SELECT * FROM `note` WHERE `id` = %s LIMIT 1""", int(nid))
         if query:
             note = Note()
             note._init_row(query)
@@ -273,28 +247,24 @@ class NoteDBMixin(object):
             return note
         return None
     def select_note_by_mid(self, mid, start = 0, count = 10):
-        sql = """SELECT * FROM `note` WHERE `member_id` = '%d' ORDER BY `id` DESC LIMIT %d, %d""" \
-                 % (int(mid), int(start), int(count))
-        query = self.db.query(sql)
+        query = self.db.query("""SELECT * FROM `note` WHERE `member_id` = %s ORDER BY `id` DESC LIMIT %s, %s""" \
+                              , int(mid), int(start), int(count))
         result = []
         if query:
             for row in query:
                 result.extend(self._new_problem_by_row(row))
         return result
     def insert_note(self, note):
-        nid = self.db.execute("""INSERT INTO `note` (`title`, `content`, `member_id`, `create`, `link_problem`) \
-                                 VALUES (%s, %s, %s, UTC_TIMESTAMP(), %s)""" \
-                                 , note.title, note.content, int(note.member_id), ", ".join(note.link_problem))
-        note.id = nid
+        note.id = self.db.execute("""INSERT INTO `note` (`title`, `content`, `member_id`, `create`, `link_problem`)
+                                     VALUES (%s, %s, %s, UTC_TIMESTAMP(), %s)""" \
+                                  , note.title, note.content, int(note.member_id), ", ".join(note.link_problem))
     def update_note(self, note):
-        sql = """UPDATE `note` SET `title` = '%s', \
-                                   `content` = '%s' \
-                               WHERE `id` = '%d'""" \
-                 % (note.title, note.content, note.id)
-        self.db.execute(sql)
+        self.db.execute("""UPDATE `note` SET `title`   = %s, 
+                                             `content` = %s
+                                         WHERE `id` = %s""" \
+                        , note.title, note.content, note.id)
     def delete_note_by_nid(self, nid):
-        sql = """DELETE FROM `note` WHERE `id` = '%d'""" % int(nid)
-        self.db.execute(sql)
+        self.db.execute("""DELETE FROM `note` WHERE `id` = %s""", int(nid))
 
 class Node(BaseDBObject):
     id = 0

@@ -62,30 +62,6 @@
             <textarea name="content" class="input-xlarge" style="width:522px; height: 427px">{% if problem.content %}{{ problem.content }}{% endif %}</textarea>
         </div>
     </div>
-    <div class="control-group">
-        <label class="control-label" for="inputfmt">{{ _('Input Format') }}</label>
-        <div class="controls">
-            <textarea name="inputfmt" class="input-xlarge" style="width:522px; height: 172px">{% if problem.inputfmt %}{{ problem.inputfmt }}{% endif %}</textarea>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="samplein">{{ _('Input Sample') }}</label>
-        <div class="controls">
-            <textarea name="samplein" class="input-xlarge" style="width:522px; height: 172px">{% if problem.samplein %}{{ problem.samplein }}{% endif %}</textarea>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="outputfmt">{{ _('Output Format') }}</label>
-        <div class="controls">
-            <textarea name="outputfmt" class="input-xlarge" style="width:522px; height: 172px">{% if problem.outputfmt %}{{ problem.outputfmt }}{% endif %}</textarea>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="sampleout">{{ _('Output Sample') }}</label>
-        <div class="controls">
-            <textarea name="sampleout" class="input-xlarge" style="width:522px; height: 172px">{% if problem.sampleout %}{{ problem.sampleout }}{% endif %}</textarea>
-        </div>
-    </div>
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
     </div>
