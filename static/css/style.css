@@ -860,3 +860,11 @@ li.last {
     border-bottom: none; 
     border-top: 1px solid #E2E2E2; 
 }
+
+.pagination {
+    text-align: center; 
+}
+
+.pagination ul {
+    background-color: white; 
+}

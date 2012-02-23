@@ -32,11 +32,20 @@ class ProblemHandler(BaseHandler, ProblemDBMixin, RelatedProblemDBMixin):
 class ProblemListHandler(BaseHandler, ProblemDBMixin):
     def get(self):
         start = self.get_argument("start", default = 0)
+        try:
+            start = int(start)
+        except ValueError:
+            start = 0
         problems = self.select_problem_order_by_id(20, start)
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((self._('Problem'), '/problem'))
         title = self._("Problem")
+        if self.current_user and self.current_user.admin:
+            count = self.count_problem()
+        else:
+            count = self.count_visible_problem()
+        pages = self.get_page_count(count)
         self.render("problem_list.html", locals())
 
 class SubmitListHandler(BaseHandler, SubmitDBMixin):

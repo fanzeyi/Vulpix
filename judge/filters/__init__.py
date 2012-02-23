@@ -97,9 +97,49 @@ def get_contest_status(contest):
         return "Finished"
     return "Unknown"
 
+def get_prev_page(start):
+    prev = get_now_page(start) - 10
+    return prev if prev >= 0 else 0
+
+def get_now_page(start):
+    start = int(start)
+    now = start / 10 * 10
+    return now
+
+def get_next_page(start):
+    return get_now_page(start) + 10
+
+def get_page_nav(pages, start):
+    now = start / 10
+    dotdot = lambda a: "<li class=\"disabled\"><a href=\"#\">...</a></li>"
+    button = lambda page: "<li><a href=\"?start=%d\">%d</a></li>" % (page * 10, page + 1)
+    activebutton = lambda page: "<li class=\"active\"><a href=\"?start=%d\">%d</a></li>" % (page * 10, page + 1)
+    result = []
+    for i in range(pages if pages <= 4 else 4):
+        if i == now:
+            result.append(activebutton(i))
+        else:
+            result.append(button(i))
+    if now == 3 and pages > 4:
+        result.append(button(4))
+    if now > 3:
+        if now > 4:
+            result.append(dotdot(1))
+            result.append(button(now - 1))
+        result.append(activebutton(now))
+        if now + 1 < pages:
+            result.append(button(now + 1))
+    if now + 1 < pages - 1:
+        result.append(dotdot(1))
+        result.append(button(pages - 1))
+    return result
+
 filters = {
     'submitstatus' :  submitstatus, 
     'autolink'     :  autolink,
     'datetimeformat' : datetimeformat, 
     'get_contest_status' : get_contest_status, 
+    'get_prev_page' : get_prev_page, 
+    'get_next_page' : get_next_page, 
+    'get_page_nav' : get_page_nav, 
 }

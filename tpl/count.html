@@ -1,0 +1,15 @@
+{% if count %}
+<div class="pagination">
+    <ul>
+        <li {% if 0 <= start < 10 %}class="disabled"{% endif %}><a href="?start={{ start | get_prev_page }}">«</a></li>
+        {% for li in pages | get_page_nav(start) %}
+        {{ li }}
+        {% endfor %}
+        {% if start | get_next_page >= pages * 10 %}
+        <li class="disabled"><a href="#">»</a></li>
+        {% else %}
+        <li><a href="?start={{ start | get_next_page }}">»</a></li>
+        {% endif %}
+    </ul>
+</div>
+{% endif %}

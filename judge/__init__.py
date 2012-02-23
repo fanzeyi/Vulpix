@@ -182,8 +182,8 @@ class ProblemDBMixin(object):
     def insert_problem(self, problem):
         problem.id = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, \
                                      `timelimit`, `memlimit`, `testpoint`, `invisible`, `create`) \
-                                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
-                                     , problem.title, problem.shortname, problem.content, problem.content_html, \
+                                     VALUES (%s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
+                                     , problem.title, problem.shortname, problem.content, \
                                      int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), int(problem.invisible))
     def update_problem(self, problem):
         self.db.execute("""UPDATE `problem` SET `title` = %s, 
@@ -200,6 +200,9 @@ class ProblemDBMixin(object):
     def count_problem(self):
         count = self.db.get("""SELECT COUNT(*) FROM `problem`""")
         return count["COUNT(*)"]
+    def count_visible_problem(self):
+        count = self.db.get("""SELECT COUNT(*) FROM `problem` WHERE `invisible` = 0""")
+        return count["COUNT(*)"]
     def select_problem_by_id(self, pid):
         query = self.db.get("""SELECT * FROM `problem` WHERE `id` = %s LIMIT 1""" , int(pid))
         if query:
@@ -208,7 +211,7 @@ class ProblemDBMixin(object):
             return problem
         return None
     def select_problem_order_by_id(self, nums, start = 0):
-        rows = self.db.query("""SELECT * FROM `problem` LIMIT %s, %s""", start, nums)
+        rows = self.db.query("""SELECT * FROM `problem` LIMIT %s, %s""", int(start), int(nums))
         result = []
         if rows:
             for row in rows:

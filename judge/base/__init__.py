@@ -46,6 +46,8 @@ class BaseHandler(tornado.web.RequestHandler):
             if required:
                 error.append(self._('%s is Required!' % title))
         return error
+    def get_page_count(self, count):
+        return count / 10 + (1 if count % 10 else 0)
     def get_current_user(self):
         auth = self.get_cookie('auth', default = None)
         uid = self.get_cookie('uid', default = None)
