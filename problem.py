@@ -9,6 +9,30 @@ from judge import ProblemDBMixin
 from judge import RelatedProblemDBMixin
 from judge.base import BaseHandler
 
+class TagListHandler(BaseHandler, ProblemDBMixin):
+    def get(self, tagname):
+        start = self.get_argument("start", default = 0)
+        try:
+            start = int(start)
+        except ValueError:
+            start = 0
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self._('Tags'), '#'))
+        breadcrumb.append((tagname, '/tag/%s' % tagname))
+        title = u"%s › %s" % (self._("Tags"), tagname)
+        if self.current_user and self.current_user.admin:
+            count = self.count_problem_by_tagname(tagname)
+            problems = self.select_problem_by_tagname(tagname, start = start)
+        else:
+            count = self.count_visible_problem_by_tagname(tagname)
+            problems = self.select_visible_problem_by_tagname(tagname, start = start)
+        if not problems:
+            raise HTTPError(404)
+        pages = self.get_page_count(count)
+        self.render("problem_list.html", locals())
+
+
 class ProblemHandler(BaseHandler, ProblemDBMixin, RelatedProblemDBMixin):
     def get(self, pid):
         try:
@@ -25,6 +49,7 @@ class ProblemHandler(BaseHandler, ProblemDBMixin, RelatedProblemDBMixin):
             breadcrumb.append((problem.title, '/problem/%d' % problem.id))
             title = self._("Problem") + u" › " + problem.title
             related_note = self.select_related_problem_by_pid(problem.id)
+            tags = self.select_problem_tag_by_pid(problem.id)
             self.render("problem.html", locals())
         else:
             raise HTTPError(404)
@@ -36,7 +61,6 @@ class ProblemListHandler(BaseHandler, ProblemDBMixin):
             start = int(start)
         except ValueError:
             start = 0
-        problems = self.select_problem_order_by_id(10, start)
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((self._('Problem'), '/problem'))

@@ -72,7 +72,7 @@
                 {% for tag in tags %}
                 <li class="tag">
                     <a href="/tag/{{ tag }}" target="_blank" style="float:left">{{ tag }}</a>
-                    <a class="close" href="#" value="{{ tag }}" data-dismiss="alert"><i class="icon-remove-sign"></i></a>
+                    <a class="close" data-dismiss="alert" value="{{ tag }}" href="#"><i class="icon-remove-sign"></i></a>
                 </li>
                 {% endfor%}
                 {% endif %}
@@ -82,10 +82,55 @@
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">{{ _('Submit') }}</button>
     </div>
+</fieldset>
 {% if tags %}
 {% for tag in tags %}
-    <input type="hidden" name="tags[]" value="{{ tag }}" id="tag_{{ tag }}" />
+    <input id="tag_{{ tag }}" type="hidden" name="tags[]" value="{{ tag }}" />
 {% endfor %}
 {% endif %}
 </form>
+<script type="text/javascript">
+$(document).ready(function() {
+    var tag_list = new Array(); 
+    $.each($('input[name="tags[]"]'), function(i, v) {
+        tag_list.push(v.value); 
+    }); 
+    function add_problem_tag() {
+        var val = $("#problem_tag").val(); 
+        if($.inArray(val, tag_list) != -1 || !val.length ) {
+            return false; 
+        }
+        $('#problem_tag_list').append('<li class="tag"><a href="/tag/' + val + '" target="_blank">' + val + '</a><a class="close" data-dismiss="alert" value="' + val + '" href="#"><i class="icon-remove-sign"></i></a></li>'); 
+        $('form.form-horizontal').append('<input id="tag_' + val + '" type="hidden" name="tags[]" value="' + val + '" />'); 
+        tag_list.push(val); 
+        $('#problem_tag').val(''); 
+        $('.tag .close').click(function () {
+            var tagname = $(this).attr('value');
+            var index = tag_list.indexOf(tagname); 
+            tag_list.splice(index, 1); 
+            $('#tag_' + tagname).remove(); 
+        }); 
+    }
+    $('.disabled').click(function() {
+        return false; 
+    }); 
+    $('#problem_tag').keypress(function (e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if(code == 13) {
+            add_problem_tag(); 
+            return false; 
+        }
+    }); 
+    $("#problem_tag_submit").click(function () {
+        add_problem_tag(); 
+        return false; 
+    }); 
+    $('.tag .close').click(function () {
+        var tagname = $(this).attr('value');
+        var index = tag_list.indexOf(tagname); 
+        tag_list.splice(index, 1); 
+        $('#tag_' + tagname).remove(); 
+    }); 
+}); 
+</script>
 {% include 'footer.html' %}

@@ -185,7 +185,7 @@ class ProblemDBMixin(object):
             return [problem]
         return []
     def insert_problem_tag(self, tagname, problem_id):
-        self.db.execute("""INSERT INTO `problem_tag` (`problem_id`, `tagname`) VAlUES (%s, %s)""", tagname, int(problem_id))
+        self.db.execute("""INSERT INTO `problem_tag` (`tagname`, `problem_id`) VAlUES (%s, %s)""", tagname, int(problem_id))
     def insert_problem(self, problem):
         problem.id = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, \
                                      `timelimit`, `memlimit`, `testpoint`, `invisible`, `create`) \
@@ -211,6 +211,14 @@ class ProblemDBMixin(object):
         return count["COUNT(*)"]
     def count_visible_problem(self):
         count = self.db.get("""SELECT COUNT(*) FROM `problem` WHERE `invisible` = 0""")
+        return count["COUNT(*)"]
+    def count_problem_by_tagname(self, tagname):
+        count = self.db.get("""SELECT COUNT(*) FROM `problem_tag` WHERE `tagname` = %s""", tagname)
+        return count["COUNT(*)"]
+    def count_visible_problem_by_tagname(self, tagname):
+        count = self.db.get("""SELECT COUNT(*), `problem`.* FROM `problem_tag` 
+                               LEFT JOIN `problem` ON `problem_tag`.`problem_id` = `problem`.`id`
+                               WHERE `tagname` = %s AND `problem`.`invisible` = 0""", tagname)
         return count["COUNT(*)"]
     def select_problem_tag_by_pid(self, pid):
         query = self.db.query("""SELECT * FROM `problem_tag` WHERE `problem_id` = %s""", pid)
@@ -242,6 +250,27 @@ class ProblemDBMixin(object):
         return result
     def select_problem_by_create(self, nums = 10):
         rows = self.db.query("""SELECT * FROM `problem` ORDER BY `id` DESC LIMIT %s""", nums)
+        result = []
+        if rows:
+            for row in rows:
+                result.extend(self._new_problem_by_row(row))
+        return result
+    def select_problem_by_tagname(self, tagname, start = 0, nums = 10):
+        rows = self.db.query("""SELECT `problem_tag`.*, `problem`.* 
+                                FROM `problem_tag`
+                                LEFT JOIN `problem` ON `problem_tag`.`problem_id` = `problem`.`id`
+                                WHERE `tagname` = %s LIMIT %s, %s""", tagname, int(start), int(nums))
+        result = []
+        if rows:
+            for row in rows:
+                result.extend(self._new_problem_by_row(row))
+        return result
+    def select_visible_problem_by_tagname(self, tagname, start = 0, nums = 10):
+        rows = self.db.query("""SELECT `problem_tag`.*, `problem`.* 
+                                FROM `problem_tag`
+                                LEFT JOIN `problem` ON `problem_tag`.`problem_id` = `problem`.`id`
+                                WHERE `tagname` = %s AND `problem`.`invisible` = 0
+                                LIMIT %s, %s""", tagname, int(start), int(nums))
         result = []
         if rows:
             for row in rows:

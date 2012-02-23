@@ -48,6 +48,7 @@ from member import ForgetPasswordHandler
 from problem import ProblemHandler
 from problem import ProblemListHandler
 from problem import SubmitListHandler
+from problem import TagListHandler
 from contest import ContestHandler
 from contest import ContestListHandler
 from backstage import BackstageHandler
@@ -94,6 +95,7 @@ class Application(tornado.web.Application):
             (r'/lang/(.*)', SetLangeuageHandler), 
             (r'/problem/([\d]*)', ProblemHandler), 
             (r'/problem', ProblemListHandler), 
+            (r'/tag/(.*)', TagListHandler), 
             (r'/contest/([\d]*)', ContestHandler), 
             (r'/contest', ContestListHandler), 
             (r'/submit', SubmitListHandler), 

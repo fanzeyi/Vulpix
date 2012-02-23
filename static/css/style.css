@@ -811,13 +811,13 @@ li.last {
     padding-left: 10px; 
 }
 
-#related_problem_list {
+#related_problem_list, #problem_tag_list {
     list-style: none; 
     margin-left: 0; 
     margin-top: 10px; 
 }
 
-#related_problem_list .related {
+#related_problem_list .related, #problem_tag_list .tag, .cell.tags .tag {
     background-color: #EEE; 
     border-radius: 4px; 
     padding: 4px 4px 2px 10px; 
@@ -825,15 +825,15 @@ li.last {
     margin-right: 4px; 
 }
 
-#related_problem_list .related:hover {
+#related_problem_list .related:hover, #problem_tag_list .tag:hover {
     background: #DDD; 
 }
 
-#related_problem_list .related a {
+#related_problem_list .related a, #problem_tag_list .tag a{
     color: black; 
 }
 
-#related_problem_list .related a.close {
+#related_problem_list .related a.close, #problem_tag_list .tag a.close {
     color: black; 
     line-height: 14px; 
     height: 14px; 
@@ -863,4 +863,20 @@ li.last {
 
 .pagination ul {
     background-color: white; 
+}
+
+.line.last {
+    border-bottom: none; 
+}
+
+.tags .line {
+    border-bottom: none; 
+}
+
+.cell.tags .tag {
+    padding: 1px 10px; 
+    margin-right: 5px; 
+    margin-bottom: 10px; 
+    float: none; 
+    display: inline-block; 
 }

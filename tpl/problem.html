@@ -42,8 +42,19 @@
 <div class="cell nopadding">
     <div class="module_title">{{ _('Related Notes') }}</div>
     {% for note in related_note %}
-    <div class="line"><a href="/note/{{ note.nid }}">{{ note.title }}</a></div>
+    <div class="line {% if loop.last %}last{% endif %}"><a href="/note/{{ note.nid }}">{{ note.title }}</a></div>
     {% endfor %}
+</div>
+{% endif %}
+{% if tags %}
+<div class="sep30"></div>
+<div class="cell nopadding tags">
+    <div class="module_title">{{ _('Tags') }}</div>
+    <div class="line">
+    {% for tag in tags %}
+    <span class="tag"><a href="/tag/{{ tag }}">{{ tag }}</a></span>
+    {% endfor%}
+    </div>
 </div>
 {% endif %}
 </div>
