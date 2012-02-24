@@ -3,6 +3,7 @@
 import re
 import string
 import datetime
+from jinja2 import evalcontextfilter, Markup, escape
 
 # Configuration for urlize() function
 LEADING_PUNCTUATION  = ['(', '<', '&lt;']
@@ -21,6 +22,8 @@ link_target_attribute_re = re.compile(r'(<a [^>]*?)target=[^\s>]+')
 html_gunk_re = re.compile(r'(?:<br clear="all">|<i><\/i>|<b><\/b>|<em><\/em>|<strong><\/strong>|<\/?smallcaps>|<\/?uppercase>)', re.IGNORECASE)
 hard_coded_bullets_re = re.compile(r'((?:<p>(?:%s).*?[a-zA-Z].*?</p>\s*)+)' % '|'.join([re.escape(x) for x in DOTS]), re.DOTALL)
 trailing_empty_content_re = re.compile(r'(?:<p>(?:&nbsp;|\s|<br \/>)*?</p>\s*)+\Z')
+_paragraph_re = re.compile(r'(?:\r\n|\r|\n){1,}')
+pre_re = re.compile(r"<pre>(.*?)</pre>", re.S)
 
 def submitstatus(value):
     if value == 0:
@@ -134,6 +137,26 @@ def get_page_nav(pages, start):
         result.append(button(pages - 1))
     return result
 
+def pre_to_code(text):
+    text = text.replace('&lt;pre&gt;', '<pre>').replace('&lt;/pre&gt;', '</pre>')
+    handle_list = pre_re.findall(text)
+    result = []
+    for p in handle_list:
+        text = text.replace(p, p.replace('<br />', ''))
+    return text
+
+def nl_to_br(text):
+    result = text.replace('\r\n', '<br />\r\n')
+    return result
+
+@evalcontextfilter
+def nl2br(eval_ctx, value):
+    result = u'\n\n'.join(u'<p>%s</p>' % p.replace('\n', '<br>\n')
+                          for p in _paragraph_re.split(value))
+    if eval_ctx.autoescape:
+        result = Markup(result)
+    return result
+
 filters = {
     'submitstatus' :  submitstatus, 
     'autolink'     :  autolink,
@@ -142,4 +165,6 @@ filters = {
     'get_prev_page' : get_prev_page, 
     'get_next_page' : get_next_page, 
     'get_page_nav' : get_page_nav, 
+    'pre_to_code' : pre_to_code, 
+    'nl_to_br' : nl_to_br,     
 }

@@ -10,7 +10,7 @@ from judge.base import BaseHandler
 
 class HomeHandler(BaseHandler, ProblemDBMixin, TopicDBMixin, NodeDBMixin):
     def get(self):
-        if self.current_user:
+        if True or self.current_user:
             title = self._("Home")
             breadcrumb = []
             breadcrumb.append((self._("Home"), '/'))

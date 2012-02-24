@@ -13,7 +13,7 @@
     <h3 class="title">{{ note.title }}</h3>
     <div class="meta">{{ note.create }} {% if note.member_id == user.id %} | <a href="/note/create?nid={{ note.id }}">{{ _('Edit') }}</a> | <a href="/note/{{ note.id }}/remove">{{ _('Delete') }}</a>{% endif %}</div>
     <div class="content">
-        {{ note.content | autolink | replace('\n', '<br />') | replace('&lt;pre&gt;', '<pre>') | replace('&lt;/pre&gt;', '</pre>')}}
+        {{ note.content | autolink | nl_to_br | pre_to_code }}
     </div>
 </div>
 {% include 'footer.html' %}
