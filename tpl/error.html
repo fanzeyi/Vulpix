@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8" />
+    <title>Error {{ status_code }}({{ msg }})!!1</title>
+    <style>
+        .ise {
+            width: 700px; 
+            margin: 0 auto; 
+            margin-top: 100px; 
+        }
+        .img, .msg {
+            float: left; 
+        }
+        .img img{
+            width: 300px; 
+        }
+        .msg {
+            margin-top: 100px; 
+            width: 400px;
+            color: #aaa; 
+        }
+        .msg pre {
+            overflow-x: scroll; 
+            padding-bottom: 20px; 
+        }
+        .msg .caption {
+            font-size: 22px; 
+            color: #000; 
+        }
+    </style>
+</head>
+<body>
+    <div class="ise">
+        <div class="img"><img src="/static/img/error.jpg" /></div>
+        <div class="msg">
+            <p class="caption"><b>{{ status_code }}</b> {{ msg }}...</p>
+            <p>If you see this message. Please contact this website administrator.</p>
+        </div>
+    </div>
+</body>
+</html>
+
+

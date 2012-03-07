@@ -2,8 +2,11 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 03:15:48 08/03/2012
+# MODIFIED: 03:31:08 08/03/2012
 # DESCRIPTION: Base handler
+
+import httplib
+import traceback
 
 import tornado.web
 import tornado.escape
@@ -26,12 +29,28 @@ class BaseHandler(tornado.web.RequestHandler):
     def sendmail(self):
         '''Send mail func, send mail to someone'''
         pass
-    def render(self):
+    def render(self, tplname, args = {}):
         '''Rewrite render func for use jinja2'''
-        pass
-    def write_error(self):
+        if "self" in args.keys():
+            args.pop("self")
+        tpl = self.jinja2.get_template(tplname)
+        ren = tpl.render(page = self, _ = self._, user = self.current_user, **args)
+        self.write(ren)
+        self.finish()
+    def write_error(self, status_code, **kwargs):
         '''Rewrite write_error for custom error page'''
-        pass
+        if status_code == 404:
+            self.render("404.html")
+            return
+        elif status_code == 500:
+            error = []
+            for line in traceback.format_exception(*kwargs['exc_info']):
+                error.append(line)
+            error = "\n".join(error)
+            self.render("500.html", locals())
+            return
+        msg = httplib.responses[status_code]
+        self.render("error.html", locals())
     @property
     def db(self):
         return self.application.db

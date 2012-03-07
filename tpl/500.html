@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8" />
+    <title>Error 500(Internal Server Error)!!1</title>
+    <style>
+        .ise {
+            width: 700px; 
+            margin: 0 auto; 
+            margin-top: 100px; 
+        }
+        .img, .msg {
+            float: left; 
+        }
+        .msg {
+            margin-top: 100px; 
+            width: 400px;
+        }
+        .msg pre {
+            overflow-x: scroll; 
+            padding-bottom: 20px; 
+        }
+        .msg .caption {
+            font-size: 22px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="ise">
+        <div class="msg">
+            <p class="caption"><b>500</b> Internal Server Error...</p>
+            <pre>{{ error }}</pre>
+        </div>
+        <div class="img"><img src="/static/img/500.png" /></div>
+    </div>
+</body>
+</html>
+
