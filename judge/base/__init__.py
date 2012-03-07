@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 02:10:52 08/03/2012
+# MODIFIED: 02:57:32 08/03/2012
 # DESCRIPTION: Base handler
 
 import tornado.web
@@ -32,6 +32,12 @@ class BaseHandler(tornado.web.RequestHandler):
     def write_error(self):
         '''Rewrite write_error for custom error page'''
         pass
+    @property
+    def db(self):
+        return self.application.db
+    @property
+    def jinja2:
+        return self.application.jinja2
 
 class BaseDBObject(object):
     ''' Base Table Object '''
