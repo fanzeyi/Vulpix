@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 02:57:32 08/03/2012
+# MODIFIED: 03:15:48 08/03/2012
 # DESCRIPTION: Base handler
 
 import tornado.web
@@ -36,7 +36,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def db(self):
         return self.application.db
     @property
-    def jinja2:
+    def jinja2(self):
         return self.application.jinja2
 
 class BaseDBObject(object):
