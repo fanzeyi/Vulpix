@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from tornado.web import HTTPError
 from tornado.web import authenticated
 
 from judge import Reply

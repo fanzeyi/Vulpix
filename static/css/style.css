@@ -622,6 +622,7 @@ li.last {
 .node .nomoretopic {
     text-align: center; 
     padding-top: 17px; 
+    margin-bottom: 20px; 
 }
 
 .topic_list {
@@ -849,6 +850,10 @@ li.last {
 
 .contest_list .table, .contest .table {
     margin-bottom: 0; 
+}
+
+.contest .table tr th {
+    padding-left: 15px; 
 }
 
 .contest_list .table tr:first-child td, .contest_list .table tr:first-child th, .contest .table tr:first-child td, .contest .table tr:first-child th  {

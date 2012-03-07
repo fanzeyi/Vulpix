@@ -55,12 +55,12 @@ class BaseHandler(tornado.web.RequestHandler):
         if auth and uid:
             auth = escape_string(auth)
             uid = escape_string(uid)
-            sql = """SELECT * FROM `auth` WHERE `secret` = '%s' AND `uid` = '%s' LIMIT 1""" \
+            sql = """SELECT * FROM `auth` WHERE `secret` = '%s' AND `member_id` = '%s' LIMIT 1""" \
                      % (auth, uid)
             auth = self.db.get(sql)
             if auth:
                 sql = """SELECT * FROM `member` WHERE `id` = '%d' LIMIT 1""" \
-                         % (auth['uid'])
+                         % (auth['member_id'])
                 user = Member()
                 query = self.db.get(sql)
                 if query:

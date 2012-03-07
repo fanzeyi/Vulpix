@@ -1,6 +1,6 @@
 {% include 'header.html' %}
+{% if topics %}
 <div class="cell form_index nopadding">
-    {% if topics %} 
     <ul class="topic_list">
         {% for topic in topics %}
         <li class="line from_{{ topic.member_id }}">
@@ -23,12 +23,13 @@
         </li>
         {% endfor %}
     </ul>
-    {% else %}
-    <div class="nomoretopic">
-        {{ _('oooops. There have no more topic.') }}
-    </div>
-    {% endif %}
 </div>
+{% else %}
+<div class="well" style="text-align:center">
+    {{ _('oooops. There have no more topic.') }}
+</div>
+{% endif %}
+
 <div class="sep30"></div>
 <div class="cell nopadding node_list">
     <div class="module_title">

@@ -81,7 +81,7 @@ class MemberDBMixin(object):
                                                member.admin, member.lang, member.id)
 
 class Auth(BaseDBObject):
-    uid = 0
+    member_id = 0
     secret = ""
     create = None
 
@@ -93,7 +93,7 @@ class AuthDBMixin(object):
             return [auth]
         return []
     def select_auth_by_uid(self, uid):
-        rows = self.db.query("""SELECT * FROM `auth` WHERE `uid` = %s""", int(uid))
+        rows = self.db.query("""SELECT * FROM `auth` WHERE `member_id` = %s""", int(uid))
         result = []
         for row in rows:
             result.extend(self._new_auth_by_row(row))
@@ -107,19 +107,19 @@ class AuthDBMixin(object):
         return None
     def create_auth(self, uid):
         random = binascii.b2a_hex(uuid.uuid4().bytes)
-        self.db.execute("""INSERT INTO `auth` (`uid`, `secret`, `create`) VALUES (%s, %s, UTC_TIMESTAMP())""" \
+        self.db.execute("""INSERT INTO `auth` (`member_id`, `secret`, `create`) VALUES (%s, %s, UTC_TIMESTAMP())""" \
                         , int(uid), random)
         auth = Auth()
         auth.uid = uid
         auth.secret = random
         return auth
     def delete_auth_by_uid(self, uid):
-        self.db.execute("""DELETE FROM `auth` WHERE `uid` = %s""", int(uid))
+        self.db.execute("""DELETE FROM `auth` WHERE `member_id` = %s""", int(uid))
     def delete_auth_by_secret(self, secret):
         self.db.execute("""DELETE FROM `auth` WHERE `secret` = %s""", secret)
 
 class ResetMail(BaseDBObject):
-    uid = 0
+    member_id = 0
     secret = ""
     create = None
 
@@ -132,12 +132,12 @@ class ResetMailDBMixin(object):
         return []
     def select_reset_mail_by_uid(self, uid):
         result = []
-        rows = self.db.query("""SELECT * FROM `reset_mail` WHERE `uid` = %s""", int(uid))
+        rows = self.db.query("""SELECT * FROM `reset_mail` WHERE `member_id` = %s""", int(uid))
         for row in rows:
             result.extend(self._new_reset_mail_by_row(row))
         return result
     def select_reset_mail_last_by_uid(self, uid):
-        result = self.db.get("""SELECT * FROM `reset_mail` WHERE `uid` = %s ORDER BY `create` DESC LIMIT 1""", int(uid))
+        result = self.db.get("""SELECT * FROM `reset_mail` WHERE `member_id` = %s ORDER BY `create` DESC LIMIT 1""", int(uid))
         if result:
             reset_mail = ResetMail()
             reset_mail._init_row(result)
@@ -152,10 +152,10 @@ class ResetMailDBMixin(object):
         return None
     def create_reset_mail(self, uid):
         random = binascii.b2a_hex(uuid.uuid4().bytes)
-        self.db.execute("""INSERT INTO `reset_mail` (`uid`, `secret`, `create`) VALUES (%s, %s, UTC_TIMESTAMP())""" \
+        self.db.execute("""INSERT INTO `reset_mail` (`member_id`, `secret`, `create`) VALUES (%s, %s, UTC_TIMESTAMP())""" \
                         , int(uid), random)
         reset_mail = ResetMail()
-        reset_mail.uid = uid
+        reset_mail.member_id = uid
         reset_mail.secret = random
         return reset_mail
     def delete_reset_mail_by_secret(self, secret):
@@ -168,7 +168,7 @@ class Problem(BaseDBObject):
     content = ""
     timelimit = 1000
     memlimit = 128
-    testpointnum = 0
+    testpoint = 0
     invisible = 0
     tags = ""
     create = None
@@ -463,8 +463,8 @@ class ReplyDBMixin(object):
 
 
 class RelatedProblem(BaseDBObject):
-    pid = 0
-    nid = 0
+    problem_id = 0
+    note_id = 0
 
 class RelatedProblemDBMixin(object):
     def _new_related_problem_by_row(self, row):
@@ -476,9 +476,9 @@ class RelatedProblemDBMixin(object):
     def select_related_problem_by_pid(self, pid, start = 0, max = 5):
         rows = self.db.query("""SELECT `related_problem`.*, `note`.`title`, `note`.`content`, `note`.`member_id`, `member`.`username`
                                 FROM `related_problem` 
-                                LEFT JOIN `note` ON `related_problem`.`nid` = `note`.`id`
+                                LEFT JOIN `note` ON `related_problem`.`note_id` = `note`.`id`
                                 LEFT JOIN `member` ON `note`.`member_id` = `member`.`id`
-                                WHERE `pid` = %s LIMIT %s, %s""", pid, start, max)
+                                WHERE `problem_id` = %s LIMIT %s, %s""", pid, start, max)
         result = []
         for row in rows:
             result.extend(self._new_related_problem_by_row(row))
@@ -486,19 +486,19 @@ class RelatedProblemDBMixin(object):
     def select_related_problem_by_nid(self, nid, start = 0, max = 20):
         rows = self.db.query("""SELECT `related_problem`.*, `problem`.`title`
                                 FROM `related_problem`
-                                LEFT JOIN `problem` ON `related_problem`.`pid` = `problem`.`id`
-                                WHERE `nid` = %s LIMIT %s, %s""", nid, start, max)
+                                LEFT JOIN `problem` ON `related_problem`.`problem_id` = `problem`.`id`
+                                WHERE `note_id` = %s LIMIT %s, %s""", nid, start, max)
         result = []
         for row in rows:
             result.extend(self._new_related_problem_by_row(row))
         return result
     def insert_related_problem(self, related_problem):
-        self.db.execute("""INSERT INTO `related_problem` (`pid`, `nid`) VALUES (%s, %s)""", \
+        self.db.execute("""INSERT INTO `related_problem` (`problem_id`, `note_id`) VALUES (%s, %s)""", \
                         related_problem.pid, related_problem.nid)
     def delete_related_problem_by_nid(self, nid):
-        self.db.execute("""DELETE FROM `related_problem` WHERE `nid` = %s""", nid)
+        self.db.execute("""DELETE FROM `related_problem` WHERE `note_id` = %s""", nid)
     def delete_related_problem_by_pid(self, pid):
-        self.db.execute("""DELETE FROM `related_problem` WHERE `pid` = %s""", pid)
+        self.db.execute("""DELETE FROM `related_problem` WHERE `problem_id` = %s""", pid)
 
 class Submit(BaseDBObject):
     id = ""
@@ -604,7 +604,7 @@ class ContestDBMixin(object):
                                      contest.title, contest.description, contest.start_time, contest.end_time, \
                                      contest.invisible)
     def insert_contest_problem(self, cid, pid):
-        self.db.execute("""INSERT INTO `contest_problem` (`cid`, `pid`) VALUES (%s, %s)""", int(cid), int(pid))
+        self.db.execute("""INSERT INTO `contest_problem` (`contest_id`, `problem_id`) VALUES (%s, %s)""", int(cid), int(pid))
     def update_contest(self, contest):
         self.db.execute("""UPDATE `contest` SET `title` = %s, 
                                                 `description` = %s, 
@@ -640,8 +640,8 @@ class ContestDBMixin(object):
     def select_contest_problem_by_cid(self, cid):
         rows = self.db.query("""SELECT `contest_problem`.*, `problem`.`title`
                                 FROM `contest_problem`
-                                LEFT JOIN `problem` ON `contest_problem`.`pid` = `problem`.`id`
-                                WHERE `cid` = %s""", cid)
+                                LEFT JOIN `problem` ON `contest_problem`.`problem_id` = `problem`.`id`
+                                WHERE `contest_id` = %s""", cid)
         result = []
         if rows:
             for row in rows:
@@ -650,8 +650,8 @@ class ContestDBMixin(object):
     def select_contest_submit_by_cid_and_uid(self, cid, uid):
         rows = self.db.query("""SELECT `contest_problem`.*, `problem`.`title`, `problem`.`shortname`
                                 FROM `contest_problem`
-                                LEFT JOIN `problem` ON `contest_problem`.`pid` = `problem`.`id`
-                                WHERE `cid` = %s""", cid)
+                                LEFT JOIN `problem` ON `contest_problem`.`problem_id` = `problem`.`id`
+                                WHERE `contest_id` = %s""", cid)
         result = []
         if rows:
             for row in rows:
