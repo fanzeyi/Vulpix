@@ -1,0 +1,124 @@
+
+@import "vars.less"; 
+@import "bootstrap/bootstrap.less"; 
+
+/* Signin & Signup Page Style */
+
+body {
+    background: url(@bg-noise);
+}
+
+.sign {
+    margin: 0; 
+    #wrapper {
+        width: @signWidth; 
+        margin-top: @signYOffset; 
+        .center-block(); 
+        #logo {
+            margin-bottom: 20px; 
+            padding-left: 40px; 
+            width: @signInnerWidth; 
+            .logo {
+                font-size: 50px;
+                font-family: 'Port Lligat Slab', serif;
+            }
+            .subtitle {
+                position: relative;
+                left: 80px;
+                top: -5px;
+                font-size: 10px;
+            }
+        }
+        .signform {
+            width: @signInnerWidth; 
+            .input-prepend {
+                input, .btn {
+                    float: left;
+                }
+            }
+            .add-on, input {
+                height: 28px; 
+                line-height: 28px; 
+            }
+            .btn {
+                width: 246px;
+                height: 34px;
+            }
+            a.btn {
+                width: 226px; 
+                height: 26px; 
+                line-height: 26px;
+            }
+        }
+    }
+}
+
+/* Common Page Style */
+
+body {
+    margin-left: @sidebarWidth + 20; 
+    margin-bottom: @bottomBlank; 
+}
+
+nav {
+    color: white; 
+    background: #2B2B2B; 
+    background-image: url(@bg-sidebar); 
+    width: @sidebarWidth; 
+    height: 100%; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    overflow: hidden; 
+    z-index: 5; 
+    border-right: solid 1px black; 
+
+    .profile {
+        height: 76px; 
+        border-bottom: 1px solid @sidebarLineBottomColor;
+
+        .profile_wrap {
+            height: 75px; 
+            border-bottom: 1px solid @sidebarLineTopColor; 
+
+            .username {
+                position: absolute;
+                top: 20px;
+                left: 70px;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+                text-shadow: black 0px 1px 1px;
+            }
+
+            .avatar {
+                .border-radius(4px); 
+                .box-shadow(0px 1px 0px rgba(255, 255, 255, 0.2)); 
+                .square(45px); 
+                border: 1px solid black; 
+                position: absolute;
+                top: 15px;
+                left: 14px;
+                cursor: pointer;
+                overflow: hidden;
+
+                img {
+                    .border-radius(4px); 
+                    .square(45px); 
+                }
+                .avatar_mask {
+                    .border-radius(4px); 
+                    .box-shadow(inset 0px 0px 9px #000000); 
+                    .opacity(50); 
+                    .square(45px); 
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                }
+            }
+        }
+    }
+
+    .nav {
+        margin-top: 20px; 
+    }
+}

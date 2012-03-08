@@ -2,14 +2,27 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 03:31:08 08/03/2012
+# MODIFIED: 02:44:38 09/03/2012
 # DESCRIPTION: Base handler
 
 import httplib
+import functools
 import traceback
 
 import tornado.web
 import tornado.escape
+
+def unauthenticated(method):
+    """Decorate methods with this to require that user be NOT logged in"""
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        if self.current_user:
+            if self.request.method in ("GET", "HEAD"):
+                self.redirect("/")
+                return
+            raise HTTPError(403)
+        return method(self, *args, **kwargs)
+    return wrapper
 
 class BaseHandler(tornado.web.RequestHandler):
     _ = lambda self, text: self.locale.translate(text) # i18n func
