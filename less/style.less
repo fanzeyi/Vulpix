@@ -60,6 +60,53 @@ body {
     margin-bottom: @bottomBlank; 
 }
 
+.main {
+    padding-top: 40px;
+    padding-right: 20px;
+    width: 96%;
+}
+
+.sep30 {
+    height: 30px; 
+}
+
+.cell {
+    .border-radius(4px); 
+    .box-shadow(0px 0px 2px #BBB); 
+    border: 2px solid #EEE;
+    margin-bottom: 30px; 
+    background-color: white; 
+    
+    &.span8 {
+        width: 64.95744680199999%;
+    }
+    
+    .title {
+        font-size: 16px; 
+        font-weight: bold;
+        line-height: 30px; 
+        padding-left: 10px; 
+        padding-top: 5px; 
+        border-bottom: 1px solid #DDD;
+    }
+
+    .table {
+        .border-radius(0px); 
+        margin-bottom: 0; 
+        border: none; 
+    }
+
+    .content {
+        padding: 10px 20px; 
+
+        p {
+            line-height: 30px;
+        }
+    }
+}
+
+/* Navigator Style */
+
 nav {
     color: white; 
     background: #2B2B2B; 
@@ -161,5 +208,22 @@ nav {
         a {
             color: white;
         }
+    }
+}
+
+/* HomePage Style */
+
+#count .table tr {
+
+    &:hover {
+        td, th {
+            background-color: white; 
+        }
+    }
+
+    th {
+        color: fade(black, 30); 
+        font-weight: normal; 
+        text-align: right; 
     }
 }

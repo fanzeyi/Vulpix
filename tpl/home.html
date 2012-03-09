@@ -1,5 +1,46 @@
 {% extends "base.html" %}
+{% from 'macros.html' import show_topic_list %}
+{% from 'macros.html' import show_problem_list %}
+{% from 'macros.html' import show_contest_list %}
 
 {% block body %}
-body
+<div class="row-fluid">
+    <div class="span8">
+        <div class="cell">
+            <div class="title">{{ _('Latest Problem') }}</div>
+            <div class="body">
+                {% set latest_problem = "" %}
+                {{ show_problem_list(latest_problem) }}
+            </div>
+        </div>
+        <div class="cell">
+            <div class="title">{{ _('Latest Contest') }}</div>
+            <div class="body">
+                {% set latest_contest = "" %}
+                {{ show_contest_list(latest_contest) }}
+            </div>
+        </div>
+        <div class="cell">
+            <div class="title">{{ _('Latest Discuss') }}</div>
+            <div class="body">
+                {% set latest_topic = "" %}
+                {{ show_topic_list(latest_topic) }}
+            </div>
+        </div>
+    </div>
+    <div class="span4">
+        <div class="cell">
+            <div class="title">{{ _('Notice') }}</div>
+            <div class="body content">
+                {% include 'widget/notice.html' %}
+            </div>
+        </div>
+        <div class="cell" id="count">
+            <div class="title">{{ _('Site Count') }}</div>
+            <div class="body">
+                {% include 'widget/count.html' %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
