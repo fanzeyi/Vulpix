@@ -90,6 +90,16 @@ nav {
                 text-shadow: black 0px 1px 1px;
             }
 
+            .tagline {
+                position: absolute;
+                top: 40px;
+                left: 70px;
+                width: 140px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
             .avatar {
                 .border-radius(4px); 
                 .box-shadow(0px 1px 0px rgba(255, 255, 255, 0.2)); 
@@ -120,5 +130,36 @@ nav {
 
     .nav {
         margin-top: 20px; 
+
+        li > a {
+            color: white;
+            text-shadow: 0px 1px 1px black;
+            -webkit-transition-property: background;
+            -webkit-transition-duration: .2s;
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.2);
+                color: white;
+                text-shadow: 0px 1px 1px black;
+            }
+        }
+    }
+
+    .sep {
+        margin-top: 20px;
+        height: 0px;
+        border-bottom: 1px solid #4A4A54;
+        border-top: 1px solid #1D1E21;
+    }
+
+    .copyright {
+        font-size: 10px;
+        text-shadow: black 0px 1px 1px;
+        padding-top: 20px;
+        padding-left: 14px;
+
+        a {
+            color: white;
+        }
     }
 }
