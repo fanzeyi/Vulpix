@@ -2,6 +2,17 @@
 @import "vars.less"; 
 @import "bootstrap/bootstrap.less"; 
 
+/* Mixins */
+
+.top-border-radius(@radius) {
+    -webkit-border-top-left-radius: @radius;
+    -webkit-border-top-right-radius: @radius;
+    -moz-border-radius-topleft: @radius;
+    -moz-border-radius-topright: @radius;
+    border-top-left-radius: @radius;
+    border-top-right-radius: @radius;
+}
+
 /* Signin & Signup Page Style */
 
 body {
@@ -78,11 +89,8 @@ body {
     margin-bottom: 30px; 
     background-color: white; 
     
-    &.span8 {
-        width: 64.95744680199999%;
-    }
-    
     .title {
+        .top-border-radius(4px); 
         font-size: 16px; 
         font-weight: bold;
         line-height: 30px; 
@@ -226,6 +234,7 @@ nav {
 
     th {
         color: fade(black, 30); 
+        font-size: 11px; 
         font-weight: normal; 
         text-align: right; 
     }

@@ -2,8 +2,11 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 02:29:52 08/03/2012
+# MODIFIED: 16:17:30 13/03/2012
 # DESCRIPTION: Database Table Object
+
+import uuid
+import binascii
 
 from judge.base import BaseDBMixin
 from judge.base import BaseDBObject
@@ -45,7 +48,47 @@ class ResetMail(BaseDBObject):
     create = None
 
 class MemberDBMixin(BaseDBMixin):
-    pass
+    ''' New Data Model '''
+    def _new_member(self, row):
+        member = Member()
+        member._init_row(row)
+        return member
+    ''' SELECT '''
+    def select_member_by_username_lower(self, username_lower):
+        row = self.db.get("""SELECT * FROM `member` WHERE `username_lower` = %s LIMIT 1""", username_lower)
+        if row:
+            return self._new_member(row)
+        return None
+    def select_member_by_email(self, email):
+        row = self.db.get("""SELECT * FROM `member` WHERE `email` = %s LIMIT 1""", email)
+        if row:
+            return self._new_member(row)
+        return None
+    def select_member_by_usr_pwd(self, usr, pwd):
+        row = self.db.get("""SELECT * FROM `member` WHERE `username` = %s AND `password` = %s LIMIT 1""", usr, pwd)
+        if row:
+            return self._new_member(row)
+        return None
+    ''' INSERT '''
+    def insert_member(self, member):
+        member.id = self.db.execute("""INSERT INTO `member` (`username`, `username_lower`, `password`, `email`, 
+                                                             `gravatar_link`, `create`, `website`, `tagline`, `bio`, 
+                                                             `admin`, `lang`)
+                                              VALUES (%s, %s, %s, %s, %s, UTC_TIMESTAMP(), %s, %s, %s, %s, %s)""", \
+                                    member.username, member.username_lower, member.passowrd, member.email, member.gravatar_link, \
+                                    member.website, member.tagline, member.bio, member.admin, member.lang)
+    def insert_auth(self, member_id, random):
+        self.db.execute("""INSERT INTO `auth` (`member_id`, `secret`, `create`) VALUES (%s, %s, UTC_TIMESTAMP())""", \
+                        member_id, random)
+        auth = Auth()
+        auth.member_id = member_id
+        auth.secret = random
+        return auth
+    ''' OTHER '''
+    def create_auth(self, member_id):
+        random = binascii.b2a_hex(uuid.uuid4().bytes)
+        return self.insert_auth(member_id, random)
+
 
 '''
 '' ===================================

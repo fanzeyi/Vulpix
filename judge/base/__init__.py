@@ -2,9 +2,11 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 02:44:38 09/03/2012
+# MODIFIED: 16:12:25 13/03/2012
 # DESCRIPTION: Base handler
 
+import re
+import hashlib
 import httplib
 import functools
 import traceback
@@ -64,6 +66,35 @@ class BaseHandler(tornado.web.RequestHandler):
             return
         msg = httplib.responses[status_code]
         self.render("error.html", locals())
+    @staticmethod
+    def check_text_value(value, valName, max = 65535, min = 0, regex = None, regex_msg = None):
+        ''' Common Check Text Value Function '''
+        return []
+    def check_username(self, usr, queryDB = False):
+        error = []
+        error.extend(self.check_text_value(usr, self._("Username"), max = 20, min = 3, \
+                                           regex = re.compile(r'^([\w\d]*)$'), \
+                                           regex_msg = self._("A username can only contain letters and digits.")))
+        if not error and queryDB:
+            query = self.select_member_by_username_lower(usr.lower())
+            if query:
+                error.append(self._("That username is taken. Please choose another."))
+        return error
+    def check_password(self, pwd):
+        return self.check_text_value(pwd, self._("Password"), max = 32, min = 6)
+    def check_email(self, email, queryDB = False):
+        error = []
+        error.extend(self.check_text_value(email, self._("E-mail"), max = 100, min = 3, \
+                                           regex = re.compile(r"(?:^|\s)[-a-z0-9_.+]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)", re.IGNORECASE), \
+                                           regex_msg = self._("Your Email address is invalid.")))
+        if not error and queryDB:
+            query = self.select_member_by_email(email)
+            if query:
+                error.append(self._("That Email is taken. Please choose another."))
+        return error
+    def get_gravatar_url(self, email):
+        gravatar_id = hashlib.md5(email.lower()).hexdigest()
+        return "http://www.gravatar.com/avatar/%s?d=mm" % (gravatar_id) 
     @property
     def db(self):
         return self.application.db
