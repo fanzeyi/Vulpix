@@ -3736,10 +3736,23 @@ body {
   height: 26px;
   line-height: 26px;
 }
+.sign .alert ul {
+  margin-bottom: 0;
+}
 /* Common Page Style */
 body {
   margin-left: 260px;
   margin-bottom: 20px;
+}
+::selection {
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(0, 0, 0, 0.5);
+  text-shadow: none;
+}
+::-moz-selection {
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(0, 0, 0, 0.5);
+  text-shadow: none;
 }
 .main {
   padding-top: 40px;
@@ -3819,6 +3832,9 @@ nav .profile .profile_wrap .username {
   font-family: Arial, sans-serif;
   font-size: 14px;
   text-shadow: black 0px 1px 1px;
+}
+nav .profile .profile_wrap .username a {
+  color: white;
 }
 nav .profile .profile_wrap .tagline {
   position: absolute;
@@ -3906,7 +3922,7 @@ nav .copyright a {
 }
 #count .table tr th {
   color: rgba(0, 0, 0, 0.3);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: normal;
   text-align: right;
 }

@@ -2,17 +2,22 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 16:12:25 13/03/2012
+# MODIFIED: 02:29:10 15/03/2012
 # DESCRIPTION: Base handler
 
 import re
 import hashlib
 import httplib
+import datetime
 import functools
 import traceback
 
 import tornado.web
 import tornado.escape
+
+from judge.db import Member
+from judge.utils import _len
+
 
 def unauthenticated(method):
     """Decorate methods with this to require that user be NOT logged in"""
@@ -37,7 +42,33 @@ class BaseHandler(tornado.web.RequestHandler):
         pass
     def get_current_user(self):
         '''Check user is logined'''
-        pass
+        auth = self.get_secure_cookie("auth")
+        uid = self.get_secure_cookie("uid")
+        member = None
+        if auth and uid:
+            auth = self.db.get("""SELECT * FROM `auth` WHERE `secret` = %s AND `member_id` = %s LIMIT 1""", auth, uid)
+            if auth:
+                member = Member()
+                query = self.db.get("""SELECT * FROM `member` WHERE `id` = %s LIMIT 1""", auth["member_id"])
+                if query:
+                    member._init_row(query)
+                    delta = auth['create'] - datetime.datetime.now()
+                    if delta.days > 20:
+                        """ Refresh Token """
+                        sql = """DELETE FROM `auth` WHERE `secret` = '%s' LIMIT 1""" \
+                                 % auth
+                        self.db.execute(sql)
+                        random = binascii.b2a_hex(uuid.uuid4().bytes)
+                        sql = """INSERT INTO `auth` (`uid`, `secret`, `create`) \
+                                 VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
+                                 % (uid, random)
+                        self.db.execute(sql)
+                        self.set_cookie('auth', random)
+                        self.set_cookie('uid', str(uid))
+                else:
+                    self.clear_cookie("auth")
+                    self.clear_cookie("uid")
+        return member
     def get_user_locale(self):
         '''Get user locale, first check cookie, then browser'''
         pass
@@ -66,13 +97,27 @@ class BaseHandler(tornado.web.RequestHandler):
             return
         msg = httplib.responses[status_code]
         self.render("error.html", locals())
-    @staticmethod
-    def check_text_value(value, valName, max = 65535, min = 0, regex = None, regex_msg = None):
+    def check_text_value(self, value, valName, required = False, max = 65535, min = 0, regex = None, regex_msg = None):
         ''' Common Check Text Value Function '''
-        return []
+        error = []
+        if not value:
+            if required:
+                error.append(self._("%s is required" % valName))
+            return error
+        if _len(value) > max:
+            error.append(self._("%s is too long." % valName))
+        elif _len(value) < min:
+            error.append(self._("%s is too short." % valName))
+        if regex:
+            if not regex.match(value):
+                if regex_msg:
+                    error.append(regex_msg)
+                else:
+                    error.append(self._("%s is invalid." % valName))
+        return error
     def check_username(self, usr, queryDB = False):
         error = []
-        error.extend(self.check_text_value(usr, self._("Username"), max = 20, min = 3, \
+        error.extend(self.check_text_value(usr, self._("Username"), required = True, max = 20, min = 3, \
                                            regex = re.compile(r'^([\w\d]*)$'), \
                                            regex_msg = self._("A username can only contain letters and digits.")))
         if not error and queryDB:
@@ -81,10 +126,10 @@ class BaseHandler(tornado.web.RequestHandler):
                 error.append(self._("That username is taken. Please choose another."))
         return error
     def check_password(self, pwd):
-        return self.check_text_value(pwd, self._("Password"), max = 32, min = 6)
+        return self.check_text_value(pwd, self._("Password"), required = True, max = 32, min = 6)
     def check_email(self, email, queryDB = False):
         error = []
-        error.extend(self.check_text_value(email, self._("E-mail"), max = 100, min = 3, \
+        error.extend(self.check_text_value(email, self._("E-mail"), required = True, max = 100, min = 3, \
                                            regex = re.compile(r"(?:^|\s)[-a-z0-9_.+]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)", re.IGNORECASE), \
                                            regex_msg = self._("Your Email address is invalid.")))
         if not error and queryDB:
@@ -101,22 +146,3 @@ class BaseHandler(tornado.web.RequestHandler):
     @property
     def jinja2(self):
         return self.application.jinja2
-
-class BaseDBObject(object):
-    ''' Base Table Object '''
-    def __repr__(self):
-        ''' for debug '''
-        result = ", \n".join(["'%s': '%s'" % (attr, getattr(self, attr)) for attr in dir(self) if attr[0] != '_' and not callable(getattr(self, attr)) ])
-        return "<{%s}>" % result
-    def _init_row(self, row):
-        keys = row.keys()
-        for key in keys:
-            setattr(self, key, row[key])
-
-class BaseDBMixin(object):
-    ''' Base Database Mixin '''
-    def _new_object_by_row(self, Obj, row):
-        obj = Obj()
-        obj._init_row(row)
-        return obj
-

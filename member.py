@@ -2,11 +2,13 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: member.py
 # CREATED: 02:18:23 09/03/2012
-# MODIFIED: 16:25:52 13/03/2012
+# MODIFIED: 02:10:17 15/03/2012
 # DESCRIPTION: member handlers
 
 import re
 import bcrypt
+
+from tornado.web import authenticated
 
 from judge.db import Member
 from judge.db import MemberDBMixin
@@ -19,15 +21,17 @@ class SigninHandler(BaseHandler, MemberDBMixin):
         self.render("signin.html", locals())
     @unauthenticated
     def post(self):
-        usr = self.get_argument("usr", default = None)
-        pwd = self.get_argument("pwd", default = None)
+        usr = self.get_argument("usr", default = "")
+        pwd = self.get_argument("pwd", default = "")
         error = []
         error.extend(self.check_username(usr.lower()))
         error.extend(self.check_password(pwd))
+        pwd = pwd.encode("utf-8")
         pwd = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
-        member = self.select_member_by_usr_pwd(usr, pwd)
-        if not member:
-            error.append(self._("Wrong Username and password combination."))
+        if not error:
+            member = self.select_member_by_usr_pwd(usr, pwd)
+            if not member:
+                error.append(self._("Wrong Username and password combination."))
         if error:
             self.render("signin.html", locals())
             return
@@ -47,9 +51,9 @@ class SignupHandler(BaseHandler, MemberDBMixin):
     @unauthenticated
     def post(self):
         self.require_setting('bcrypt_salt', 'bcrypt for Password')
-        usr = self.get_argument("usr", default = None)
-        pwd = self.get_argument("pwd", default = None)
-        email = self.get_argument("email", default = None)
+        usr = self.get_argument("usr", default = "")
+        pwd = self.get_argument("pwd", default = "")
+        email = self.get_argument("email", default = "")
         error = []
         error.extend(self.check_username(usr.lower(), queryDB = True))
         error.extend(self.check_password(pwd))

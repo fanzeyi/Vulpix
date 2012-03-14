@@ -2,14 +2,29 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 16:17:30 13/03/2012
+# MODIFIED: 02:39:32 15/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
 import binascii
 
-from judge.base import BaseDBMixin
-from judge.base import BaseDBObject
+class BaseDBObject(object):
+    ''' Base Table Object '''
+    def __repr__(self):
+        ''' for debug '''
+        result = ", \n".join(["'%s': '%s'" % (attr, getattr(self, attr)) for attr in dir(self) if attr[0] != '_' and not callable(getattr(self, attr)) ])
+        return "<{%s}>" % result
+    def _init_row(self, row):
+        keys = row.keys()
+        for key in keys:
+            setattr(self, key, row[key])
+
+class BaseDBMixin(object):
+    ''' Base Database Mixin '''
+    def _new_object_by_row(self, Obj, row):
+        obj = Obj()
+        obj._init_row(row)
+        return obj
 
 '''
 '' ===================================
@@ -84,6 +99,9 @@ class MemberDBMixin(BaseDBMixin):
         auth.member_id = member_id
         auth.secret = random
         return auth
+    ''' DELETE '''
+    def delete_auth_by_secret(self, secret):
+        self.db.execute("""DELETE FROM `auth` WHERE `secret` = %s""", secret)
     ''' OTHER '''
     def create_auth(self, member_id):
         random = binascii.b2a_hex(uuid.uuid4().bytes)

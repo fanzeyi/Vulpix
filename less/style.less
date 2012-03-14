@@ -63,6 +63,9 @@ body {
             }
         }
     }
+    .alert ul {
+        margin-bottom: 0; 
+    }
 }
 
 /* Common Page Style */
@@ -70,6 +73,17 @@ body {
 body {
     margin-left: @sidebarWidth + 20; 
     margin-bottom: @bottomBlank; 
+}
+
+::selection { 
+	color: rgba(255, 255, 255, .75);
+	background: rgba(0, 0, 0, .5);
+	text-shadow: none;
+}
+::-moz-selection {
+	color: rgba(255, 255, 255, .75);
+	background: rgba(0, 0, 0, .5);
+	text-shadow: none;
 }
 
 .main {
@@ -145,6 +159,10 @@ nav {
                 font-family: Arial, sans-serif;
                 font-size: 14px;
                 text-shadow: black 0px 1px 1px;
+
+                a {
+                    color: white; 
+                }
             }
 
             .tagline {

@@ -6,18 +6,21 @@
         <span class="tagline" title="{{ user['tagline'] }}">{{ user['tagline'] }}</span>
         {% else %}
         <span class="username">Guest</span>
+        <span class="tagline"></span>
         {% endif %}
         <div class="avatar">
             {% if user %}
             <a href="/member/{{ user['username'] }}">
-            {% endif %}
-            {% if user.email %}
-            {{ user.gravatar_link | avatar_img }}
+                {% if user.email %}
+                {{ user.gravatar_link | avatar_img }}
+                {% else %}
+                {{ "/static/img/avatar.png" | avatar_img }}
+                {% endif %}
+            </a>
             {% else %}
             {{ "/static/img/avatar.png" | avatar_img }}
             {% endif %}
             <span class="avatar_mask"></span>
-            {% if user %}</a>{% endif %}
         </div>
     </div>
 </div>
