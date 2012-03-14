@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% from 'macros.html' import form_actions %}
+
+{% block body %}
+{% if problem.invisible %}
+<div class="alert alert-info">
+    {{ _('This Problem is Invisible!') }}
+</div>
+{% endif %}
+<div class="cell signleproblem">
+    <div class="title">
+        {% if user.admin %}
+        <div class="fr"><a href="/backstage/problem/add?pid={{ problem.id }}">Edit</a></div>
+        {% endif %}
+        {{ problem.title }}
+    </div>
+    <div class="body">
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th>ID</th>
+                <td>{{ problem.id }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('Short Name') }}</th>
+                <td>{{ problem.shortname }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('Time') }}</th>
+                <td>{{ problem.timelimit }}ms</td>
+            </tr>
+            <tr>
+                <th>{{ _('Memory') }}</th>
+                <td>{{ problem.memlimit }}MB</td>
+            </tr>
+            <tr>
+                <th>{{ _('Content') }}</th>
+                <td>{{ problem.content | autolink | replace('\n', '<br/>') }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('Tags') }}</th>
+                <td>
+                    <ul class="tagclound">
+                    {% for tag in tags %}
+                        <li class="tag"><a href="/tag/{{ tag.tagname }}">{{ tag.tagname }}</a></li>
+                    {% endfor%}
+                    </ul>
+                </td>
+        </table>
+    </div>
+</div>
+{% if user %}
+<form class="form-horizontal cell">
+    <fieldset>
+        <div class="title">{{ _('Submit Problem') }}</div>
+        <div class="sep30"></div>
+        <div class="control-group">
+            <label class="control-label" for="codefile">{{ _('Code File') }}</label>
+            <div class="controls">
+                <input name="codefile" type="file" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="lang">{{ _('Language') }}</label>
+            <input type="hidden" name="lang" value="{{ user.lang }}"/>
+            <div class="controls btn-group" id="lang_select">
+                <a href="#" id="pascal" class="btn{% if user.lang == 1 %} btn-success{% endif %}">Pascal</a>
+                <a href="#" id="c" class="btn{% if user.lang == 2 %} btn-success{% endif %}">C</a>
+                <a href="#" id="cpp" class="btn{% if user.lang == 3 %} btn-success{% endif %}">C++</a>
+            </div>
+        </div>
+        {{ form_actions(_('Submit')) }}
+    </fieldset>
+</form>
+<script type="text/javascript">
+$(document).ready(function () {
+    $('#lang_select > a.btn').click(function () {
+        var lang = $(this).prop('id'); 
+        $("#lang_select > a.btn").removeClass('btn-success'); 
+        $(this).addClass('btn-success'); 
+        $("input[name='lang']").val(lang); 
+        return false; 
+    }); 
+}); 
+</script>
+{% endif %}
+{% endblock %}

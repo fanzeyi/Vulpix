@@ -103,7 +103,7 @@ body {
     margin-bottom: 30px; 
     background-color: white; 
     
-    .title, legend {
+    .title {
         .top-border-radius(4px); 
         font-size: 16px; 
         font-weight: bold;
@@ -111,12 +111,13 @@ body {
         padding-left: 10px; 
         padding-top: 5px; 
         border-bottom: 1px solid #DDD;
-    } 
 
-    legend {
-        padding-left: 20px; 
-        padding-top: 20px; 
-    }
+        .fr {
+            float: right;
+            margin-right: 10px;
+            font-weight: normal;
+        }
+    } 
 
     .table {
         .border-radius(0px); 
@@ -135,6 +136,11 @@ body {
     .form-actions {
         margin-bottom: 0; 
     }
+}
+
+form.cell fieldset .title {
+    padding-left: 20px; 
+    padding-top: 20px; 
 }
 
 .tagclound {
@@ -283,5 +289,36 @@ nav {
         font-size: 11px; 
         font-weight: normal; 
         text-align: right; 
+    }
+}
+
+/* Single Problem Page Style */
+
+.signleproblem {
+
+    .table tr {
+
+        &:hover {
+            td, th {
+                background-color: #FAFAFA; 
+            }
+        }
+
+        th {
+            text-align: right; 
+            width: 13%; 
+        }
+    }
+
+    .title {
+        padding-left: 20px; 
+    }
+
+    .tagclound {
+        margin-top: 0; 
+
+        .tag {
+            padding-right: 10px; 
+        }
     }
 }

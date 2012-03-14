@@ -2,12 +2,13 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: handlers.py
 # CREATED: 01:41:06 08/03/2012
-# MODIFIED: 02:52:56 15/03/2012
+# MODIFIED: 04:09:12 15/03/2012
 # DESCRIPTION: URL Route
 
 from home import *
 from lang import *
 from member import *
+from problem import *
 from backstage import *
 
 '''
@@ -20,5 +21,6 @@ handlers = [
     (r'/signup', SignupHandler), 
     (r'/signout', SignoutHandler), 
     (r'/lang/(.*)', SetLanguageHandler), 
+    (r'/problem/([\d]*)', ViewProblemHandler), 
     (r'/backstage/problem/add', AddProblemHandler), 
 ]

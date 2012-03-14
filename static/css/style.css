@@ -3773,8 +3773,7 @@ body {
   margin-bottom: 30px;
   background-color: white;
 }
-.cell .title,
-.cell legend {
+.cell .title {
   -webkit-border-top-left-radius: 4px;
   -webkit-border-top-right-radius: 4px;
   -moz-border-radius-topleft: 4px;
@@ -3788,9 +3787,10 @@ body {
   padding-top: 5px;
   border-bottom: 1px solid #DDD;
 }
-.cell legend {
-  padding-left: 20px;
-  padding-top: 20px;
+.cell .title .fr {
+  float: right;
+  margin-right: 10px;
+  font-weight: normal;
 }
 .cell .table {
   -webkit-border-radius: 0px;
@@ -3807,6 +3807,10 @@ body {
 }
 .cell .form-actions {
   margin-bottom: 0;
+}
+form.cell fieldset .title {
+  padding-left: 20px;
+  padding-top: 20px;
 }
 .tagclound {
   list-style: none;
@@ -3951,4 +3955,22 @@ nav .copyright a {
   font-size: 11px;
   font-weight: normal;
   text-align: right;
+}
+/* Single Problem Page Style */
+.signleproblem .table tr:hover td,
+.signleproblem .table tr:hover th {
+  background-color: #FAFAFA;
+}
+.signleproblem .table tr th {
+  text-align: right;
+  width: 13%;
+}
+.signleproblem .title {
+  padding-left: 20px;
+}
+.signleproblem .tagclound {
+  margin-top: 0;
+}
+.signleproblem .tagclound .tag {
+  padding-right: 10px;
 }
