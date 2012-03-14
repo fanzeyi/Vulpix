@@ -3773,7 +3773,8 @@ body {
   margin-bottom: 30px;
   background-color: white;
 }
-.cell .title {
+.cell .title,
+.cell legend {
   -webkit-border-top-left-radius: 4px;
   -webkit-border-top-right-radius: 4px;
   -moz-border-radius-topleft: 4px;
@@ -3787,6 +3788,10 @@ body {
   padding-top: 5px;
   border-bottom: 1px solid #DDD;
 }
+.cell legend {
+  padding-left: 20px;
+  padding-top: 20px;
+}
 .cell .table {
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
@@ -3799,6 +3804,27 @@ body {
 }
 .cell .content p {
   line-height: 30px;
+}
+.cell .form-actions {
+  margin-bottom: 0;
+}
+.tagclound {
+  list-style: none;
+  margin-left: 0;
+  margin-top: 10px;
+}
+.tagclound .tag {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #EEE;
+  padding: 4px 4px 2px 10px;
+  float: left;
+  margin-right: 4px;
+  margin-bottom: 5px;
+}
+.tagclound .tag a {
+  color: black;
 }
 /* Navigator Style */
 nav {

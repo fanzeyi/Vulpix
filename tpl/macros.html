@@ -1,3 +1,15 @@
+{% macro show_error_list(error) %}
+{%- if error -%}
+<div class="alert alert-error">
+<ul class="errorlist">
+{% for err in error %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+{% endmacro %}
+
 {% macro show_problem_list(problem_list) %}
 <table class="table table-striped table-bordered">
     <thead>
@@ -21,4 +33,41 @@
 {% endmacro %}
 
 {% macro show_contest_list(contest_list) %}
+{% endmacro %}
+
+{#================  Form  ================#}
+
+{% macro input(name, label, value = '', type = 'TEXT', class = 'input-xlarge', default = '', addon = '') %}
+    <div class="control-group">
+        <label class="control-label" for="{{ name }}">{{ label }}</label>
+        <div class="controls">
+            {% if addon %}<div class="input-append">{% endif %}
+            <input name="{{ name }}" class="{{ class }}" type="{{ type }}" {% if value %}value="{{ value }}"{% elif default %}value="{{ default }}"{% endif %}/>
+            {% if addon %}<span class="add-on">{{ addon }}</span></div>{% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro checkbox(name, label, checked = 0) %}
+    <div class="control-group">
+        <label class="control-label" for="{{ name }}"></label>
+        <div class="controls">
+            <label class="checkbox"><input type="checkbox" name="{{ name }}" value="1" {% if checked %}checked{% endif %}>{{ label }}</label>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro textarea(name, label, value = '', class = 'input-xlarge', style = '') %}
+    <div class="control-group">
+        <label class="control-label" for="{{ name }}">{{ label }}</label>
+        <div class="controls">
+            <textarea name="{{ name }}" class="{{ class }}" style="{{ style }}">{% if value %}{{ value }}{% endif %}</textarea>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro form_actions(submit) %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ submit }}</button>
+    </div>
 {% endmacro %}

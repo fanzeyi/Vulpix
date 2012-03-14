@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 02:39:32 15/03/2012
+# MODIFIED: 04:00:13 15/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -213,7 +213,53 @@ class Submit(BaseDBObject):
     create = 0
 
 class ProblemDBMixin(BaseDBMixin):
-    pass
+    ''' New Data Model '''
+    def _new_problem(self, row):
+        problem = Problem()
+        problem._init_row(row)
+        return problem
+    def _new_problem_tag(self, row):
+        problem_tag = ProblemTag()
+        problem_tag._init_row(row)
+        return problem_tag
+    ''' SELECT '''
+    def select_problem_by_id(self, id):
+        row = self.db.get("""SELECT * FROM `problem` WHERE `id` = %s LIMIT 1""", id)
+        if row:
+            return self._new_problem(row)
+        return None
+    def select_problem_tag_by_problem_id(self, problem_id):
+        rows = self.db.query("""SELECT * FROM `problem_tag` WHERE `problem_id` = %s""", problem_id)
+        result = []
+        for row in rows:
+            result.append(self._new_problem_tag(row))
+        return result
+    ''' INSERT '''
+    def insert_problem(self, problem):
+        problem.id = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, \
+                                     `timelimit`, `memlimit`, `testpoint`, `invisible`, `create`) \
+                                     VALUES (%s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""" \
+                                     , problem.title, problem.shortname, problem.content, \
+                                     int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), int(problem.invisible))
+    def insert_problem_tag(self, tagname, problem_id):
+        self.db.execute("""INSERT INTO `problem_tag` (`tagname`, `problem_id`) VAlUES (%s, %s)""", tagname, int(problem_id))
+    ''' UPDATE '''
+    def update_problem(self, problem):
+        self.db.execute("""UPDATE `problem` SET `title` = %s, 
+                                                `shortname` = %s, 
+                                                `content` = %s, 
+                                                `timelimit` = %s, 
+                                                `memlimit` = %s, 
+                                                `testpoint` = %s, 
+                                                `invisible` = %s
+                                            WHERE `id` = %s""", \
+                           problem.title, problem.shortname, problem.content, \
+                           int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), int(problem.invisible), \
+                           problem.id)
+    ''' DELETE '''
+    def delete_problem_tag_by_problem_id(self, problem_id):
+        self.db.execute("""DELETE FROM `problem_tag` WHERE `problem_id` = %s""", int(problem_id))
+    ''' OTHER '''
 
 '''
 '' ===================================

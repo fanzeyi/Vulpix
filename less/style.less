@@ -103,7 +103,7 @@ body {
     margin-bottom: 30px; 
     background-color: white; 
     
-    .title {
+    .title, legend {
         .top-border-radius(4px); 
         font-size: 16px; 
         font-weight: bold;
@@ -111,6 +111,11 @@ body {
         padding-left: 10px; 
         padding-top: 5px; 
         border-bottom: 1px solid #DDD;
+    } 
+
+    legend {
+        padding-left: 20px; 
+        padding-top: 20px; 
     }
 
     .table {
@@ -124,6 +129,29 @@ body {
 
         p {
             line-height: 30px;
+        }
+    }
+
+    .form-actions {
+        margin-bottom: 0; 
+    }
+}
+
+.tagclound {
+    list-style: none;
+    margin-left: 0;
+    margin-top: 10px;
+
+    .tag {
+        .border-radius(4px); 
+        background-color: #EEE;
+        padding: 4px 4px 2px 10px;
+        float: left;
+        margin-right: 4px;
+        margin-bottom: 5px; 
+
+        a {
+            color: black; 
         }
     }
 }

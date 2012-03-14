@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 02:29:10 15/03/2012
+# MODIFIED: 04:02:16 15/03/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -97,13 +97,22 @@ class BaseHandler(tornado.web.RequestHandler):
             return
         msg = httplib.responses[status_code]
         self.render("error.html", locals())
-    def check_text_value(self, value, valName, required = False, max = 65535, min = 0, regex = None, regex_msg = None):
+    def check_text_value(self, value, valName, required = False, max = 65535, min = 0, regex = None, regex_msg = None, is_num = False, vaild = []):
         ''' Common Check Text Value Function '''
         error = []
         if not value:
             if required:
                 error.append(self._("%s is required" % valName))
             return error
+        if is_num:
+            try:
+                tmp = int(value)
+            except ValueError:
+                return [self._("%s must be a number." % valName)]
+            else:
+                if vaild and tmp not in vaild:
+                    return [self._("%s is invalid." % valName)]
+                return []
         if _len(value) > max:
             error.append(self._("%s is too long." % valName))
         elif _len(value) < min:
@@ -114,6 +123,9 @@ class BaseHandler(tornado.web.RequestHandler):
                     error.append(regex_msg)
                 else:
                     error.append(self._("%s is invalid." % valName))
+            else:
+                if vaild and value not in vaild:
+                    errora.append(self._("%s is invalid." % valName))
         return error
     def check_username(self, usr, queryDB = False):
         error = []
