@@ -27,7 +27,7 @@
         </div>
     </div>
     {{ checkbox('invisible', _('Invisible'), checked=contest.invisible) }}
-    {{ textarea("description", _("Descriptiopn"), value=contest.description, style="width:400px; height:300px; ") }}
+    {{ textarea("description", _("Description"), value=contest.description, style="width:400px; height:300px; ") }}
     <div class="control-group">
         <label class="control-label" for="related_problem">{{ _('Related Problem') }}</label>
         <div class="controls">
@@ -37,8 +37,8 @@
                 {% if related_problem %}
                 {% for problem in related_problem %}
                 <li class="related">
-                    <a href="/problem/{{ problem.nid }}" target="_blank" style="float:left">{{ problem.title }}</a>
-                    <a class="close" href="#" value="{{ problem.nid }}" data-dismiss="alert"><i class="icon-remove-sign"></i></a>
+                    <a href="/problem/{{ problem.id }}" target="_blank" style="float:left">{{ problem.title }}</a>
+                    <a class="close" href="#" value="{{ problem.id }}" data-dismiss="alert"><i class="icon-remove-sign"></i></a>
                 </li>
                 {% endfor%}
                 {% endif %}
@@ -47,10 +47,67 @@
     </div>
 {% if related_problem %}
 {% for problem in related_problem %}
-<input id="related_{{ problem.id }}" type="hidden" name="link_problem[]" value="{{ problem.pid }}" />
+<input id="related_{{ problem.id }}" type="hidden" name="link_problem[]" value="{{ problem.id }}" />
 {% endfor %}
 {% endif %}
     {{ form_actions(_("Submit")) }}
 </fieldset>
 </form>
+<script type="text/javascript">
+$(document).ready(function () {
+    var related_list = new Array(); 
+    $.each($('input[name="link_problem[]"]'), function(i, v) {
+        related_list.push(v.value); 
+    }); 
+    function add_related_problem() {
+        var val = $("#related_problem").val(); 
+        if(val.search("^-?\\d+$") == 0) {
+            if($.inArray(val, related_list) != -1) {
+                return false; 
+            }
+            $.get('/api/problem/get/' + val, null, function(text) {
+                $('#related_problem_list').append('<li class="related"><a href="/problem/' + val + '" target="_blank">' + text + '</a><a class="close" data-dismiss="alert" value="' + val + '" href="#"><i class="icon-remove-sign"></i></a></li>'); 
+                $('form.form-horizontal').append('<input id="related_' + val + '" type="hidden" name="link_problem[]" value="' + val + '" />'); 
+                related_list.push(val); 
+                $('#related_problem').val(''); 
+                $('#related_problem').prop('disabled', false); 
+                $('#related_problem_submit').removeClass('disabled'); 
+                $('.related .close').click(function () {
+                    var pid = $(this).attr('value');
+                    var index = related_list.indexOf(val); 
+                    related_list.splice(index, 1); 
+                    $('#related_' + pid).remove(); 
+                }); 
+            }); 
+            $('#related_problem_submit').addClass('disabled'); 
+            $('#related_problem').prop('disabled', true); 
+        }
+    }
+    $('form').ajaxError(function() {
+        $('#related_problem_submit').removeClass('disabled'); 
+        $('#related_problem').prop('disabled', false); 
+    }); 
+    $('.disabled').click(function() {
+        return false; 
+    }); 
+    $('#related_problem').keypress(function (e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if(code == 13) {
+            add_related_problem(); 
+            return false; 
+        }
+    }); 
+    $("#related_problem_submit").click(function () {
+        add_related_problem(); 
+        return false; 
+    }); 
+}); 
+</script>
+{% endblock %}
+
+{% block head %}
+<script src="/static/js/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/static/js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
+<script src="/static/js/timepicker.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/static/css/timepicker.css" />
 {% endblock %}

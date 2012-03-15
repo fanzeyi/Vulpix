@@ -351,6 +351,12 @@ class ContestDBMixin(BaseDBMixin):
         contest_problem._init_row(row)
         return contest
     ''' COUNT '''
+    def count_contest(self):
+        row = self.db.get("""SELECT COUNT(*) FROM `contest`""")
+        return row["COUNT(*)"]
+    def count_visible_contest(self):
+        row = self.db.get("""SELECT COUNT(*) FROM `contest` WHERE invisible = 0""")
+        return row["COUNT(*)"]
     ''' SELECT '''
     def select_countest_by_id(contest_id):
         row = self.db.get("""SELECT * FROM `contest` WHERE `id` = %s""", contest_id)
@@ -363,8 +369,39 @@ class ContestDBMixin(BaseDBMixin):
         for row in rows:
             result.append(self._new_contest_problem(row))
         return result
+    def select_countest(self, start = 0, count = 20):
+        rows = self.db.query("""SELECT * FROM `contest` LIMIT %s, %s""", start, count)
+        result = []
+        for row in rows:
+            result.append(self._new_contest(row))
+        return result
+    def select_visible_contest(self, start = 0, count = 20):
+        rows = self.db.query("""SELECT * FROM `contest` WHERE `invisible` = 0 LIMIT %s, %s""", start, count)
+        result = []
+        for row in rows:
+            result.append(self._new_contest(row))
+        return result
     ''' INSERT '''
+    def insert_contest(self, contest):
+        contest.id = self.db.execute("""INSERT INTO `contest` (`title`, `description`, `start_time`, 
+                                                               `end_time`, `invisible`, `create`)
+                                               VALUES (%s, %s, %s, %s, %s, UTC_TIMESTAMP())""", \
+                                     contest.title, contest.description, contest.start_time, contest.end_time, \
+                                     contest.invisible)
+    def insert_contest_problem(self, contest_problem):
+        self.db.execute("""INSERT INTO `contest_problem` (`contest_id`, `problem_id`) VALUES (%s, %s)""", int(cid), int(pid))
     ''' UPDATE '''
+    def update_contest(self, contest):
+        self.db.execute("""UPDATE `contest` SET `title` = %s, 
+                                                `description` = %s, 
+                                                `start_time` = %s, 
+                                                `end_time` = %s, 
+                                                `invisible` = %s
+                                            WHERE `id` = %s""" \
+                        , contest.title, contest.description, contest.start_time, contest.end_time, \
+                        contest.invisible, contest.id)
     ''' DELETE '''
+    def delete_contest_problem_by_contest_id(self, contest_id):
+        self.db.execute("""DELETE FROM `contest_problem` WHERE `cid` = %s""", cid)
     ''' OTHER '''
 
