@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 02:50:48 16/03/2012
+# MODIFIED: 03:13:19 16/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -381,7 +381,7 @@ class ContestDBMixin(BaseDBMixin):
         if row:
             return self._new_contest_submit(row)
         return None
-    def select_countest(self, start = 0, count = 20):
+    def select_contest(self, start = 0, count = 20):
         rows = self.db.query("""SELECT * FROM `contest` LIMIT %s, %s""", start, count)
         result = []
         for row in rows:

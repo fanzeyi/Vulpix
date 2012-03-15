@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: contest.py
 # CREATED: 15:46:17 15/03/2012
-# MODIFIED: 02:48:49 16/03/2012
+# MODIFIED: 03:19:13 16/03/2012
 
 import datetime
 
@@ -27,6 +27,10 @@ class ViewContestHandler(BaseHandler, ContestDBMixin):
         problems = self.select_contest_problem_by_contest_id(cid)
         for problem in problems:
             problem.submit = self.select_contest_submit_by_contest_id_problem_id_user_id(cid, problem.problem_id)
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self._('Contest'), '/contest'))
+        breadcrumb.append((contest.title, '/contest/%d' % contest.id))
         self.render("contest.html", locals())
 
 class ListContestHandlder(BaseHandler, ContestDBMixin):
@@ -43,6 +47,9 @@ class ListContestHandlder(BaseHandler, ContestDBMixin):
         else:
             count = self.count_visible_contest()
             contests = self.select_visible_contest(start = start)
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self._('Contest'), '/contest'))
         pages = self.get_page_count(count)
         self.render("contest_list.html", locals())
 
