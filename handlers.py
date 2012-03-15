@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: handlers.py
 # CREATED: 01:41:06 08/03/2012
-# MODIFIED: 13:47:59 15/03/2012
+# MODIFIED: 14:19:36 15/03/2012
 # DESCRIPTION: URL Route
 
 from home import *
@@ -23,6 +23,7 @@ handlers = [
     (r'/settings', SettingsHandler), 
     (r'/settings/changepass', ChangePasswordHandler), 
     (r'/lang/(.*)', SetLanguageHandler), 
+    (r'/problem', ProblemListHandler), 
     (r'/problem/([\d]*)', ViewProblemHandler), 
     (r'/backstage/problem/add', AddProblemHandler), 
 ]

@@ -3831,6 +3831,12 @@ form.cell fieldset .title {
 .tagclound .tag a {
   color: black;
 }
+.pagination {
+  text-align: center;
+}
+.pagination ul {
+  background-color: white;
+}
 /* Navigator Style */
 nav {
   -webkit-box-shadow: 0px 0px 5px #000000;

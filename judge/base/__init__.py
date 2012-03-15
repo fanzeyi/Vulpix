@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 13:13:55 15/03/2012
+# MODIFIED: 14:20:39 15/03/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -37,9 +37,9 @@ class BaseHandler(tornado.web.RequestHandler):
     def _check_text_value(self):
         '''Check text value is vaild'''
         pass
-    def get_page_num(self):
+    def get_page_count(self, count):
         '''Return page num by input item num'''
-        pass
+        return count / 10 + (1 if count % 10 else 0)
     def get_current_user(self):
         '''Check user is logined'''
         auth = self.get_secure_cookie("auth")

@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/filters/__init__.py
 # CREATED: 01:48:10 08/03/2012
-# MODIFIED: 04:25:41 15/03/2012
+# MODIFIED: 14:29:20 15/03/2012
 # DESCRIPTION: jinja2 filters
 
 import re
@@ -54,11 +54,50 @@ def autolink(text, trim_url_limit=None, nofollow=False):
                 words[i] = lead + middle + trail
     return ''.join(words)
 
-
 def avatar_img(link, size = 45):
     return "<img src=\"%s\" width=\"%d\" height=\"%d\" />" % (link, size, size)
 
+def get_prev_page(start):
+    prev = get_now_page(start) - 10
+    return prev if prev >= 0 else 0
+
+def get_now_page(start):
+    start = int(start)
+    now = start / 10 * 10
+    return now
+
+def get_next_page(start):
+    return get_now_page(start) + 10
+
+def get_page_nav(pages, start):
+    now = start / 10
+    dotdot = lambda a: "<li class=\"disabled\"><a href=\"#\">...</a></li>"
+    button = lambda page: "<li><a href=\"?start=%d\">%d</a></li>" % (page * 10, page + 1)
+    activebutton = lambda page: "<li class=\"active\"><a href=\"?start=%d\">%d</a></li>" % (page * 10, page + 1)
+    result = []
+    for i in range(pages if pages <= 4 else 4):
+        if i == now:
+            result.append(activebutton(i))
+        else:
+            result.append(button(i))
+    if now == 3 and pages > 4:
+        result.append(button(4))
+    if now > 3:
+        if now > 4:
+            result.append(dotdot(1))
+            result.append(button(now - 1))
+        result.append(activebutton(now))
+        if now + 1 < pages:
+            result.append(button(now + 1))
+    if pages - 1 > 3 and now + 1 < pages - 1:
+        result.append(dotdot(1))
+        result.append(button(pages - 1))
+    return result
+
 filters = {
-    'autolink'   : autolink, 
-    'avatar_img' : avatar_img, 
+    'autolink'      : autolink, 
+    'avatar_img'    : avatar_img, 
+    'get_prev_page' : get_prev_page, 
+    'get_next_page' : get_next_page, 
+    'get_page_nav'  : get_page_nav, 
 }

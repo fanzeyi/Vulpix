@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: problem.py
 # CREATED: 04:04:57 15/03/2012
-# MODIFIED: 04:09:32 15/03/2012
+# MODIFIED: 14:19:53 15/03/2012
 
 from tornado.web import HTTPError
 
@@ -29,4 +29,24 @@ class ViewProblemHandler(BaseHandler, ProblemDBMixin):
         tags = self.select_problem_tag_by_problem_id(problem.id)
         self.render("problem.html", locals())
 
-__all__ = ["ViewProblemHandler"]
+class ProblemListHandler(BaseHandler, ProblemDBMixin):
+    def get(self):
+        start = self.get_argument("start", default = 0)
+        try:
+            start = int(start)
+        except ValueError:
+            start = 0
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self._('Problem'), '/problem'))
+        title = self._("Problem")
+        if self.current_user and self.current_user.admin:
+            count = self.count_problem()
+            problems = self.select_problem_order_by_id(10, start)
+        else:
+            count = self.count_visible_problem()
+            problems = self.select_problem_order_by_id_visible(10, start)
+        pages = self.get_page_count(count)
+        self.render("problem_list.html", locals())
+
+__all__ = ["ViewProblemHandler", "ProblemListHandler"]

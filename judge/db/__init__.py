@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 13:51:26 15/03/2012
+# MODIFIED: 14:18:11 15/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -238,6 +238,16 @@ class ProblemDBMixin(BaseDBMixin):
         problem_tag = ProblemTag()
         problem_tag._init_row(row)
         return problem_tag
+    ''' COUNT '''
+    def count_problem(self):
+        count = self.db.get("""SELECT COUNT(*) FROM `problem`""")
+        return count["COUNT(*)"]
+    def count_visible_problem(self):
+        count = self.db.get("""SELECT COUNT(*) FROM `problem` WHERE `invisible` = 0""")
+        return count["COUNT(*)"]
+    def count_problem_by_tagname(self, tagname):
+        count = self.db.get("""SELECT COUNT(*) FROM `problem_tag` WHERE `tagname` = %s""", tagname)
+        return count["COUNT(*)"]
     ''' SELECT '''
     def select_problem_by_id(self, id):
         row = self.db.get("""SELECT * FROM `problem` WHERE `id` = %s LIMIT 1""", id)
@@ -249,6 +259,18 @@ class ProblemDBMixin(BaseDBMixin):
         result = []
         for row in rows:
             result.append(self._new_problem_tag(row))
+        return result
+    def select_problem_order_by_id(self, count = 10, start = 0):
+        rows = self.db.query("""SELECT * FROM `problem` LIMIT %s, %s""", int(start), int(count))
+        result = []
+        for row in rows:
+            result.append(self._new_problem(row))
+        return result
+    def select_visible_problem_order_by_id(self, count = 10, start = 0):
+        rows = self.db.query("""SELECT * FROM `problem` WHERE `invisible` = 0 LIMIT %s, %s""", int(start), int(count))
+        result = []
+        for row in rows:
+            result.append(self._new_problem(row))
         return result
     ''' INSERT '''
     def insert_problem(self, problem):
