@@ -66,8 +66,8 @@
     </div>
 {% endmacro %}
 
-{% macro form_actions(submit) %}
+{% macro form_actions(submit, class="btn-primary") %}
     <div class="form-actions">
-        <button type="submit" class="btn btn-primary">{{ submit }}</button>
+        <button type="submit" class="btn {{ class }}">{{ submit }}</button>
     </div>
 {% endmacro %}

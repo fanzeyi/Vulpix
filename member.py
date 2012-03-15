@@ -2,10 +2,11 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: member.py
 # CREATED: 02:18:23 09/03/2012
-# MODIFIED: 02:10:17 15/03/2012
+# MODIFIED: 13:32:38 15/03/2012
 # DESCRIPTION: member handlers
 
 import re
+import copy
 import bcrypt
 
 from tornado.web import authenticated
@@ -82,4 +83,60 @@ class SignoutHandler(BaseHandler, MemberDBMixin):
         self.clear_cookie('uid')
         self.redirect('/')
 
-__all__ = ["SigninHandler", "SignupHandler", "SignoutHandler"]
+class SettingsHandler(BaseHandler, MemberDBMixin):
+    @staticmethod
+    def get_lang_code(lang):
+        lang_dict = {
+            'pas' : 1, 
+            'c'   : 2, 
+            'cpp' : 3, 
+        }
+        if lang not in lang_dict.keys():
+            return 1
+        return lang_dict[lang]
+    @authenticated
+    def get(self):
+        title = self._("Settings")
+        msg = self.get_secure_cookie("msg")
+        if msg:
+            self.clear_cookie("msg")
+        member = self.current_user
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self.current_user.username, '/member/%s' % self.current_user.username))
+        breadcrumb.append((self._('Settings'), '/settings'))
+        self.render("settings.html", locals())
+    @authenticated
+    def post(self):
+        email = self.get_argument("email", default = None)
+        website = self.get_argument("website", default = "")
+        tagline = self.get_argument("tagline", default = "")
+        lang = self.get_argument("lang", default = "pas").lower()
+        bio = self.get_argument("bio", default = "")
+        error = []
+        member = copy.copy(self.current_user)
+        error.extend(self.check_email(email))
+        error.extend(self.check_text_value(website, self._("Website"), max = 200, \
+                                           regex = re.compile('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')))
+        error.extend(self.check_text_value(tagline, self._("Tagline"), max = 70))
+        error.extend(self.check_text_value(lang, self._("Code Language"), vaild=["pas", "c", "cpp"]))
+        error.extend(self.check_text_value(bio, self._("Bio"), max = 20000))
+        member.email = self.xhtml_escape(email)
+        member.website = self.xhtml_escape(website)
+        member.tagline = self.xhtml_escape(tagline)
+        member.bio = self.xhtml_escape(bio)
+        member.lang = self.get_lang_code(lang)
+        if error:
+            title = self._("Settings")
+            breadcrumb = []
+            breadcrumb.append((self._('Home'), '/'))
+            breadcrumb.append((self.current_user.username, '/member/%s' % self.current_user.username))
+            breadcrumb.append((self._('Settings'), '/settings'))
+            self.render("settings.html", locals())
+            return
+        member.gravatar_link = self.get_gravatar_url(email)
+        self.update_member(member)
+        self.set_secure_cookie('msg', self._('Settings Updated.'))
+        self.redirect('/settings')
+
+__all__ = ["SigninHandler", "SignupHandler", "SignoutHandler", "SettingsHandler"]

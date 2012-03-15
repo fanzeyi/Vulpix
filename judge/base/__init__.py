@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 04:02:16 15/03/2012
+# MODIFIED: 13:13:55 15/03/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -123,9 +123,8 @@ class BaseHandler(tornado.web.RequestHandler):
                     error.append(regex_msg)
                 else:
                     error.append(self._("%s is invalid." % valName))
-            else:
-                if vaild and value not in vaild:
-                    errora.append(self._("%s is invalid." % valName))
+        elif vaild and value not in vaild:
+            errora.append(self._("%s is invalid." % valName))
         return error
     def check_username(self, usr, queryDB = False):
         error = []

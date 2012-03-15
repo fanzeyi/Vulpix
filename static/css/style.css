@@ -3736,9 +3736,6 @@ body {
   height: 26px;
   line-height: 26px;
 }
-.sign .alert ul {
-  margin-bottom: 0;
-}
 /* Common Page Style */
 body {
   margin-left: 260px;
@@ -3757,7 +3754,11 @@ body {
 .main {
   padding-top: 40px;
   padding-right: 20px;
+  margin-bottom: 20px;
   width: 96%;
+}
+.alert ul {
+  margin-bottom: 0;
 }
 .sep30 {
   height: 30px;
