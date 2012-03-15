@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 13:35:01 15/03/2012
+# MODIFIED: 13:51:26 15/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -112,10 +112,12 @@ class MemberDBMixin(BaseDBMixin):
                                                member.website, member.tagline, member.bio, \
                                                member.lang, member.id)
     def update_member_password(self, member):
-        self.db.execute("""UPDATE `member` SET `passowrd` = %s WHERE `id` = %s""", member.password, member.id)
+        self.db.execute("""UPDATE `member` SET `password` = %s WHERE `id` = %s""", member.password, member.id)
     ''' DELETE '''
     def delete_auth_by_secret(self, secret):
         self.db.execute("""DELETE FROM `auth` WHERE `secret` = %s""", secret)
+    def delete_auth_by_member_id(self, member_id):
+        self.db.execute("""DELETE FROM `auth` WHERE `member_id` = %s""", member_id)
     ''' OTHER '''
     def create_auth(self, member_id):
         random = binascii.b2a_hex(uuid.uuid4().bytes)

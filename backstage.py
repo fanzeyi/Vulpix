@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: backstage.py
 # CREATED: 02:43:49 15/03/2012
-# MODIFIED: 04:03:09 15/03/2012
+# MODIFIED: 13:39:21 15/03/2012
 
 import functools
 
@@ -82,7 +82,5 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
         for tag in tags:
             self.insert_problem_tag(tag, problem.id)
         self.redirect('/problem/%d' % problem.id)
-
-
 
 __all__ = ["AddProblemHandler"]

@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: member.py
 # CREATED: 02:18:23 09/03/2012
-# MODIFIED: 13:32:38 15/03/2012
+# MODIFIED: 14:00:53 15/03/2012
 # DESCRIPTION: member handlers
 
 import re
@@ -139,4 +139,29 @@ class SettingsHandler(BaseHandler, MemberDBMixin):
         self.set_secure_cookie('msg', self._('Settings Updated.'))
         self.redirect('/settings')
 
-__all__ = ["SigninHandler", "SignupHandler", "SignoutHandler", "SettingsHandler"]
+class ChangePasswordHandler(BaseHandler, MemberDBMixin):
+    @authenticated
+    def post(self):
+        oldpwd = self.get_argument('oldpwd', default = None)
+        newpwd = self.get_argument('newpwd', default = None)
+        error = []
+        error.extend(self.check_password(oldpwd))
+        error.extend(self.check_password(newpwd))
+        oldpwd_hash = bcrypt.hashpw(oldpwd, self.settings['bcrypt_salt'])
+        if oldpwd_hash != self.current_user.password:
+            error.append(self._("Wrong Passowrd"))
+        if error:
+            title = self._("Change Password")
+            self.render("settings_changepass.html", locals())
+            return
+        member = self.current_user
+        member.password = bcrypt.hashpw(newpwd, self.settings['bcrypt_salt'])
+        self.update_member_password(member)
+        self.delete_auth_by_member_id(member.id)
+        auth = self.create_auth(member.id)
+        self.set_secure_cookie('auth', auth.secret)
+        self.set_secure_cookie('uid', str(auth.member_id))
+        self.set_secure_cookie('msg', self._('Password Updated.'))
+        self.redirect('/settings')
+
+__all__ = ["SigninHandler", "SignupHandler", "SignoutHandler", "SettingsHandler", "ChangePasswordHandler"]
