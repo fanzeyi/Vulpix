@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: handlers.py
 # CREATED: 01:41:06 08/03/2012
-# MODIFIED: 14:49:25 15/03/2012
+# MODIFIED: 15:54:23 15/03/2012
 # DESCRIPTION: URL Route
 
 from home import *
@@ -27,4 +27,5 @@ handlers = [
     (r'/problem', ProblemListHandler), 
     (r'/problem/([\d]*)', ViewProblemHandler), 
     (r'/backstage/problem/add', AddProblemHandler), 
+    (r'/backstage/contest/add', AddContestHandler), 
 ]

@@ -2,13 +2,15 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: backstage.py
 # CREATED: 02:43:49 15/03/2012
-# MODIFIED: 13:39:21 15/03/2012
+# MODIFIED: 15:53:23 15/03/2012
 
 import functools
 
 from tornado.web import HTTPError
 
+from judge.db import Contest
 from judge.db import Problem
+from judge.db import ContestDBMixin
 from judge.db import ProblemDBMixin
 from judge.base import BaseHandler
 
@@ -83,4 +85,16 @@ class AddProblemHandler(BaseHandler, ProblemDBMixin):
             self.insert_problem_tag(tag, problem.id)
         self.redirect('/problem/%d' % problem.id)
 
-__all__ = ["AddProblemHandler"]
+class AddContestHandler(BaseHandler, ProblemDBMixin, ContestDBMixin):
+    @backstage
+    def get(self):
+        title = self._("Add Contest")
+        cid = self.get_argument("cid", default = 0)
+        contest = None
+        if cid:
+            contest = self.select_contest_by_id(cid)
+            title = self._("Edit Contest")
+            related_problem = self.select_contest_problem_by_contest_id(contest.id)
+        self.render("backstage/add_contest.html", locals())
+
+__all__ = ["AddProblemHandler", "AddContestHandler"]

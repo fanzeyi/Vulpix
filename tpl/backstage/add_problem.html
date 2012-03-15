@@ -9,7 +9,7 @@
 {{ show_error_list(error) }}
 <form method="POST" action="" class="form-horizontal cell form">
 <fieldset>
-    <div class="title">{{ _('Add Problem') }}</div>
+    <div class="title">{{ title }}</div>
     {{ page.xsrf_form_html() }}
     <input type="hidden" name="pid" value="{% if problem %}{{ problem.id }}{% endif %}" />
     <div class="sep30"></div>

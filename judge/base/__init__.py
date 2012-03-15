@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 14:20:39 15/03/2012
+# MODIFIED: 15:41:54 15/03/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -17,7 +17,6 @@ import tornado.escape
 
 from judge.db import Member
 from judge.utils import _len
-
 
 def unauthenticated(method):
     """Decorate methods with this to require that user be NOT logged in"""
@@ -34,9 +33,6 @@ def unauthenticated(method):
 class BaseHandler(tornado.web.RequestHandler):
     _ = lambda self, text: self.locale.translate(text) # i18n func
     xhtml_escape = lambda self, text: tornado.escape.xhtml_escape(text) if text else text # xhtml escape
-    def _check_text_value(self):
-        '''Check text value is vaild'''
-        pass
     def get_page_count(self, count):
         '''Return page num by input item num'''
         return count / 10 + (1 if count % 10 else 0)
@@ -71,7 +67,12 @@ class BaseHandler(tornado.web.RequestHandler):
         return member
     def get_user_locale(self):
         '''Get user locale, first check cookie, then browser'''
-        pass
+        result = self.get_cookie('LANG', default = None)
+        if result == None:
+            result = self.get_browser_locale()
+        else:
+            result = tornado.locale.get(result)
+        return result
     def sendmail(self):
         '''Send mail func, send mail to someone'''
         pass

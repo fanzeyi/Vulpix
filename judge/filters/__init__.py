@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/filters/__init__.py
 # CREATED: 01:48:10 08/03/2012
-# MODIFIED: 15:38:22 15/03/2012
+# MODIFIED: 16:00:06 15/03/2012
 # DESCRIPTION: jinja2 filters
 
 import re
@@ -96,10 +96,14 @@ def get_page_nav(pages, start):
         result.append(button(pages - 1))
     return result
 
+def datetimeformat(value, format='%m/%d/%Y %H:%M'):
+    return value.strftime(format)
+
 filters = {
-    'autolink'      : autolink, 
-    'avatar_img'    : avatar_img, 
-    'get_prev_page' : get_prev_page, 
-    'get_next_page' : get_next_page, 
-    'get_page_nav'  : get_page_nav, 
+    'autolink'       : autolink, 
+    'avatar_img'     : avatar_img, 
+    'get_prev_page'  : get_prev_page, 
+    'get_next_page'  : get_next_page, 
+    'get_page_nav'   : get_page_nav, 
+    'datetimeformat' : datetimeformat, 
 }

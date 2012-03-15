@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 14:51:08 15/03/2012
+# MODIFIED: 15:53:03 15/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -341,4 +341,30 @@ class ContestSubmit(BaseDBObject):
     create = 0
 
 class ContestDBMixin(BaseDBMixin):
-    pass
+    ''' New Data Model '''
+    def _new_contest(self, row):
+        contest = Contest()
+        contest._init_row(row)
+        return contest
+    def _new_contest_problem(self, row):
+        contest_problem = ContestProblem()
+        contest_problem._init_row(row)
+        return contest
+    ''' COUNT '''
+    ''' SELECT '''
+    def select_countest_by_id(contest_id):
+        row = self.db.get("""SELECT * FROM `contest` WHERE `id` = %s""", contest_id)
+        if row:
+            return self._new_contest(row)
+        return None
+    def select_contest_problem_by_contest_id(contest_id):
+        rows = self.db.query("""SELECT * FROM `contest_problem` WHERE `contest_id` = %s""", contest_id)
+        result = []
+        for row in rows:
+            result.append(self._new_contest_problem(row))
+        return result
+    ''' INSERT '''
+    ''' UPDATE '''
+    ''' DELETE '''
+    ''' OTHER '''
+
