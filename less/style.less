@@ -138,6 +138,10 @@ body {
     .form-actions {
         margin-bottom: 0; 
     }
+
+    .line {
+        border-bottom: 1px solid #DDD; 
+    }
 }
 
 form.cell fieldset .title {
@@ -329,6 +333,48 @@ nav {
 
         .tag {
             padding-right: 10px; 
+        }
+    }
+}
+
+/* Member Page */
+
+.member-top {
+
+    .line {
+        padding: 10px 15px; 
+        min-height: 100px; 
+    }
+
+    .avatar {
+        float: left; 
+        img {
+            .border-radius(4px); 
+        }
+    }
+
+    .profile {
+        float: left; 
+        margin-left: 15px; 
+        width: 80%; 
+
+        .username {
+            font-family: Georgia,Times New Roman,serif;
+        }
+        .tagline {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 16px; 
+            color: #999; 
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif
+        }
+        .meta {
+            font-size: 12px;
+            color: #CCC;
+        }
+        .website i {
+            margin-right: 5px; 
         }
     }
 }

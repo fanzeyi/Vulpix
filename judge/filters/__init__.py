@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/filters/__init__.py
 # CREATED: 01:48:10 08/03/2012
-# MODIFIED: 14:29:20 15/03/2012
+# MODIFIED: 15:38:22 15/03/2012
 # DESCRIPTION: jinja2 filters
 
 import re
@@ -55,6 +55,8 @@ def autolink(text, trim_url_limit=None, nofollow=False):
     return ''.join(words)
 
 def avatar_img(link, size = 45):
+    if link != "/static/img/avatar.png":
+        link = link + "&s=100"
     return "<img src=\"%s\" width=\"%d\" height=\"%d\" />" % (link, size, size)
 
 def get_prev_page(start):

@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: member.py
 # CREATED: 02:18:23 09/03/2012
-# MODIFIED: 14:00:53 15/03/2012
+# MODIFIED: 14:51:21 15/03/2012
 # DESCRIPTION: member handlers
 
 import re
@@ -164,4 +164,16 @@ class ChangePasswordHandler(BaseHandler, MemberDBMixin):
         self.set_secure_cookie('msg', self._('Password Updated.'))
         self.redirect('/settings')
 
-__all__ = ["SigninHandler", "SignupHandler", "SignoutHandler", "SettingsHandler", "ChangePasswordHandler"]
+class MemberHandler(BaseHandler, MemberDBMixin):
+    def get(self, username):
+        title = username
+        username = username.lower()
+        member = self.select_member_by_username_lower(username)
+        if not member:
+            raise HTTPError(404)
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((member.username, '/member/%s' % member.username))
+        self.render("member.html", locals())
+
+__all__ = ["SigninHandler", "SignupHandler", "SignoutHandler", "SettingsHandler", "ChangePasswordHandler", "MemberHandler"]

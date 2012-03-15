@@ -3809,6 +3809,9 @@ body {
 .cell .form-actions {
   margin-bottom: 0;
 }
+.cell .line {
+  border-bottom: 1px solid #DDD;
+}
 form.cell fieldset .title {
   padding-left: 20px;
   padding-top: 20px;
@@ -3980,4 +3983,40 @@ nav .copyright a {
 }
 .signleproblem .tagclound .tag {
   padding-right: 10px;
+}
+/* Member Page */
+.member-top .line {
+  padding: 10px 15px;
+  min-height: 100px;
+}
+.member-top .avatar {
+  float: left;
+}
+.member-top .avatar img {
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+}
+.member-top .profile {
+  float: left;
+  margin-left: 15px;
+  width: 80%;
+}
+.member-top .profile .username {
+  font-family: Georgia,Times New Roman,serif;
+}
+.member-top .profile .tagline {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+  color: #999;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.member-top .profile .meta {
+  font-size: 12px;
+  color: #CCC;
+}
+.member-top .profile .website i {
+  margin-right: 5px;
 }

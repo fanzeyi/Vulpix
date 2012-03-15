@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="cell member-top">
+    <div class="line">
+        <div class="avatar">
+            {{ member.gravatar_link | avatar_img(100) }}
+        </div>
+        <div class="profile">
+            <div class="username"><h1>{{ member.username.title() }}</h1></div>
+            <div class="tagline" title="{{ member.tagline }}">{{ member.tagline }}</div>
+            <div class="meta">{{ _('ID:') }}{{ member.id }}. {{ _('Joined at') }} {{ member.create }}</div>
+            <div class="website"><i class="icon-leaf"></i><a href="{{ member.website }}">{{ member.website }}</a></div>
+        </div>
+    </div>
+    <div class="body content">
+        {{ member.bio | autolink | replace("\n", "<br />")}}
+    </div>
+</div>
+{% endblock %}

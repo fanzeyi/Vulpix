@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 14:18:11 15/03/2012
+# MODIFIED: 14:51:08 15/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
