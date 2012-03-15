@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: backstage.py
 # CREATED: 02:43:49 15/03/2012
-# MODIFIED: 15:53:23 15/03/2012
+# MODIFIED: 03:02:17 16/03/2012
 
 import datetime
 import functools
@@ -95,10 +95,7 @@ class AddContestHandler(BaseHandler, ProblemDBMixin, ContestDBMixin):
         if cid:
             contest = self.select_contest_by_id(cid)
             title = self._("Edit Contest")
-            related_problem_id = self.select_contest_problem_by_contest_id(contest.id)
-            related_problem = []
-            for pid in related_problem_id:
-                related_problem.append(self.select_problem_by_id(pid))
+            related_problem = self.select_contest_problem_by_contest_id(contest.id)
         self.render("backstage/add_contest.html", locals())
     @backstage
     def post(self):
@@ -139,11 +136,11 @@ class AddContestHandler(BaseHandler, ProblemDBMixin, ContestDBMixin):
         contest.end_time = end_datetime
         if contest.id:
             self.update_contest(contest)
-            self.delete_contest_problem_by_cid(contest.id)
+            self.delete_contest_problem_by_contest_id(contest.id)
         else:
             self.insert_contest(contest)
         for pid in contest.related_problem:
-            self.insert_contest_problem(cid = contest.id, pid = pid)
+            self.insert_contest_problem(contest.id, pid)
         self.redirect("/contest/%d" % int(contest.id))
 
-__all__ = ["AddProblemHandler", "AddContestHandler"]
+__all__ = ["backstage", "AddProblemHandler", "AddContestHandler"]

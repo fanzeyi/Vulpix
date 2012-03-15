@@ -149,7 +149,7 @@ form.cell fieldset .title {
     padding-top: 20px; 
 }
 
-.tagclound {
+.tagcloud {
     list-style: none;
     margin-left: 0;
     margin-top: 10px;
@@ -175,6 +175,20 @@ form.cell fieldset .title {
         background-color: white; 
     }
 }
+
+.table-info tr {
+
+        &:hover {
+            td, th {
+                background-color: #FAFAFA; 
+            }
+        }
+
+        th {
+            text-align: right; 
+            width: 13%; 
+        }
+    }
 
 /* Navigator Style */
 
@@ -310,25 +324,11 @@ nav {
 
 .signleproblem {
 
-    .table tr {
-
-        &:hover {
-            td, th {
-                background-color: #FAFAFA; 
-            }
-        }
-
-        th {
-            text-align: right; 
-            width: 13%; 
-        }
-    }
-
     .title {
         padding-left: 20px; 
     }
 
-    .tagclound {
+    .tagcloud {
         margin-top: 0; 
 
         .tag {

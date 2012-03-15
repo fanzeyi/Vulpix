@@ -14,8 +14,8 @@
         {% endif %}
         {{ problem.title }}
     </div>
-    <div class="body">
-        <table class="table table-bordered">
+    <div class="body line">
+        <table class="table table-bordered table-info">
             <tr>
                 <th>ID</th>
                 <td>{{ problem.id }}</td>
@@ -33,19 +33,18 @@
                 <td>{{ problem.memlimit }}MB</td>
             </tr>
             <tr>
-                <th>{{ _('Content') }}</th>
-                <td>{{ problem.content | autolink | replace('\n', '<br/>') }}</td>
-            </tr>
-            <tr>
                 <th>{{ _('Tags') }}</th>
                 <td>
-                    <ul class="tagclound">
+                    <ul class="tagcloud">
                     {% for tag in tags %}
                         <li class="tag"><a href="/tag/{{ tag.tagname }}">{{ tag.tagname }}</a></li>
                     {% endfor%}
                     </ul>
                 </td>
         </table>
+    </div>
+    <div class="body content">
+        {{ problem.content | autolink | replace('\n', '<br />') }}
     </div>
 </div>
 {% if user %}

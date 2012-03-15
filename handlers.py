@@ -2,13 +2,15 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: handlers.py
 # CREATED: 01:41:06 08/03/2012
-# MODIFIED: 15:54:23 15/03/2012
+# MODIFIED: 01:14:36 16/03/2012
 # DESCRIPTION: URL Route
 
+from api import *
 from home import *
 from lang import *
 from member import *
 from problem import *
+from contest import *
 from backstage import *
 
 '''
@@ -24,8 +26,11 @@ handlers = [
     (r'/settings/changepass', ChangePasswordHandler), 
     (r'/member/(.*)', MemberHandler), 
     (r'/lang/(.*)', SetLanguageHandler), 
-    (r'/problem', ProblemListHandler), 
+    (r'/problem', ListProblemHandler), 
     (r'/problem/([\d]*)', ViewProblemHandler), 
     (r'/backstage/problem/add', AddProblemHandler), 
     (r'/backstage/contest/add', AddContestHandler), 
+    (r'/contest', ListContestHandlder), 
+    (r'/contest/([\d]*)', ViewContestHandler), 
+    (r'/api/problem/get/([\d]*)', GetProblemHandler), 
 ]

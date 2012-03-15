@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: contest.py
 # CREATED: 15:46:17 15/03/2012
-# MODIFIED: 15:46:36 15/03/2012
+# MODIFIED: 02:48:49 16/03/2012
 
 import datetime
 
@@ -24,6 +24,9 @@ class ViewContestHandler(BaseHandler, ContestDBMixin):
         if not contest:
             raise HTTPError(404)
         now = datetime.datetime.now()
+        problems = self.select_contest_problem_by_contest_id(cid)
+        for problem in problems:
+            problem.submit = self.select_contest_submit_by_contest_id_problem_id_user_id(cid, problem.problem_id)
         self.render("contest.html", locals())
 
 class ListContestHandlder(BaseHandler, ContestDBMixin):
@@ -43,4 +46,4 @@ class ListContestHandlder(BaseHandler, ContestDBMixin):
         pages = self.get_page_count(count)
         self.render("contest_list.html", locals())
 
-__all__ = ["ViewContestHandler"]
+__all__ = ["ViewContestHandler", "ListContestHandlder"]

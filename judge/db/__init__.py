@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 15:53:03 15/03/2012
+# MODIFIED: 02:50:48 16/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -349,7 +349,11 @@ class ContestDBMixin(BaseDBMixin):
     def _new_contest_problem(self, row):
         contest_problem = ContestProblem()
         contest_problem._init_row(row)
-        return contest
+        return contest_problem
+    def _new_contest_submit(self, row):
+        contest_submit = ContestSubmit()
+        contest_submit._init_row(row)
+        return contest_submit
     ''' COUNT '''
     def count_contest(self):
         row = self.db.get("""SELECT COUNT(*) FROM `contest`""")
@@ -358,17 +362,25 @@ class ContestDBMixin(BaseDBMixin):
         row = self.db.get("""SELECT COUNT(*) FROM `contest` WHERE invisible = 0""")
         return row["COUNT(*)"]
     ''' SELECT '''
-    def select_countest_by_id(contest_id):
+    def select_contest_by_id(self, contest_id):
         row = self.db.get("""SELECT * FROM `contest` WHERE `id` = %s""", contest_id)
         if row:
             return self._new_contest(row)
         return None
-    def select_contest_problem_by_contest_id(contest_id):
-        rows = self.db.query("""SELECT * FROM `contest_problem` WHERE `contest_id` = %s""", contest_id)
+    def select_contest_problem_by_contest_id(self, contest_id):
+        rows = self.db.query("""SELECT *, `problem`.* FROM `contest_problem`
+                                LEFT JOIN `problem` ON `contest_problem`.`problem_id` = `problem`.`id`
+                                WHERE `contest_id` = %s""", contest_id)
         result = []
         for row in rows:
             result.append(self._new_contest_problem(row))
         return result
+    def select_contest_submit_by_contest_id_problem_id_user_id(self, contest_id, problem_id):
+        row = self.db.get("""SELECT * FROM `contest_submit` WHERE `contest_id` = %s AND `problem_id` = %s AND `member_id` = %s""", \
+                          contest_id, problem_id, self.current_user.id)
+        if row:
+            return self._new_contest_submit(row)
+        return None
     def select_countest(self, start = 0, count = 20):
         rows = self.db.query("""SELECT * FROM `contest` LIMIT %s, %s""", start, count)
         result = []
@@ -388,8 +400,8 @@ class ContestDBMixin(BaseDBMixin):
                                                VALUES (%s, %s, %s, %s, %s, UTC_TIMESTAMP())""", \
                                      contest.title, contest.description, contest.start_time, contest.end_time, \
                                      contest.invisible)
-    def insert_contest_problem(self, contest_problem):
-        self.db.execute("""INSERT INTO `contest_problem` (`contest_id`, `problem_id`) VALUES (%s, %s)""", int(cid), int(pid))
+    def insert_contest_problem(self, contest_id, problem_id):
+        self.db.execute("""INSERT INTO `contest_problem` (`contest_id`, `problem_id`) VALUES (%s, %s)""", int(contest_id), int(problem_id))
     ''' UPDATE '''
     def update_contest(self, contest):
         self.db.execute("""UPDATE `contest` SET `title` = %s, 
@@ -402,6 +414,6 @@ class ContestDBMixin(BaseDBMixin):
                         contest.invisible, contest.id)
     ''' DELETE '''
     def delete_contest_problem_by_contest_id(self, contest_id):
-        self.db.execute("""DELETE FROM `contest_problem` WHERE `cid` = %s""", cid)
+        self.db.execute("""DELETE FROM `contest_problem` WHERE `contest_id` = %s""", contest_id)
     ''' OTHER '''
 

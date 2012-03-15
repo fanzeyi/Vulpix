@@ -3816,12 +3816,12 @@ form.cell fieldset .title {
   padding-left: 20px;
   padding-top: 20px;
 }
-.tagclound {
+.tagcloud {
   list-style: none;
   margin-left: 0;
   margin-top: 10px;
 }
-.tagclound .tag {
+.tagcloud .tag {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
@@ -3831,7 +3831,7 @@ form.cell fieldset .title {
   margin-right: 4px;
   margin-bottom: 5px;
 }
-.tagclound .tag a {
+.tagcloud .tag a {
   color: black;
 }
 .pagination {
@@ -3839,6 +3839,14 @@ form.cell fieldset .title {
 }
 .pagination ul {
   background-color: white;
+}
+.table-info tr:hover td,
+.table-info tr:hover th {
+  background-color: #FAFAFA;
+}
+.table-info tr th {
+  text-align: right;
+  width: 13%;
 }
 /* Navigator Style */
 nav {
@@ -3967,21 +3975,13 @@ nav .copyright a {
   text-align: right;
 }
 /* Single Problem Page Style */
-.signleproblem .table tr:hover td,
-.signleproblem .table tr:hover th {
-  background-color: #FAFAFA;
-}
-.signleproblem .table tr th {
-  text-align: right;
-  width: 13%;
-}
 .signleproblem .title {
   padding-left: 20px;
 }
-.signleproblem .tagclound {
+.signleproblem .tagcloud {
   margin-top: 0;
 }
-.signleproblem .tagclound .tag {
+.signleproblem .tagcloud .tag {
   padding-right: 10px;
 }
 /* Member Page */

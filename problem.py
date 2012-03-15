@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: problem.py
 # CREATED: 04:04:57 15/03/2012
-# MODIFIED: 14:19:53 15/03/2012
+# MODIFIED: 01:14:52 16/03/2012
 
 from tornado.web import HTTPError
 
@@ -29,7 +29,7 @@ class ViewProblemHandler(BaseHandler, ProblemDBMixin):
         tags = self.select_problem_tag_by_problem_id(problem.id)
         self.render("problem.html", locals())
 
-class ProblemListHandler(BaseHandler, ProblemDBMixin):
+class ListProblemHandler(BaseHandler, ProblemDBMixin):
     def get(self):
         start = self.get_argument("start", default = 0)
         try:
@@ -49,4 +49,4 @@ class ProblemListHandler(BaseHandler, ProblemDBMixin):
         pages = self.get_page_count(count)
         self.render("problem_list.html", locals())
 
-__all__ = ["ViewProblemHandler", "ProblemListHandler"]
+__all__ = ["ViewProblemHandler", "ListProblemHandler"]
