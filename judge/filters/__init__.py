@@ -2,11 +2,12 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/filters/__init__.py
 # CREATED: 01:48:10 08/03/2012
-# MODIFIED: 16:00:06 15/03/2012
+# MODIFIED: 14:50:10 16/03/2012
 # DESCRIPTION: jinja2 filters
 
 import re
 import string
+import datetime
 
 # Configuration for urlize() function
 LEADING_PUNCTUATION  = ['(', '<', '&lt;']
@@ -20,6 +21,23 @@ punctuation_re = re.compile('^(?P<lead>(?:%s)*)(?P<middle>.*?)(?P<trail>(?:%s)*)
     ('|'.join([re.escape(x) for x in LEADING_PUNCTUATION]),
     '|'.join([re.escape(x) for x in TRAILING_PUNCTUATION])))
 simple_email_re = re.compile(r'^\S+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+$')
+
+CONTEST_STATUS = {
+    1 : ("success", "Running"), 
+    2 : ("info", "Waiting"), 
+    3 : ("default", "Finished"), 
+    4 : ("warning", "Invisible"), 
+    5 : ("important", "Unknown"), 
+}
+SUBMIT_STATUS  = {
+    0 : ("info", "Pending"), 
+    1 : ("success", "Accepted"), 
+    2 : ("important", "Wrong Answer"), 
+    3 : ("warning", "Time Limit Exceeded"), 
+    4 : ("warning", "Memory Limit Exceeded"), 
+    5 : ("inverse", "Runtime Error"), 
+    6 : ("default", "Compile Error"), 
+}
 
 def autolink(text, trim_url_limit=None, nofollow=False):
     """
@@ -99,6 +117,15 @@ def get_page_nav(pages, start):
 def datetimeformat(value, format='%m/%d/%Y %H:%M'):
     return value.strftime(format)
 
+def get_contest_status(contest):
+    return "<span class=\"label label-%s\">%s</span>" % (CONTEST_STATUS[contest.status])
+
+def get_submit_status(submit):
+    if not submit:
+        return "-"
+    cla, status = SUBMIT_STATUS[submit.status]
+    return "<span class=\"label label-%s\">%s</span>" % (cla, status)
+
 filters = {
     'autolink'       : autolink, 
     'avatar_img'     : avatar_img, 
@@ -106,4 +133,6 @@ filters = {
     'get_next_page'  : get_next_page, 
     'get_page_nav'   : get_page_nav, 
     'datetimeformat' : datetimeformat, 
+    'get_contest_status' : get_contest_status, 
+    'get_submit_status' : get_submit_status, 
 }

@@ -25,7 +25,7 @@
             </tr>
             <tr>
                 <th>{{ _('Status') }}</th>
-                <td></td>
+                <td>{{ contest | get_contest_status }}</td>
             </tr>
         </table>
     </div>
@@ -67,7 +67,7 @@
         </table>
     </div>
 </div>
-{% if user %}
+{% if (user and contest.status == 1) or user.admin %}
 <form class="form-horizontal cell">
     <fieldset>
         <div class="title">{{ _('Submit Problem') }}</div>

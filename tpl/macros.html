@@ -1,3 +1,5 @@
+{#================ List ================#}
+
 {% macro show_error_list(error) %}
 {%- if error -%}
 <div class="alert alert-error">
@@ -35,7 +37,7 @@
 {% macro show_contest_list(contest_list) %}
 {% endmacro %}
 
-{#================  Form  ================#}
+{#================ Form ================#}
 
 {% macro input(name, label, value = '', type = 'TEXT', class = 'input-xlarge', default = '', addon = '') %}
     <div class="control-group">

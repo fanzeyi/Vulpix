@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: contest.py
 # CREATED: 15:46:17 15/03/2012
-# MODIFIED: 03:19:13 16/03/2012
+# MODIFIED: 14:50:32 16/03/2012
 
 import datetime
 
@@ -12,6 +12,21 @@ from tornado.web import authenticated
 from judge.db import Contest
 from judge.db import ContestDBMixin
 from judge.base import BaseHandler
+
+def get_contest_status(contest):
+    status = 0
+    now = datetime.datetime.now()
+    if now >= contest.start_time and now <= contest.end_time:
+        status = 1 #"Running"
+    elif now <= contest.start_time:
+        status = 2 #"Waiting"
+    elif now >= contest.end_time:
+        status = 3 #"Finished"
+    if contest.invisible:
+        status = 4 #"Invisible"
+    if not status:
+        status = 5 #"Unknown"
+    return status
 
 class ViewContestHandler(BaseHandler, ContestDBMixin):
     @authenticated
@@ -24,6 +39,7 @@ class ViewContestHandler(BaseHandler, ContestDBMixin):
         if not contest:
             raise HTTPError(404)
         now = datetime.datetime.now()
+        contest.status = get_contest_status(contest)
         problems = self.select_contest_problem_by_contest_id(cid)
         for problem in problems:
             problem.submit = self.select_contest_submit_by_contest_id_problem_id_user_id(cid, problem.problem_id)
@@ -51,6 +67,8 @@ class ListContestHandlder(BaseHandler, ContestDBMixin):
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((self._('Contest'), '/contest'))
         pages = self.get_page_count(count)
+        for contest in contests:
+            contest.status = get_contest_status(contest)
         self.render("contest_list.html", locals())
 
 __all__ = ["ViewContestHandler", "ListContestHandlder"]

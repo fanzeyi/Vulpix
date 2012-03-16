@@ -22,7 +22,7 @@
                 <td><a href="/contest/{{ contest.id }}">{{ contest.title }}</a></td>
                 <td>{{ contest.start_time }}</td>
                 <td>{{ contest.end_time }}</td>
-                <td></td>
+                <td>{{ contest | get_contest_status }}</td>
             </tr>
             {% endif %}
             {% endfor %}

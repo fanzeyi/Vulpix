@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 03:13:19 16/03/2012
+# MODIFIED: 14:00:26 16/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -238,6 +238,10 @@ class ProblemDBMixin(BaseDBMixin):
         problem_tag = ProblemTag()
         problem_tag._init_row(row)
         return problem_tag
+    def _new_submit(self, row):
+        submit = Submit()
+        submit._init_row(row)
+        return submit
     ''' COUNT '''
     def count_problem(self):
         count = self.db.get("""SELECT COUNT(*) FROM `problem`""")
@@ -272,6 +276,12 @@ class ProblemDBMixin(BaseDBMixin):
         for row in rows:
             result.append(self._new_problem(row))
         return result
+    def select_last_submit_by_problem_id_member_id(self, problem_id):
+        row = self.db.get("""SELECT * FROM `submit` WHERE `problem_id` = %s AND `member_id` = %s ORDER BY `id` DESC LIMIT 1""", \
+                          problem_id, self.current_user.id)
+        if row:
+            return self._new_submit(row)
+        return None
     ''' INSERT '''
     def insert_problem(self, problem):
         problem.id = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, \

@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: problem.py
 # CREATED: 04:04:57 15/03/2012
-# MODIFIED: 01:14:52 16/03/2012
+# MODIFIED: 14:00:51 16/03/2012
 
 from tornado.web import HTTPError
 
@@ -45,8 +45,11 @@ class ListProblemHandler(BaseHandler, ProblemDBMixin):
             problems = self.select_problem_order_by_id(10, start)
         else:
             count = self.count_visible_problem()
-            problems = self.select_problem_order_by_id_visible(10, start)
+            problems = self.select_visible_problem_order_by_id(10, start)
         pages = self.get_page_count(count)
+        if self.current_user:
+            for problem in problems:
+                problem.submit = self.select_last_submit_by_problem_id_member_id(problem.id)
         self.render("problem_list.html", locals())
 
 __all__ = ["ViewProblemHandler", "ListProblemHandler"]
