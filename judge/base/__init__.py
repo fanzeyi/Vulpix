@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 02:26:46 18/03/2012
+# MODIFIED: 03:08:32 18/03/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -13,6 +13,7 @@ import httplib
 import datetime
 import functools
 import traceback
+import simplejson
 
 import tornado.web
 import tornado.escape
@@ -156,7 +157,7 @@ class BaseHandler(tornado.web.RequestHandler):
         gravatar_id = hashlib.md5(email.lower()).hexdigest()
         return "http://www.gravatar.com/avatar/%s?d=mm" % (gravatar_id) 
     def post_to_judger(self, post_arg, judger, callback = None):
-        query_string =  "&".join(["%s=%s" % (k,a[k]) for k in a.keys()])
+        query_string = simplejson.dumps(post_arg) # use json
         encrypt = rsa.encrypt(query_string, rsa.PublicKey.load_pkcs1(judger.pubkey))
         http_client = AsyncHTTPClient()
         http_client.fetch(judger.path, method = "POST", body = urllib.urlencode({"query" : encrypt}), callback = callback)
