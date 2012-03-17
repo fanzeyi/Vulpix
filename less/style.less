@@ -98,26 +98,37 @@ body {
     height: 30px; 
 }
 
+.breadcrumb {
+    #gradient > .vertical(rgb(235,235,235), rgb(229,229,229));
+}
+
 .cell {
     .border-radius(4px); 
-    .box-shadow(0px 1px 2px rgba(0, 0, 0, 0.15)); 
-    border: 2px solid #EEE;
+    .box-shadow(0px 1px 3px rgba(0, 0, 0, 0.2)); 
     margin-bottom: 30px; 
     background-color: white; 
+    border-top: 1px solid #FAFAFA;
     
     .title {
-        .top-border-radius(4px); 
+        .top-border-radius(4px);
+        #gradient > .vertical(rgb(235,235,235), rgb(229,229,229));
         font-size: 16px; 
         font-weight: bold;
         line-height: 30px; 
         padding-left: 10px; 
         padding-top: 5px; 
-        border-bottom: 1px solid #DDD;
+        color: #898989;
+        text-shadow: 0 1px 0 #fff;
 
         .fr {
             float: right;
             margin-right: 10px;
             font-weight: normal;
+
+            a {
+                color: #898989;
+                font-size: 14px;
+            }
         }
     } 
 
@@ -145,8 +156,8 @@ body {
 }
 
 form.cell fieldset .title {
-    padding-left: 20px; 
-    padding-top: 20px; 
+//    padding-left: 20px; 
+//    padding-top: 20px; 
 }
 
 .tagcloud {
@@ -276,7 +287,6 @@ nav {
 
             &:hover {
                 background: rgba(0, 0, 0, 0.2);
-                color: white;
                 text-shadow: 0px 1px 1px black;
             }
         }

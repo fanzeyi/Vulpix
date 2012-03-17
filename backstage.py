@@ -2,15 +2,18 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: backstage.py
 # CREATED: 02:43:49 15/03/2012
-# MODIFIED: 03:02:17 16/03/2012
+# MODIFIED: 02:13:40 18/03/2012
 
+import re
 import datetime
 import functools
 
 from tornado.web import HTTPError
 
+from judge.db import Judger
 from judge.db import Contest
 from judge.db import Problem
+from judge.db import JudgerDBMixin
 from judge.db import ContestDBMixin
 from judge.db import ProblemDBMixin
 from judge.base import BaseHandler
@@ -143,4 +146,58 @@ class AddContestHandler(BaseHandler, ProblemDBMixin, ContestDBMixin):
             self.insert_contest_problem(contest.id, pid)
         self.redirect("/contest/%d" % int(contest.id))
 
-__all__ = ["backstage", "AddProblemHandler", "AddContestHandler"]
+class ManageJudgerHandler(BaseHandler, JudgerDBMixin):
+    @backstage
+    def get(self):
+        title = self._("Judger Manage")
+        judgers = self.select_judgers()
+        self.render("backstage/judger.html", locals())
+
+class AddJudgerHandler(BaseHandler, JudgerDBMixin):
+    @backstage
+    def get(self):
+        title = self._("Add Judger")
+        jid = self.get_argument("jid", default = 0)
+        judger = None
+        try:
+            jid = int(jid)
+        except ValueError:
+            raise HTTPError(404)
+        if jid:
+            judger = self.select_judger_by_id(jid)
+            if not judger:
+                raise HTTPError(404)
+            title = self._("Edit Judger")
+        self.render("backstage/add_judger.html", locals())
+    @backstage
+    def post(self):
+        name = self.get_argument("name", default = "")
+        description = self.get_argument("description", default = "")
+        path = self.get_argument("path", default = "")
+        priority = self.get_argument("priority", default = 0)
+        pubkey = self.get_argument("pubkey", default = "")
+        jid = self.get_argument("jid", default = 0)
+        judger = Judger()
+        error = []
+        error.extend(self.check_text_value(name, self._("Name"), required = True, min = 1, max = 100))
+        error.extend(self.check_text_value(description, self._("Description"), max = 5000))
+        error.extend(self.check_text_value(path, self._("Path"), required = True, regex = re.compile(r"^http://(.*)"), max = 200))
+        error.extend(self.check_text_value(priority, self._("Priority"), is_num = True))
+        error.extend(self.check_text_value(pubkey, self._("RSA Public Key"), required = True))
+        judger.id = jid
+        judger.name = self.xhtml_escape(name)
+        judger.description = self.xhtml_escape(description)
+        judger.path = self.xhtml_escape(path)
+        judger.priority = priority
+        judger.pubkey = self.xhtml_escape(pubkey)
+        if error:
+            title = self._("Edit Judger")
+            self.render("backstage/add_judger.html", locals())
+            return
+        if judger.id:
+            self.update_judger(judger)
+        else:
+            self.insert_judger(judger)
+        self.redirect("/backstage/judger")
+
+__all__ = ["backstage", "AddProblemHandler", "AddContestHandler", "ManageJudgerHandler", "AddJudgerHandler"]

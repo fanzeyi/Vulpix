@@ -2,10 +2,12 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 15:41:54 15/03/2012
+# MODIFIED: 02:26:46 18/03/2012
 # DESCRIPTION: Base handler
 
 import re
+import rsa
+import urllib
 import hashlib
 import httplib
 import datetime
@@ -14,6 +16,7 @@ import traceback
 
 import tornado.web
 import tornado.escape
+from tornado.httpclient import AsyncHTTPClient
 
 from judge.db import Member
 from judge.utils import _len
@@ -152,6 +155,11 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_gravatar_url(self, email):
         gravatar_id = hashlib.md5(email.lower()).hexdigest()
         return "http://www.gravatar.com/avatar/%s?d=mm" % (gravatar_id) 
+    def post_to_judger(self, post_arg, judger, callback = None):
+        query_string =  "&".join(["%s=%s" % (k,a[k]) for k in a.keys()])
+        encrypt = rsa.encrypt(query_string, rsa.PublicKey.load_pkcs1(judger.pubkey))
+        http_client = AsyncHTTPClient()
+        http_client.fetch(judger.path, method = "POST", body = urllib.urlencode({"query" : encrypt}), callback = callback)
     @property
     def db(self):
         return self.application.db

@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: handlers.py
 # CREATED: 01:41:06 08/03/2012
-# MODIFIED: 21:52:34 16/03/2012
+# MODIFIED: 01:36:47 18/03/2012
 # DESCRIPTION: URL Route
 
 from api import *
@@ -30,6 +30,8 @@ handlers = [
     (r'/problem/([\d]*)', ViewProblemHandler), 
     (r'/backstage/problem/add', AddProblemHandler), 
     (r'/backstage/contest/add', AddContestHandler), 
+    (r'/backstage/judger', ManageJudgerHandler), 
+    (r'/backstage/judger/add', AddJudgerHandler), 
     (r'/contest', ListContestHandlder), 
     (r'/contest/([\d]*)', ViewContestHandler), 
     (r'/api/problem/get/([\d]*)', GetProblemHandler), 

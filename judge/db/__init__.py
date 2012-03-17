@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 14:00:26 16/03/2012
+# MODIFIED: 02:08:56 18/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -427,3 +427,49 @@ class ContestDBMixin(BaseDBMixin):
         self.db.execute("""DELETE FROM `contest_problem` WHERE `contest_id` = %s""", contest_id)
     ''' OTHER '''
 
+class Judger(BaseDBObject):
+    '''Contest problem table'''
+    __tablename__ = "judge"
+    id = 0
+    name = ""
+    description = ""
+    path = "" # support HTTP protocol
+    priority = 0
+    queue_num = 0
+    pubkey = ""
+    create = None
+
+class JudgerDBMixin(BaseDBMixin):
+    ''' New Data Model '''
+    def _new_judger(self, row):
+        judger = Judger()
+        judger._init_row(row)
+        return judger
+    ''' SELECT '''
+    def select_judgers(self):
+        rows = self.db.query("""SELECT * FROM `judger`""")
+        result = []
+        for row in rows:
+            result.append(self._new_judger(row))
+        return result
+    def select_judger_by_id(self, juder_id):
+        row = self.db.get("""SELECT * FROM `judger` WHERE `id` = %s""", juder_id)
+        if row:
+            return self._new_judger(row)
+        return None
+    ''' INSERT '''
+    def insert_judger(self, judger):
+        judger.id = self.db.execute("""INSERT INTO `judger` (`name`, `description`, `path`, `priority`, `queue_num`, `pubkey`, `create`)
+                                              VALUES (%s, %s, %s, 0, %s, UTC_TIMESTAMP())""", \
+                                    judger.name, judger.description, judger.path, judger.pubkey)
+    ''' UPDATE '''
+    def update_judger(self, judger):
+        self.db.execute("""UPDATE `judger` SET `name` = %s, 
+                                               `description` = %s, 
+                                               `path` = %s, 
+                                               `priority` = %s,
+                                               `pubkey` = %s
+                                           WHERE `id` = %s""", \
+                           judger.name, judger.description, judger.path, judger.priority, judger.pubkey, judger.id)
+    def update_judger_count(self, judger):
+        self.db.execute("""UPDATE `judger` SET `queue_num` = 0 WHERE `id` = %s""", judger.id)
