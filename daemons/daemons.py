@@ -2,34 +2,51 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: daemons.py
 # CREATED: 02:48:06 18/03/2012
-# MODIFIED: 02:59:28 18/03/2012
+# MODIFIED: 20:11:11 18/03/2012
 
-import rsa
-import simplejson
+import time
+import hashlib
+import logging
+import simplejson as json
+from operator import itemgetter
 
 import tornado.web
 import tornado.ioloop
+import tornado.options
 from tornado.web import HTTPError
 
-from tasks import judge
-from config import DAEMON_PORT
-from config import RSA_PRIVKEY
+tornado.options.parse_command_line()
 
-REQURED_ARGS = ["code", "lang", "filename", "shortname", "timelimit", "memlimit"]
+from tasks import judge
+from config import SALT
+from config import DAEMON_PORT
+
+REQURED_ARGS = ["code", "lang", "filename", "shortname", "timelimit", "memlimit", "testpoint", "sign", "time"]
 
 class ReceiveQueryHandler(tornado.web.RequestHandler):
     def post(self):
         query = self.get_argument("query", default = None)
         if not query:
+            logging.error("Invalid Post Query.")
             raise HTTPError(404)
-        try:
-            query = rsa.decrypt(query, RSA_PRIVKEY)
-        except:
-            raise HTTPError(404)
-        query = simplejson.loads(query)
+        query = json.loads(query)
         for key in REQURED_ARGS:
             if key not in query.keys():
+                logging.error("Require key %s is missing" % key)
                 raise HTTPError(404)
+        query_sign = query["sign"]
+        query.pop("sign")
+        now = time.time()
+        if abs(now - query["time"]) > 300:
+            logging.error("Time is invalid!")
+            raise HTTPError(404)
+        query = dict(sorted(query.iteritems(), key=itemgetter(1), reverse=True))
+        sign = hashlib.sha1(json.dumps(query) + SALT).hexdigest()
+        if not sign ==  query_sign:
+            logging.error("Signature is invalid")
+            raise HTTPError(404)
+        print sign
+        print query_sign
         judge.delay(query)
         
 application = tornado.web.Application([
