@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 02:08:56 18/03/2012
+# MODIFIED: 02:29:19 19/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -216,8 +216,11 @@ class Submit(BaseDBObject):
     id = 0
     problem_id = 0
     member_id = 0
+    code = ""
     status = 0
-    testpoint = ""
+    testpoint = 0
+    testpoint_time = ""
+    testpoint_memory = ""
     score = 0
     costtime = 0
     costmemory = 0
@@ -252,6 +255,9 @@ class ProblemDBMixin(BaseDBMixin):
     def count_problem_by_tagname(self, tagname):
         count = self.db.get("""SELECT COUNT(*) FROM `problem_tag` WHERE `tagname` = %s""", tagname)
         return count["COUNT(*)"]
+    def count_submit(self):
+        count = self.db.get("""SELECT COUNT(*) FROM `submit`""")
+        return count["COUNT(*)"]
     ''' SELECT '''
     def select_problem_by_id(self, id):
         row = self.db.get("""SELECT * FROM `problem` WHERE `id` = %s LIMIT 1""", id)
@@ -282,6 +288,23 @@ class ProblemDBMixin(BaseDBMixin):
         if row:
             return self._new_submit(row)
         return None
+    def select_submit_by_id(self, sid):
+        row = self.db.get("""SELECT `submit`.*, `member`.`username`, `problem`.`title` FROM `submit` 
+                             LEFT JOIN `member` ON `submit`.`member_id` = `member`.`id`
+                             LEFT JOIN `problem` ON `submit`.`problem_id` = `problem`.`id`
+                             WHERE `submit`.`id` = %s LIMIT 1""", int(sid))
+        if row:
+            return self._new_submit(row)
+        return None
+    def select_submit_order_by_id(self, count = 10, start = 0):
+        rows = self.db.query("""SELECT `submit`.*, `member`.`username`, `problem`.`title` FROM `submit` 
+                                LEFT JOIN `member` ON `submit`.`member_id` = `member`.`id`
+                                LEFT JOIN `problem` ON `submit`.`problem_id` = `problem`.`id`
+                                ORDER BY `submit`.`id` DESC LIMIT %s, %s""", int(start), int(count))
+        result = []
+        for row in rows:
+            result.append(self._new_submit(row))
+        return result
     ''' INSERT '''
     def insert_problem(self, problem):
         problem.id = self.db.execute("""INSERT INTO `problem` (`title`, `shortname`, `content`, \
@@ -291,6 +314,12 @@ class ProblemDBMixin(BaseDBMixin):
                                      int(problem.timelimit), int(problem.memlimit), int(problem.testpoint), int(problem.invisible))
     def insert_problem_tag(self, tagname, problem_id):
         self.db.execute("""INSERT INTO `problem_tag` (`tagname`, `problem_id`) VAlUES (%s, %s)""", tagname, int(problem_id))
+    def insert_submit(self, submit):
+        submit.id = self.db.execute("""INSERT INTO `submit` (`problem_id`, `member_id`, `code`, `timestamp`,
+                                                            `lang`, `user_agent`, `ip`, `create`)
+                                       VALUES (%s, %s, %s, %s, %s, %s, %s, UTC_TIMESTAMP())""", \
+                                    submit.problem_id, submit.member_id, submit.code, submit.timestamp, \
+                                    submit.lang, submit.user_agent, submit.ip)
     ''' UPDATE '''
     def update_problem(self, problem):
         self.db.execute("""UPDATE `problem` SET `title` = %s, 
@@ -454,6 +483,11 @@ class JudgerDBMixin(BaseDBMixin):
         return result
     def select_judger_by_id(self, juder_id):
         row = self.db.get("""SELECT * FROM `judger` WHERE `id` = %s""", juder_id)
+        if row:
+            return self._new_judger(row)
+        return None
+    def select_judger_by_queue(self):
+        row = self.db.get("""SELECT * FROM `judger` ORDER BY `queue_num`, `priority` LIMIT 1""")
         if row:
             return self._new_judger(row)
         return None

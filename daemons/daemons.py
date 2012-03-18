@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: daemons.py
 # CREATED: 02:48:06 18/03/2012
-# MODIFIED: 20:11:11 18/03/2012
+# MODIFIED: 01:35:35 19/03/2012
 
 import time
 import hashlib
@@ -40,8 +40,10 @@ class ReceiveQueryHandler(tornado.web.RequestHandler):
         if abs(now - query["time"]) > 300:
             logging.error("Time is invalid!")
             raise HTTPError(404)
-        query = dict(sorted(query.iteritems(), key=itemgetter(1), reverse=True))
+        query = dict(sorted(query.iteritems(), key=itemgetter(1)))
         sign = hashlib.sha1(json.dumps(query) + SALT).hexdigest()
+        print json.dumps(query)
+        print SALT
         if not sign ==  query_sign:
             logging.error("Signature is invalid")
             raise HTTPError(404)

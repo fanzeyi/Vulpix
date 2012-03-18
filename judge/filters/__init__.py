@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/filters/__init__.py
 # CREATED: 01:48:10 08/03/2012
-# MODIFIED: 14:50:10 16/03/2012
+# MODIFIED: 04:21:53 19/03/2012
 # DESCRIPTION: jinja2 filters
 
 import re
@@ -37,6 +37,16 @@ SUBMIT_STATUS  = {
     4 : ("warning", "Memory Limit Exceeded"), 
     5 : ("inverse", "Runtime Error"), 
     6 : ("default", "Compile Error"), 
+    7 : ("default", "No Output"), 
+}
+ALPHA_STATUS = {
+    "a" : 1, 
+    "w" : 2, 
+    "t" : 3, 
+    "m" : 4, 
+    "r" : 5, 
+    "c" : 6, 
+    "n" : 7, 
 }
 
 def autolink(text, trim_url_limit=None, nofollow=False):
@@ -126,6 +136,26 @@ def get_submit_status(submit):
     cla, status = SUBMIT_STATUS[submit.status]
     return "<span class=\"label label-%s\">%s</span>" % (cla, status)
 
+def lang2text(lang):
+    if lang == 1:
+        return "pascal"
+    elif lang == 2:
+        return "c"
+    elif lang == 3:
+        return "cpp"
+
+def lang2humantext(lang):
+    if lang == 1:
+        return "Pascal"
+    elif lang == 2:
+        return "C"
+    elif lang == 3:
+        return "C++"
+
+def alpha2status(alpha):
+    cla, status = SUBMIT_STATUS[ALPHA_STATUS[str(alpha.lower())]]
+    return "<span class=\"label label-%s\">%s</span>" % (cla, status)
+
 filters = {
     'autolink'       : autolink, 
     'avatar_img'     : avatar_img, 
@@ -135,4 +165,7 @@ filters = {
     'datetimeformat' : datetimeformat, 
     'get_contest_status' : get_contest_status, 
     'get_submit_status' : get_submit_status, 
+    'lang2text'      : lang2text, 
+    'lang2humantext' : lang2humantext, 
+    'alpha2status'   : alpha2status, 
 }

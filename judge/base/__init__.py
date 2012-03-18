@@ -2,18 +2,24 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 03:08:32 18/03/2012
+# MODIFIED: 03:15:40 19/03/2012
 # DESCRIPTION: Base handler
 
 import re
-import rsa
+import time
 import urllib
 import hashlib
 import httplib
 import datetime
 import functools
 import traceback
-import simplejson
+import simplejson as json
+from operator import itemgetter
+from pygments import highlight
+from pygments.lexers import CLexer
+from pygments.lexers import CppLexer
+from pygments.lexers import DelphiLexer
+from pygments.formatters import HtmlFormatter
 
 import tornado.web
 import tornado.escape
@@ -21,6 +27,12 @@ from tornado.httpclient import AsyncHTTPClient
 
 from judge.db import Member
 from judge.utils import _len
+
+CODE_LEXER = {
+    1 : DelphiLexer, 
+    2 : CLexer, 
+    3 : CppLexer, 
+}
 
 def unauthenticated(method):
     """Decorate methods with this to require that user be NOT logged in"""
@@ -156,11 +168,18 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_gravatar_url(self, email):
         gravatar_id = hashlib.md5(email.lower()).hexdigest()
         return "http://www.gravatar.com/avatar/%s?d=mm" % (gravatar_id) 
-    def post_to_judger(self, post_arg, judger, callback = None):
-        query_string = simplejson.dumps(post_arg) # use json
-        encrypt = rsa.encrypt(query_string, rsa.PublicKey.load_pkcs1(judger.pubkey))
+    def post_to_judger(self, query, judger, callback = None):
+        query["time"] = time.time()
+        query = dict(sorted(query.iteritems(), key=itemgetter(1)))
+        jsondump = json.dumps(query)
+        print jsondump
+        print judger.pubkey.strip()
+        sign = hashlib.sha1(jsondump + judger.pubkey.strip()).hexdigest()
+        query["sign"] = sign
         http_client = AsyncHTTPClient()
-        http_client.fetch(judger.path, method = "POST", body = urllib.urlencode({"query" : encrypt}), callback = callback)
+        http_client.fetch(judger.path, method = "POST", body = urllib.urlencode({"query" : json.dumps(query)}), callback = callback)
+    def highlight_code(self, code, lang):
+        return highlight(code, CODE_LEXER[lang](), HtmlFormatter(linenos=True))
     @property
     def db(self):
         return self.application.db

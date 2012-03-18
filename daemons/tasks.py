@@ -2,13 +2,14 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: tasks.py
 # CREATED: 02:27:12 17/03/2012
-# MODIFIED: 00:05:00 19/03/2012
+# MODIFIED: 03:43:04 19/03/2012
 
 import os
 import MySQLdb
 import subprocess
 from time import sleep
 from celery.task import task
+from MySQLdb import escape_string
 
 from config import COMPILE_DIR
 from config import TESTDATA_DIR
@@ -29,6 +30,7 @@ STATUS_DICT = {
     "C" : 6, 
     "N" : 7, 
 }
+_e = lambda a: escape_string(str(a))
 
 def _clean(dir_path):
     for root, dirs, files in os.walk(dir_path):
@@ -122,22 +124,30 @@ def _return_result(result, query):
     # connect to server
     conn = MySQLdb.connect(host = MYSQL_HOST, user = MYSQL_USER, passwd = MYSQL_PASS, db = MYSQL_DB)
     cur = conn.cursor()
-    # update 
-    testpoint = []
-    timecost = []
-    memorycost = []
+    testpoint = ""
+    timecost = ""
+    memorycost = ""
     totaltime = 0
     totalmemory = 0
-    for tp in result["testpoint"]:
-        testpoint.append(tp[0])
-        timecost.append(str(tp[1]))
-        memorycost.append(str(tp[2]))
-        totaltime = totaltime + tp[1]
-        totalmemory = totalmemory + tp[2]
-    testpoint = "".join(testpoint)
-    timecost = ",".join(timecost)
-    memorycost = ",".join(memorycost)
-    status = _get_status(testpoint)
+    if result["compilesucc"] == 0:
+        status = 6
+    else:
+        # update 
+        testpoint = []
+        timecost = []
+        memorycost = []
+        totaltime = 0
+        totalmemory = 0
+        for tp in result["testpoint"]:
+            testpoint.append(tp[0])
+            timecost.append(str(tp[1]))
+            memorycost.append(str(tp[2]))
+            totaltime = totaltime + tp[1]
+            totalmemory = totalmemory + tp[2]
+        testpoint = "".join(testpoint)
+        timecost = ",".join(timecost)
+        memorycost = ",".join(memorycost)
+        status = _get_status(testpoint)
     cur.execute("""UPDATE `submit` SET `status` = %s, 
                                        `testpoint` = %s, 
                                        `testpoint_time` = %s, 
@@ -145,10 +155,10 @@ def _return_result(result, query):
                                        `score` = %s, 
                                        `costtime` = %s, 
                                        `costmemory` = %s, 
-                                       `msg` = %s, 
-                                   WHERE `id` = %s""", (status, testpoint, timecost, memorycost, \
-                                                        result["score"], totaltime, totalmemory, result["msg"], 
-                                                        query["id"]))
+                                       `msg` = %s 
+                                   WHERE `id` = %s """, (_e(status), _e(testpoint), _e(timecost), _e(memorycost), \
+                                                        _e(result["score"]), _e(totaltime), _e(totalmemory), \
+                                                        _e(result["msg"]), _e(query["id"])))
     conn.commit()
     cur.close()
 
@@ -173,7 +183,9 @@ time - For signature.
 def judge(query):
     result = {}
     _compile(result, query)
-    print result
+    if result["compilesucc"] == 0:
+        result["score"] = 0
+        _return_result(result, query)
     result["testpoint"] = []
     result["score"] = 0
     if result["compilesucc"]:

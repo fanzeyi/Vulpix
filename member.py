@@ -2,13 +2,14 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: member.py
 # CREATED: 02:18:23 09/03/2012
-# MODIFIED: 14:51:21 15/03/2012
+# MODIFIED: 04:22:54 19/03/2012
 # DESCRIPTION: member handlers
 
 import re
 import copy
 import bcrypt
 
+from tornado.web import HTTPError
 from tornado.web import authenticated
 
 from judge.db import Member
@@ -40,6 +41,7 @@ class SigninHandler(BaseHandler, MemberDBMixin):
         self.set_secure_cookie("auth", auth.secret)
         self.set_secure_cookie("uid", str(auth.member_id))
         go_next = self.get_argument("next", default = None)
+        print go_next
         if go_next:
             self.redirect(go_next)
             return

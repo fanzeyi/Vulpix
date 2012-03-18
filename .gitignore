@@ -3,3 +3,4 @@ config.py
 celeryconfig.py
 privekey.key
 upload/
+test.py
