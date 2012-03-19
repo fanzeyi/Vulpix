@@ -12,7 +12,7 @@
                 <th style="width:100px;">{{ _('Time') }}</th>
                 <th style="width:100px;">{{ _('Memory') }}</th>
                 <th style="width:100px;">{{ _('Short Name') }}</th>
-                {% if user %}<th style="width:160px;">{{ _('Status') }}</th>{% endif %}
+                {% if user %}<th style="width:100px;">{{ _('Status') }}</th>{% endif %}
             </tr>
         </thead>
         <tbody>
@@ -24,7 +24,7 @@
                 <td>{{ problem.timelimit }} ms</td>
                 <td>{{ problem.memlimit }} MB</td>
                 <td>{{ problem.shortname }}</td>
-                {% if user %}<td>{{ problem.submit | get_submit_status }}</td>{% endif %}
+                {% if user %}<td><a href="/submit/{{ problem.submit.id }}" class="nounderline">{{ problem.submit | get_submit_status }}</a></td>{% endif %}
             </tr>
             {% endif %}
             {% endfor %}

@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 02:29:19 19/03/2012
+# MODIFIED: 19:49:56 19/03/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -282,6 +282,12 @@ class ProblemDBMixin(BaseDBMixin):
         for row in rows:
             result.append(self._new_problem(row))
         return result
+    def select_latest_visible_problem_order_by_id(self, count = 10):
+        rows = self.db.query("""SELECT * FROM `problem` WHERE `invisible` = 0 ORDER BY `id` DESC LIMIT %s""", int(count))
+        result = []
+        for row in rows:
+            result.append(self._new_problem(row))
+        return result
     def select_last_submit_by_problem_id_member_id(self, problem_id):
         row = self.db.get("""SELECT * FROM `submit` WHERE `problem_id` = %s AND `member_id` = %s ORDER BY `id` DESC LIMIT 1""", \
                           problem_id, self.current_user.id)
@@ -421,13 +427,13 @@ class ContestDBMixin(BaseDBMixin):
             return self._new_contest_submit(row)
         return None
     def select_contest(self, start = 0, count = 20):
-        rows = self.db.query("""SELECT * FROM `contest` LIMIT %s, %s""", start, count)
+        rows = self.db.query("""SELECT * FROM `contest` ORDER BY `id` DESC LIMIT %s, %s""", start, count)
         result = []
         for row in rows:
             result.append(self._new_contest(row))
         return result
     def select_visible_contest(self, start = 0, count = 20):
-        rows = self.db.query("""SELECT * FROM `contest` WHERE `invisible` = 0 LIMIT %s, %s""", start, count)
+        rows = self.db.query("""SELECT * FROM `contest` WHERE `invisible` = 0 ORDER BY `id` DESC LIMIT %s, %s""", start, count)
         result = []
         for row in rows:
             result.append(self._new_contest(row))

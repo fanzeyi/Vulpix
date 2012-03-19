@@ -3738,7 +3738,7 @@ body {
 }
 /* Common Page Style */
 body {
-  margin-left: 260px;
+  margin-left: 240px;
   margin-bottom: 20px;
 }
 a.nounderline:hover {
@@ -3840,6 +3840,9 @@ a.nounderline:hover {
 .cell .line {
   border-bottom: 1px solid #DDD;
 }
+.label {
+  white-space: nowrap;
+}
 .tagcloud {
   list-style: none;
   margin-left: 0;
@@ -3880,7 +3883,7 @@ nav {
   color: white;
   background: #2B2B2B;
   background-image: url("/static/img/lines.jpg");
-  width: 240px;
+  width: 220px;
   height: 100%;
   position: fixed;
   top: 0;
@@ -3981,7 +3984,7 @@ nav .copyright {
   font-size: 10px;
   text-shadow: black 0px 1px 1px;
   padding-top: 20px;
-  width: 212px;
+  width: 192px;
 }
 nav .copyright a {
   color: white;
@@ -4358,3 +4361,8 @@ nav .copyright a {
   font-weight: bold;
 }
 /* Literal.Number.Integer.Long */
+.onecol .row-fluid .span4,
+.onecol .row-fluid .span8 {
+  width: 100%;
+  margin-left: 0;
+}

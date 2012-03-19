@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: tasks.py
 # CREATED: 02:27:12 17/03/2012
-# MODIFIED: 03:43:04 19/03/2012
+# MODIFIED: 14:26:12 19/03/2012
 
 import os
 import MySQLdb
@@ -79,13 +79,10 @@ def _run(result, query, tp):
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     (stdoutput,erroutput) = proc.communicate()
     testresult = ""
-    wexit, time, memory = stdoutput.split("\n")[-2].split(" ")
-    wexit = int(wexit)
-    time = int(time)
-    memory = int(memory)
-    if wexit != 0:
-        testresult = "W"
-    elif proc.returncode:
+    wexit = 0
+    time = 0
+    memory = 0
+    if proc.returncode:
         if proc.returncode == 251:
             testresult = "T" 
         elif proc.returncode == 252:
@@ -93,20 +90,27 @@ def _run(result, query, tp):
         elif proc.returncode == 253:
             testresult = "R"
     else:
-        # cmp output
-        with open(os.path.join(TESTDATA_DIR, shortname, shortname + str(tp+1) + ".ans")) as answer_fp:
-            answer = answer_fp.read()
-        try:
-            with open(os.path.join(COMPILE_DIR, shortname + ".out")) as prg_answer_fp:
-                prg_answer = prg_answer_fp.read()
-        except IOError:
-            testresult = "N"
+        wexit, time, memory = stdoutput.split("\n")[-2].split(" ")
+        wexit = int(wexit)
+        time = int(time)
+        memory = int(memory)
+        if wexit != 0:
+            testresult = "W"
         else:
-            if _compare(answer, prg_answer):
-                testresult = "A"
-                result["score"] = result["score"] + 10
+            # cmp output
+            with open(os.path.join(TESTDATA_DIR, shortname, shortname + str(tp+1) + ".ans")) as answer_fp:
+                answer = answer_fp.read()
+            try:
+                with open(os.path.join(COMPILE_DIR, shortname + ".out")) as prg_answer_fp:
+                    prg_answer = prg_answer_fp.read()
+            except IOError:
+                testresult = "N"
             else:
-                testresult = "W"
+                if _compare(answer, prg_answer):
+                    testresult = "A"
+                    result["score"] = result["score"] + 10
+                else:
+                    testresult = "W"
     result["testpoint"].append((testresult, time, memory))
 
 def _compare(fout, fans):

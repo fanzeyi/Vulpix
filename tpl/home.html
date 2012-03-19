@@ -9,24 +9,22 @@
         <div class="cell">
             <div class="title">{{ _('Latest Problem') }}</div>
             <div class="body">
-                {% set latest_problem = "" %}
                 {{ show_problem_list(latest_problem) }}
             </div>
         </div>
         <div class="cell">
             <div class="title">{{ _('Latest Contest') }}</div>
             <div class="body">
-                {% set latest_contest = "" %}
                 {{ show_contest_list(latest_contest) }}
             </div>
         </div>
-        <div class="cell">
+        {#        <div class="cell">
             <div class="title">{{ _('Latest Discuss') }}</div>
             <div class="body">
                 {% set latest_topic = "" %}
                 {{ show_topic_list(latest_topic) }}
             </div>
-        </div>
+        </div>#}
     </div>
     <div class="span4">
         <div class="cell">

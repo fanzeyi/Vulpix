@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: problem.py
 # CREATED: 04:04:57 15/03/2012
-# MODIFIED: 03:10:26 19/03/2012
+# MODIFIED: 15:28:24 19/03/2012
 
 import os
 import time
@@ -148,7 +148,6 @@ class ListSubmitHandler(BaseHandler, ProblemDBMixin):
         self.render("submit_list.html", locals())
 
 class ViewSubmitHandler(BaseHandler, ProblemDBMixin):
-    @authenticated
     def get(self, sid):
         try:
             sid = int(sid)
@@ -162,8 +161,10 @@ class ViewSubmitHandler(BaseHandler, ProblemDBMixin):
         breadcrumb.append((self._('Submit'), '/submit'))
         breadcrumb.append(("# %d" % submit.id, '/submit/%d' % submit.id))
         title = self._("Submit #%d - %s") % (submit.id, submit.title)
-        testpoint = zip(range(1, len(submit.testpoint) + 1), submit.testpoint, \
-                        submit.testpoint_time.split(","), submit.testpoint_memory.split(","))
+        testpoint = []
+        if submit.testpoint:
+            testpoint = zip(range(1, len(submit.testpoint) + 1), submit.testpoint, \
+                            submit.testpoint_time.split(","), submit.testpoint_memory.split(","))
         code_highlighted = self.highlight_code(submit.code, submit.lang)
         self.render("submit.html", locals())
 
