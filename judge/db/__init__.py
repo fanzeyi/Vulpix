@@ -499,9 +499,10 @@ class JudgerDBMixin(BaseDBMixin):
         return None
     ''' INSERT '''
     def insert_judger(self, judger):
-        judger.id = self.db.execute("""INSERT INTO `judger` (`name`, `description`, `path`, `priority`, `queue_num`, `pubkey`, `create`)
-                                              VALUES (%s, %s, %s, 0, %s, UTC_TIMESTAMP())""", \
-                                    judger.name, judger.description, judger.path, judger.pubkey)
+        judger.id = self.db.execute("""INSERT INTO `judger` (`name`, `description`, `path`, \
+                                                             `priority`, `queue_num`, `pubkey`, `create`)
+                                              VALUES (%s, %s, %s, %s, 0, %s, UTC_TIMESTAMP())""", \
+                                    judger.name, judger.description, judger.path, judger.priority, judger.pubkey)
     ''' UPDATE '''
     def update_judger(self, judger):
         self.db.execute("""UPDATE `judger` SET `name` = %s, 
