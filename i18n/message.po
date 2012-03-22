@@ -1,0 +1,473 @@
+# Vulpix Translate File.
+# Copyright (C) 2012 Zeray Rice <fanzeyi1994@gmail.com>
+# This file is distributed under the same license as the Vulpix package.
+# Zeray Rice <fanzeyi1994@gmail.com>, 2012.
+#
+#, 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0 beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-22 19:52+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: problem.py:45 problem.py:82 problem.py:119 problem.py:142 problem.py:160
+#: contest.py:47 contest.py:67 home.py:16 home.py:18 member.py:107
+#: member.py:134 member.py:177 tpl/base/sidebar.html:34
+msgid "Home"
+msgstr ""
+
+#: problem.py:46 problem.py:83 problem.py:120 problem.py:121
+#: tpl/submit.html:13 tpl/submit_list.html:12 tpl/base/sidebar.html:40
+#: tpl/contest.html:76
+msgid "Problem"
+msgstr ""
+
+#: problem.py:68
+msgid "Please Choose Your Code File"
+msgstr ""
+
+#: problem.py:72
+msgid "File Type Error!"
+msgstr ""
+
+#: problem.py:75
+msgid "Error Code Language Select"
+msgstr ""
+
+#: problem.py:79
+msgid "No Judger Seted!"
+msgstr ""
+
+#: problem.py:143 problem.py:161 tpl/backstage/add_judger.html:18
+#: tpl/backstage/add_problem.html:40 tpl/backstage/add_contest.html:53
+#: tpl/problem.html:71 tpl/base/sidebar.html:52 tpl/contest.html:103
+msgid "Submit"
+msgstr ""
+
+#: problem.py:144 tpl/submit_list.html:5
+msgid "Submit List"
+msgstr ""
+
+#: problem.py:163
+#, python-format
+msgid "Submit #%d - %s"
+msgstr ""
+
+#: contest.py:48 contest.py:68 tpl/base/sidebar.html:46
+msgid "Contest"
+msgstr ""
+
+#: contest.py:55 tpl/contest_list.html:5
+msgid "Contest List"
+msgstr ""
+
+#: backstage.py:34 tpl/base/sidebar.html:93
+msgid "Add Problem"
+msgstr ""
+
+#: backstage.py:38 backstage.py:79
+msgid "Edit Problem"
+msgstr ""
+
+#: backstage.py:62 backstage.py:115 tpl/backstage/add_problem.html:16
+#: tpl/backstage/add_contest.html:16 tpl/contest_list.html:11
+#: tpl/problem_list.html:11
+msgid "Title"
+msgstr ""
+
+#: backstage.py:63 tpl/backstage/add_problem.html:17 tpl/problem.html:24
+#: tpl/problem_list.html:14 tpl/contest.html:43
+msgid "Short Name"
+msgstr ""
+
+#: backstage.py:64 tpl/backstage/add_problem.html:18
+msgid "Time Limit"
+msgstr ""
+
+#: backstage.py:65 tpl/backstage/add_problem.html:19
+msgid "Memory Limit"
+msgstr ""
+
+#: backstage.py:66 tpl/submit_list.html:17
+msgid "Testpoint"
+msgstr ""
+
+#: backstage.py:67 tpl/backstage/add_problem.html:21
+#: tpl/backstage/add_contest.html:29
+msgid "Invisible"
+msgstr ""
+
+#: backstage.py:68 tpl/backstage/add_problem.html:22
+msgid "Content"
+msgstr ""
+
+#: backstage.py:69 tpl/backstage/add_problem.html:20 tpl/submit.html:68
+msgid "Test Point"
+msgstr ""
+
+#: backstage.py:95 backstage.py:132 tpl/base/sidebar.html:99
+msgid "Add Contest"
+msgstr ""
+
+#: backstage.py:100
+msgid "Edit Contest"
+msgstr ""
+
+#: backstage.py:116 backstage.py:183 tpl/backstage/add_judger.html:16
+#: tpl/backstage/add_contest.html:30
+msgid "Description"
+msgstr ""
+
+#: backstage.py:121
+msgid "Start/End Time Format is Invalid."
+msgstr ""
+
+#: backstage.py:124
+msgid "Start/End Time is invalid."
+msgstr ""
+
+#: backstage.py:152 tpl/base/sidebar.html:111
+msgid "Judger Manage"
+msgstr ""
+
+#: backstage.py:159 tpl/backstage/judger.html:6
+msgid "Add Judger"
+msgstr ""
+
+#: backstage.py:170 backstage.py:194
+msgid "Edit Judger"
+msgstr ""
+
+#: backstage.py:182 tpl/backstage/add_judger.html:13
+#: tpl/backstage/judger.html:13 tpl/contest.html:42
+msgid "Name"
+msgstr ""
+
+#: backstage.py:184 tpl/backstage/add_judger.html:14
+#: tpl/backstage/judger.html:14
+msgid "Path"
+msgstr ""
+
+#: backstage.py:185 tpl/backstage/add_judger.html:15
+#: tpl/backstage/judger.html:15
+msgid "Priority"
+msgstr ""
+
+#: backstage.py:186 tpl/backstage/add_judger.html:17
+msgid "RSA Public Key"
+msgstr ""
+
+#: judge/base/__init__.py:122
+#, python-format
+msgid "%s is required"
+msgstr ""
+
+#: judge/base/__init__.py:128
+#, python-format
+msgid "%s must be a number."
+msgstr ""
+
+#: judge/base/__init__.py:131 judge/base/__init__.py:142
+#: judge/base/__init__.py:144
+#, python-format
+msgid "%s is invalid."
+msgstr ""
+
+#: judge/base/__init__.py:134
+#, python-format
+msgid "%s is too long."
+msgstr ""
+
+#: judge/base/__init__.py:136
+#, python-format
+msgid "%s is too short."
+msgstr ""
+
+#: judge/base/__init__.py:148
+msgid "Username"
+msgstr ""
+
+#: judge/base/__init__.py:150
+msgid "A username can only contain letters and digits."
+msgstr ""
+
+#: judge/base/__init__.py:154
+msgid "That username is taken. Please choose another."
+msgstr ""
+
+#: judge/base/__init__.py:157
+msgid "Password"
+msgstr ""
+
+#: judge/base/__init__.py:160
+msgid "E-mail"
+msgstr ""
+
+#: judge/base/__init__.py:162
+msgid "Your Email address is invalid."
+msgstr ""
+
+#: judge/base/__init__.py:166
+msgid "That Email is taken. Please choose another."
+msgstr ""
+
+#: member.py:36
+msgid "Wrong Username and password combination."
+msgstr ""
+
+#: member.py:101 member.py:109 member.py:132 member.py:136
+#: tpl/base/sidebar.html:77
+msgid "Settings"
+msgstr ""
+
+#: member.py:121 tpl/settings.html:20
+msgid "Website"
+msgstr ""
+
+#: member.py:123 tpl/settings.html:21
+msgid "Tagline"
+msgstr ""
+
+#: member.py:124 tpl/settings.html:23
+msgid "Code Language"
+msgstr ""
+
+#: member.py:125 tpl/settings.html:32
+msgid "Bio"
+msgstr ""
+
+#: member.py:141
+msgid "Settings Updated."
+msgstr ""
+
+#: member.py:154
+msgid "Wrong Passowrd"
+msgstr ""
+
+#: member.py:156 tpl/settings_changepass.html:10
+#: tpl/settings_changepass.html:15 tpl/settings.html:39 tpl/settings.html:44
+msgid "Change Password"
+msgstr ""
+
+#: member.py:166
+msgid "Password Updated."
+msgstr ""
+
+#: tpl/backstage/judger.html:7
+msgid "Judger List"
+msgstr ""
+
+#: tpl/backstage/judger.html:16
+msgid "Queue"
+msgstr ""
+
+#: tpl/backstage/judger.html:17 tpl/backstage/judger.html:27
+msgid "Edit"
+msgstr ""
+
+#: tpl/backstage/add_problem.html:24
+msgid "Problem Tag"
+msgstr ""
+
+#: tpl/backstage/add_problem.html:27 tpl/backstage/add_contest.html:35
+msgid "Add"
+msgstr ""
+
+#: tpl/backstage/add_contest.html:18 tpl/contest_list.html:12
+#: tpl/contest.html:19
+msgid "Start Time"
+msgstr ""
+
+#: tpl/backstage/add_contest.html:24 tpl/contest.html:23
+msgid "End Time"
+msgstr ""
+
+#: tpl/backstage/add_contest.html:32
+msgid "Related Problem"
+msgstr ""
+
+#: tpl/member.html:12
+msgid "ID:"
+msgstr ""
+
+#: tpl/member.html:12
+msgid "Joined at"
+msgstr ""
+
+#: tpl/problem.html:7
+msgid "This Problem is Invisible!"
+msgstr ""
+
+#: tpl/problem.html:28 tpl/submit.html:75 tpl/submit_list.html:15
+#: tpl/problem_list.html:12
+msgid "Time"
+msgstr ""
+
+#: tpl/problem.html:32 tpl/submit.html:76 tpl/submit_list.html:16
+#: tpl/problem_list.html:13
+msgid "Memory"
+msgstr ""
+
+#: tpl/problem.html:36
+msgid "Tags"
+msgstr ""
+
+#: tpl/problem.html:53 tpl/contest.html:73
+msgid "Submit Problem"
+msgstr ""
+
+#: tpl/problem.html:57 tpl/contest.html:89
+msgid "Code File"
+msgstr ""
+
+#: tpl/problem.html:63 tpl/submit.html:25 tpl/submit_list.html:14
+#: tpl/contest.html:44 tpl/contest.html:95
+msgid "Language"
+msgstr ""
+
+#: tpl/submit.html:5
+msgid "Submit Detail"
+msgstr ""
+
+#: tpl/submit.html:17
+msgid "Member"
+msgstr ""
+
+#: tpl/submit.html:21 tpl/submit.html:74 tpl/submit_list.html:11
+#: tpl/contest_list.html:14 tpl/problem_list.html:15 tpl/contest.html:27
+#: tpl/contest.html:46
+msgid "Status"
+msgstr ""
+
+#: tpl/submit.html:29 tpl/contest.html:47
+msgid "Score"
+msgstr ""
+
+#: tpl/submit.html:33
+msgid "Cost Time"
+msgstr ""
+
+#: tpl/submit.html:37
+msgid "Cost Memory"
+msgstr ""
+
+#: tpl/submit.html:41 tpl/contest.html:45
+msgid "Submit Time"
+msgstr ""
+
+#: tpl/submit.html:46
+msgid "IP"
+msgstr ""
+
+#: tpl/submit.html:50
+msgid "User-Agent"
+msgstr ""
+
+#: tpl/submit.html:59
+msgid "Compile Output"
+msgstr ""
+
+#: tpl/submit.html:95
+msgid "Code"
+msgstr ""
+
+#: tpl/submit.html:100
+msgid "You dont have permissions to view this code."
+msgstr ""
+
+#: tpl/home.html:10
+msgid "Latest Problem"
+msgstr ""
+
+#: tpl/home.html:16
+msgid "Latest Contest"
+msgstr ""
+
+#: tpl/home.html:22
+msgid "Latest Discuss"
+msgstr ""
+
+#: tpl/home.html:31
+msgid "Notice"
+msgstr ""
+
+#: tpl/home.html:37
+msgid "Site Count"
+msgstr ""
+
+#: tpl/submit_list.html:13
+msgid "User"
+msgstr ""
+
+#: tpl/settings_changepass.html:13 tpl/settings.html:42
+msgid "Current Password"
+msgstr ""
+
+#: tpl/settings_changepass.html:14 tpl/settings.html:43
+msgid "New Password"
+msgstr ""
+
+#: tpl/contest_list.html:13
+msgid "End time"
+msgstr ""
+
+#: tpl/base/sidebar.html:58
+msgid "Forum"
+msgstr ""
+
+#: tpl/base/sidebar.html:64
+msgid "List"
+msgstr ""
+
+#: tpl/base/sidebar.html:71
+msgid "Notes"
+msgstr ""
+
+#: tpl/base/sidebar.html:83
+msgid "Sign Out"
+msgstr ""
+
+#: tpl/base/sidebar.html:88
+msgid "Backstage"
+msgstr ""
+
+#: tpl/base/sidebar.html:105
+msgid "Add Node"
+msgstr ""
+
+#: tpl/base/sidebar.html:119 tpl/signup.html:46 tpl/signin.html:5
+#: tpl/signin.html:39
+msgid "Sign In"
+msgstr ""
+
+#: tpl/base/sidebar.html:125 tpl/signup.html:5 tpl/signup.html:43
+#: tpl/signin.html:42
+msgid "Sign Up"
+msgstr ""
+
+#: tpl/base/sidebar.html:136
+msgid "Help"
+msgstr ""
+
+#: tpl/settings.html:16
+msgid "Basic Settings"
+msgstr ""
+
+#: tpl/settings.html:19
+msgid "Email"
+msgstr ""
+
+#: tpl/settings.html:33
+msgid "Save Changes"
+msgstr ""
+
+#: tpl/problem_list.html:5 tpl/contest.html:37
+msgid "Problem List"
+msgstr ""
