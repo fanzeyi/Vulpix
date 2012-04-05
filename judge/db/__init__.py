@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 16:41:57 05/04/2012
+# MODIFIED: 16:57:43 05/04/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -68,6 +68,10 @@ class MemberDBMixin(BaseDBMixin):
         member = Member()
         member._init_row(row)
         return member
+    ''' COUNT '''
+    def count_member(self):
+        count = self.db.get("""SELECT COUNT(*) FROM `member`""")
+        return count["COUNT(*)"]
     ''' SELECT '''
     def select_member_by_username_lower(self, username_lower):
         row = self.db.get("""SELECT * FROM `member` WHERE `username_lower` = %s LIMIT 1""", username_lower)

@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: problem.py
 # CREATED: 04:04:57 15/03/2012
-# MODIFIED: 16:39:22 05/04/2012
+# MODIFIED: 16:59:41 05/04/2012
 
 import os
 import time
@@ -121,11 +121,11 @@ class ListProblemHandler(BaseHandler, ProblemDBMixin):
         title = self._("Problem")
         if self.current_user and self.current_user.admin:
             count = self.count_problem()
-            problems = self.select_problem_order_by_id(10, start)
+            problems = self.select_problem_order_by_id(20, start)
         else:
             count = self.count_visible_problem()
-            problems = self.select_visible_problem_order_by_id(10, start)
-        pages = self.get_page_count(count)
+            problems = self.select_visible_problem_order_by_id(20, start)
+        pages = self.get_page_count(count, 20)
         if self.current_user:
             for problem in problems:
                 problem.submit = self.select_last_submit_by_problem_id_member_id(problem.id)
@@ -146,11 +146,11 @@ class ViewTagHandler(BaseHandler, ProblemDBMixin):
         title = self._("Problem")
         if self.current_user and self.current_user.admin:
             count = self.count_problem_by_tagname(tagname)
-            problems = self.select_problem_by_tagname(tagname, 10, start)
+            problems = self.select_problem_by_tagname(tagname, 20, start)
         else:
             count = self.count_visible_problem_by_tagname(tagname)
-            problems = self.select_visible_problem_by_tagname(tagname, 10, start)
-        pages = self.get_page_count(count)
+            problems = self.select_visible_problem_by_tagname(tagname, 20, start)
+        pages = self.get_page_count(count, 20)
         if self.current_user:
             for problem in problems:
                 problem.submit = self.select_last_submit_by_problem_id_member_id(problem.id)

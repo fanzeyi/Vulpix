@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 03:15:40 19/03/2012
+# MODIFIED: 16:59:00 05/04/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -49,9 +49,9 @@ def unauthenticated(method):
 class BaseHandler(tornado.web.RequestHandler):
     _ = lambda self, text: self.locale.translate(text) # i18n func
     xhtml_escape = lambda self, text: tornado.escape.xhtml_escape(text) if text else text # xhtml escape
-    def get_page_count(self, count):
+    def get_page_count(self, count, pre = 10):
         '''Return page num by input item num'''
-        return count / 10 + (1 if count % 10 else 0)
+        return count / pre + (1 if count % pre else 0)
     def get_current_user(self):
         '''Check user is logined'''
         auth = self.get_secure_cookie("auth")
