@@ -1,0 +1,473 @@
+# Vulpix Translate File.
+# Copyright (C) 2012 Zeray Rice <fanzeyi1994@gmail.com>
+# This file is distributed under the same license as the Vulpix package.
+# Zeray Rice <fanzeyi1994@gmail.com>, 2012.
+#
+#, 
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0 beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-22 19:52+0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: problem.py:45 problem.py:82 problem.py:119 problem.py:142 problem.py:160
+#: contest.py:47 contest.py:67 home.py:16 home.py:18 member.py:107
+#: member.py:134 member.py:177 tpl/base/sidebar.html:34
+msgid "Home"
+msgstr "首页"
+
+#: problem.py:46 problem.py:83 problem.py:120 problem.py:121
+#: tpl/submit.html:13 tpl/submit_list.html:12 tpl/base/sidebar.html:40
+#: tpl/contest.html:76
+msgid "Problem"
+msgstr "题目"
+
+#: problem.py:68
+msgid "Please Choose Your Code File"
+msgstr "请选择一个代码文件"
+
+#: problem.py:72
+msgid "File Type Error!"
+msgstr "文件类型错误"
+
+#: problem.py:75
+msgid "Error Code Language Select"
+msgstr "语言选项错误"
+
+#: problem.py:79
+msgid "No Judger Seted!"
+msgstr "没有设置评测机"
+
+#: problem.py:143 problem.py:161 tpl/backstage/add_judger.html:18
+#: tpl/backstage/add_problem.html:40 tpl/backstage/add_contest.html:53
+#: tpl/problem.html:71 tpl/base/sidebar.html:52 tpl/contest.html:103
+msgid "Submit"
+msgstr "提交"
+
+#: problem.py:144 tpl/submit_list.html:5
+msgid "Submit List"
+msgstr "提交列表"
+
+#: problem.py:163
+#, python-format
+msgid "Submit #%d - %s"
+msgstr "提交 #%d - %s"
+
+#: contest.py:48 contest.py:68 tpl/base/sidebar.html:46
+msgid "Contest"
+msgstr "比赛"
+
+#: contest.py:55 tpl/contest_list.html:5
+msgid "Contest List"
+msgstr "比赛列表"
+
+#: backstage.py:34 tpl/base/sidebar.html:93
+msgid "Add Problem"
+msgstr "添加题目"
+
+#: backstage.py:38 backstage.py:79
+msgid "Edit Problem"
+msgstr "编辑题目"
+
+#: backstage.py:62 backstage.py:115 tpl/backstage/add_problem.html:16
+#: tpl/backstage/add_contest.html:16 tpl/contest_list.html:11
+#: tpl/problem_list.html:11
+msgid "Title"
+msgstr "标题"
+
+#: backstage.py:63 tpl/backstage/add_problem.html:17 tpl/problem.html:24
+#: tpl/problem_list.html:14 tpl/contest.html:43
+msgid "Short Name"
+msgstr "名称"
+
+#: backstage.py:64 tpl/backstage/add_problem.html:18
+msgid "Time Limit"
+msgstr "时间限制"
+
+#: backstage.py:65 tpl/backstage/add_problem.html:19
+msgid "Memory Limit"
+msgstr "空间限制"
+
+#: backstage.py:66 tpl/submit_list.html:17
+msgid "Testpoint"
+msgstr "测试点数"
+
+#: backstage.py:67 tpl/backstage/add_problem.html:21
+#: tpl/backstage/add_contest.html:29
+msgid "Invisible"
+msgstr "不可见"
+
+#: backstage.py:68 tpl/backstage/add_problem.html:22
+msgid "Content"
+msgstr "正文"
+
+#: backstage.py:69 tpl/backstage/add_problem.html:20 tpl/submit.html:68
+msgid "Test Point"
+msgstr "测试点"
+
+#: backstage.py:95 backstage.py:132 tpl/base/sidebar.html:99
+msgid "Add Contest"
+msgstr "添加比赛"
+
+#: backstage.py:100
+msgid "Edit Contest"
+msgstr "编辑比赛"
+
+#: backstage.py:116 backstage.py:183 tpl/backstage/add_judger.html:16
+#: tpl/backstage/add_contest.html:30
+msgid "Description"
+msgstr "描述"
+
+#: backstage.py:121
+msgid "Start/End Time Format is Invalid."
+msgstr "开始/结束时间格式不正确。"
+
+#: backstage.py:124
+msgid "Start/End Time is invalid."
+msgstr "开始/结束时间不正确。"
+
+#: backstage.py:152 tpl/base/sidebar.html:111
+msgid "Judger Manage"
+msgstr "评测机管理"
+
+#: backstage.py:159 tpl/backstage/judger.html:6
+msgid "Add Judger"
+msgstr "添加评测机"
+
+#: backstage.py:170 backstage.py:194
+msgid "Edit Judger"
+msgstr "编辑评测机"
+
+#: backstage.py:182 tpl/backstage/add_judger.html:13
+#: tpl/backstage/judger.html:13 tpl/contest.html:42
+msgid "Name"
+msgstr "名称"
+
+#: backstage.py:184 tpl/backstage/add_judger.html:14
+#: tpl/backstage/judger.html:14
+msgid "Path"
+msgstr "路径"
+
+#: backstage.py:185 tpl/backstage/add_judger.html:15
+#: tpl/backstage/judger.html:15
+msgid "Priority"
+msgstr "优先级"
+
+#: backstage.py:186 tpl/backstage/add_judger.html:17
+msgid "RSA Public Key"
+msgstr "RSA 公钥"
+
+#: judge/base/__init__.py:122
+#, python-format
+msgid "%s is required"
+msgstr "要求填写 %s。"
+
+#: judge/base/__init__.py:128
+#, python-format
+msgid "%s must be a number."
+msgstr "%s 必须为数字。"
+
+#: judge/base/__init__.py:131 judge/base/__init__.py:142
+#: judge/base/__init__.py:144
+#, python-format
+msgid "%s is invalid."
+msgstr "%s "
+
+#: judge/base/__init__.py:134
+#, python-format
+msgid "%s is too long."
+msgstr "%s 过长。"
+
+#: judge/base/__init__.py:136
+#, python-format
+msgid "%s is too short."
+msgstr "%s 过短。"
+
+#: judge/base/__init__.py:148
+msgid "Username"
+msgstr "用户名"
+
+#: judge/base/__init__.py:150
+msgid "A username can only contain letters and digits."
+msgstr "用户名只允许包含数字和字母。"
+
+#: judge/base/__init__.py:154
+msgid "That username is taken. Please choose another."
+msgstr "用户名已被使用，请换一个。"
+
+#: judge/base/__init__.py:157
+msgid "Password"
+msgstr "密码"
+
+#: judge/base/__init__.py:160
+msgid "E-mail"
+msgstr "邮箱"
+
+#: judge/base/__init__.py:162
+msgid "Your Email address is invalid."
+msgstr "邮箱地址不正确。"
+
+#: judge/base/__init__.py:166
+msgid "That Email is taken. Please choose another."
+msgstr "邮箱已被使用，请换一个。"
+
+#: member.py:36
+msgid "Wrong Username and password combination."
+msgstr "用户名或密码错误。"
+
+#: member.py:101 member.py:109 member.py:132 member.py:136
+#: tpl/base/sidebar.html:77
+msgid "Settings"
+msgstr "设置"
+
+#: member.py:121 tpl/settings.html:20
+msgid "Website"
+msgstr "网站"
+
+#: member.py:123 tpl/settings.html:21
+msgid "Tagline"
+msgstr "签名"
+
+#: member.py:124 tpl/settings.html:23
+msgid "Code Language"
+msgstr "编程语言"
+
+#: member.py:125 tpl/settings.html:32
+msgid "Bio"
+msgstr "个人信息"
+
+#: member.py:141
+msgid "Settings Updated."
+msgstr "设置已更新。"
+
+#: member.py:154
+msgid "Wrong Passowrd"
+msgstr "密码错误"
+
+#: member.py:156 tpl/settings_changepass.html:10
+#: tpl/settings_changepass.html:15 tpl/settings.html:39 tpl/settings.html:44
+msgid "Change Password"
+msgstr "更改密码"
+
+#: member.py:166
+msgid "Password Updated."
+msgstr "密码已更新"
+
+#: tpl/backstage/judger.html:7
+msgid "Judger List"
+msgstr "评测机列表"
+
+#: tpl/backstage/judger.html:16
+msgid "Queue"
+msgstr "队列"
+
+#: tpl/backstage/judger.html:17 tpl/backstage/judger.html:27
+msgid "Edit"
+msgstr "编辑"
+
+#: tpl/backstage/add_problem.html:24
+msgid "Problem Tag"
+msgstr "题目标签"
+
+#: tpl/backstage/add_problem.html:27 tpl/backstage/add_contest.html:35
+msgid "Add"
+msgstr "添加"
+
+#: tpl/backstage/add_contest.html:18 tpl/contest_list.html:12
+#: tpl/contest.html:19
+msgid "Start Time"
+msgstr "开始时间"
+
+#: tpl/backstage/add_contest.html:24 tpl/contest.html:23
+msgid "End Time"
+msgstr "结束时间"
+
+#: tpl/backstage/add_contest.html:32
+msgid "Related Problem"
+msgstr "关联题目"
+
+#: tpl/member.html:12
+msgid "ID:"
+msgstr "编号："
+
+#: tpl/member.html:12
+msgid "Joined at"
+msgstr "加入时间"
+
+#: tpl/problem.html:7
+msgid "This Problem is Invisible!"
+msgstr "题目不可用！"
+
+#: tpl/problem.html:28 tpl/submit.html:75 tpl/submit_list.html:15
+#: tpl/problem_list.html:12
+msgid "Time"
+msgstr "时间"
+
+#: tpl/problem.html:32 tpl/submit.html:76 tpl/submit_list.html:16
+#: tpl/problem_list.html:13
+msgid "Memory"
+msgstr "内存"
+
+#: tpl/problem.html:36
+msgid "Tags"
+msgstr "标签"
+
+#: tpl/problem.html:53 tpl/contest.html:73
+msgid "Submit Problem"
+msgstr "提交题目"
+
+#: tpl/problem.html:57 tpl/contest.html:89
+msgid "Code File"
+msgstr "代码文件"
+
+#: tpl/problem.html:63 tpl/submit.html:25 tpl/submit_list.html:14
+#: tpl/contest.html:44 tpl/contest.html:95
+msgid "Language"
+msgstr "编程语言"
+
+#: tpl/submit.html:5
+msgid "Submit Detail"
+msgstr "提交详情"
+
+#: tpl/submit.html:17
+msgid "Member"
+msgstr "成员"
+
+#: tpl/submit.html:21 tpl/submit.html:74 tpl/submit_list.html:11
+#: tpl/contest_list.html:14 tpl/problem_list.html:15 tpl/contest.html:27
+#: tpl/contest.html:46
+msgid "Status"
+msgstr "状态"
+
+#: tpl/submit.html:29 tpl/contest.html:47
+msgid "Score"
+msgstr "得分"
+
+#: tpl/submit.html:33
+msgid "Cost Time"
+msgstr "用时"
+
+#: tpl/submit.html:37
+msgid "Cost Memory"
+msgstr "内存使用"
+
+#: tpl/submit.html:41 tpl/contest.html:45
+msgid "Submit Time"
+msgstr "提交时间"
+
+#: tpl/submit.html:46
+msgid "IP"
+msgstr "IP 地址"
+
+#: tpl/submit.html:50
+msgid "User-Agent"
+msgstr "访问信息"
+
+#: tpl/submit.html:59
+msgid "Compile Output"
+msgstr "编译输出"
+
+#: tpl/submit.html:95
+msgid "Code"
+msgstr "代码"
+
+#: tpl/submit.html:100
+msgid "You dont have permissions to view this code."
+msgstr "你没有权限查看此代码。"
+
+#: tpl/home.html:10
+msgid "Latest Problem"
+msgstr "最新题目"
+
+#: tpl/home.html:16
+msgid "Latest Contest"
+msgstr "最近比赛"
+
+#: tpl/home.html:22
+msgid "Latest Discuss"
+msgstr "最新讨论"
+
+#: tpl/home.html:31
+msgid "Notice"
+msgstr "公告"
+
+#: tpl/home.html:37
+msgid "Site Count"
+msgstr "站点统计"
+
+#: tpl/submit_list.html:13
+msgid "User"
+msgstr "用户"
+
+#: tpl/settings_changepass.html:13 tpl/settings.html:42
+msgid "Current Password"
+msgstr "当前密码"
+
+#: tpl/settings_changepass.html:14 tpl/settings.html:43
+msgid "New Password"
+msgstr "新建密码"
+
+#: tpl/contest_list.html:13
+msgid "End time"
+msgstr "结束时间"
+
+#: tpl/base/sidebar.html:58
+msgid "Forum"
+msgstr "论坛"
+
+#: tpl/base/sidebar.html:64
+msgid "List"
+msgstr "列表"
+
+#: tpl/base/sidebar.html:71
+msgid "Notes"
+msgstr "笔记"
+
+#: tpl/base/sidebar.html:83
+msgid "Sign Out"
+msgstr "注销"
+
+#: tpl/base/sidebar.html:88
+msgid "Backstage"
+msgstr "后台管理"
+
+#: tpl/base/sidebar.html:105
+msgid "Add Node"
+msgstr "添加节点"
+
+#: tpl/base/sidebar.html:119 tpl/signup.html:46 tpl/signin.html:5
+#: tpl/signin.html:39
+msgid "Sign In"
+msgstr "登录"
+
+#: tpl/base/sidebar.html:125 tpl/signup.html:5 tpl/signup.html:43
+#: tpl/signin.html:42
+msgid "Sign Up"
+msgstr "注册"
+
+#: tpl/base/sidebar.html:136
+msgid "Help"
+msgstr "帮助"
+
+#: tpl/settings.html:16
+msgid "Basic Settings"
+msgstr "基本设置"
+
+#: tpl/settings.html:19
+msgid "Email"
+msgstr "邮箱"
+
+#: tpl/settings.html:33
+msgid "Save Changes"
+msgstr "保存更改"
+
+#: tpl/problem_list.html:5 tpl/contest.html:37
+msgid "Problem List"
+msgstr "题目列表"

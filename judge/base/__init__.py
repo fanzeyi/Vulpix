@@ -119,29 +119,29 @@ class BaseHandler(tornado.web.RequestHandler):
         error = []
         if not value:
             if required:
-                error.append(self._("%s is required" % valName))
+                error.append(self._("%s is required") % valName)
             return error
         if is_num:
             try:
                 tmp = int(value)
             except ValueError:
-                return [self._("%s must be a number." % valName)]
+                return [self._("%s must be a number.") % valName]
             else:
                 if vaild and tmp not in vaild:
-                    return [self._("%s is invalid." % valName)]
+                    return [self._("%s is invalid.") % valName]
                 return []
         if _len(value) > max:
-            error.append(self._("%s is too long." % valName))
+            error.append(self._("%s is too long.") % valName)
         elif _len(value) < min:
-            error.append(self._("%s is too short." % valName))
+            error.append(self._("%s is too short.") % valName)
         if regex:
             if not regex.match(value):
                 if regex_msg:
                     error.append(regex_msg)
                 else:
-                    error.append(self._("%s is invalid." % valName))
+                    error.append(self._("%s is invalid.") % valName)
         elif vaild and value not in vaild:
-            errora.append(self._("%s is invalid." % valName))
+            errora.append(self._("%s is invalid.") % valName)
         return error
     def check_username(self, usr, queryDB = False):
         error = []
