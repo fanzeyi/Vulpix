@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 19:49:56 19/03/2012
+# MODIFIED: 16:41:57 05/04/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -255,6 +255,11 @@ class ProblemDBMixin(BaseDBMixin):
     def count_problem_by_tagname(self, tagname):
         count = self.db.get("""SELECT COUNT(*) FROM `problem_tag` WHERE `tagname` = %s""", tagname)
         return count["COUNT(*)"]
+    def count_visible_problem_by_tagname(self, tagname):
+        count = self.db.get("""SELECT COUNT(*) FROM `problem_tag` 
+                               LEFT JOIN `problem` ON `problem_tag`.`problem_id` = `problem`.`id`
+                               WHERE `tagname` = %s AND `problem`.`invisible` = 0""", tagname)
+        return count["COUNT(*)"]
     def count_submit(self):
         count = self.db.get("""SELECT COUNT(*) FROM `submit`""")
         return count["COUNT(*)"]
@@ -310,6 +315,26 @@ class ProblemDBMixin(BaseDBMixin):
         result = []
         for row in rows:
             result.append(self._new_submit(row))
+        return result
+    def select_problem_by_tagname(self, tagname, count = 10, start = 0):
+        rows = self.db.query("""SELECT `problem_tag`.*, `problem`.* FROM `problem_tag` 
+                                LEFT JOIN `problem` ON `problem_tag`.`problem_id` = `problem`.`id`
+                                WHERE `problem_tag`.`tagname` = %s AND `problem`.`invisible` = 0 
+                                ORDER BY `problem`.`id` ASC
+                                LIMIT %s, %s""", tagname, int(start), int(count))
+        result = []
+        for row in rows:
+            result.append(self._new_problem(row))
+        return result
+    def select_visible_problem_by_tagname(self, tagname, count = 10, start = 0):
+        rows = self.db.query("""SELECT `problem_tag`.*, `problem`.* FROM `problem_tag` 
+                                LEFT JOIN `problem` ON `problem_tag`.`problem_id` = `problem`.`id`
+                                WHERE `problem_tag`.`tagname` = %s 
+                                ORDER BY `problem`.`id` ASC
+                                LIMIT %s, %s""", tagname, int(start), int(count))
+        result = []
+        for row in rows:
+            result.append(self._new_problem(row))
         return result
     ''' INSERT '''
     def insert_problem(self, problem):
