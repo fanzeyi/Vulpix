@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: problem.py
 # CREATED: 04:04:57 15/03/2012
-# MODIFIED: 15:28:24 19/03/2012
+# MODIFIED: 16:39:22 05/04/2012
 
 import os
 import time
@@ -131,6 +131,31 @@ class ListProblemHandler(BaseHandler, ProblemDBMixin):
                 problem.submit = self.select_last_submit_by_problem_id_member_id(problem.id)
         self.render("problem_list.html", locals())
 
+class ViewTagHandler(BaseHandler, ProblemDBMixin):
+    def get(self, tagname):
+        start = self.get_argument("start", default = 0)
+        try:
+            start = int(start)
+        except ValueError:
+            start = 0
+        tagname = self.xhtml_escape(tagname)
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self._('Tag'), '/problem'))
+        breadcrumb.append((tagname, '/tag/' + tagname))
+        title = self._("Problem")
+        if self.current_user and self.current_user.admin:
+            count = self.count_problem_by_tagname(tagname)
+            problems = self.select_problem_by_tagname(tagname, 10, start)
+        else:
+            count = self.count_visible_problem_by_tagname(tagname)
+            problems = self.select_visible_problem_by_tagname(tagname, 10, start)
+        pages = self.get_page_count(count)
+        if self.current_user:
+            for problem in problems:
+                problem.submit = self.select_last_submit_by_problem_id_member_id(problem.id)
+        self.render("problem_list.html", locals())
+
 class ListSubmitHandler(BaseHandler, ProblemDBMixin):
     def get(self):
         start = self.get_argument("start", default = 0)
@@ -168,4 +193,4 @@ class ViewSubmitHandler(BaseHandler, ProblemDBMixin):
         code_highlighted = self.highlight_code(submit.code, submit.lang)
         self.render("submit.html", locals())
 
-__all__ = ["ViewProblemHandler", "ListProblemHandler", "ListSubmitHandler", "ViewSubmitHandler"]
+__all__ = ["ViewProblemHandler", "ListProblemHandler", "ViewTagHandler", "ListSubmitHandler", "ViewSubmitHandler"]
