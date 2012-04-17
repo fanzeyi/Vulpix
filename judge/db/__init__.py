@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 19:21:42 17/04/2012
+# MODIFIED: 23:04:42 17/04/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -175,7 +175,28 @@ class Reply(BaseDBObject):
     create = None
 
 class ForumDBMixin(BaseDBMixin):
-    pass
+    def _new_node(row):
+        node = Node()
+        node._init_row(row)
+        return node
+    '''COUNT'''
+    '''SELECT'''
+    def select_node_by_id(self, node_id):
+        row = self.db.get("""SELECT * FROM `node` WHERE `id` = %s""", int(node_id))
+        if row:
+            return self._new_node(row)
+        return None
+    '''INSERT'''
+    def insert_node(self, node):
+        node.id = self.db.execute("""INSERT INTO `node` (`name`, `link`, `description`) 
+                                     VALUES (%s, %s, %s)""", node.name, node.link, node.description)
+    '''UPDATE'''
+    def update_node(self, node):
+        self.db.execute("""UPDATE `node` SET `name` = %s, 
+                                             `link` = %s, 
+                                             `description` = %s, 
+                                         WHERE `node`.`id` = %s""", node.name, node.link, node.description, node.id)
+    '''DELETE'''
 
 '''
 '' ===================================

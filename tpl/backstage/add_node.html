@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "macros.html" import input %}
+{% from "macros.html" import textarea %}
+{% from "macros.html" import form_actions %}
+
+{% block body %}
+<form method="POST" action="" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ title }}</div>
+    {{ page.xsrf_form_html() }}
+    <input type="hidden" name="nid" value="{% if node %}{{ node.id }}{% endif %}" />
+    <div class="sep30"></div>
+    {{ input("name", _("Name"), value=node.name) }}
+    {{ input("link", _("Link"), value=node.link) }}
+    {{ form_actions(_("Submit")) }}
+</fieldset>
+</form>
+{% endblock %}

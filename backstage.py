@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: backstage.py
 # CREATED: 02:43:49 15/03/2012
-# MODIFIED: 02:13:40 18/03/2012
+# MODIFIED: 23:05:02 17/04/2012
 
 import re
 import datetime
@@ -10,9 +10,11 @@ import functools
 
 from tornado.web import HTTPError
 
+from judge.db import Node
 from judge.db import Judger
 from judge.db import Contest
 from judge.db import Problem
+from judge.db import ForumDBMixin
 from judge.db import JudgerDBMixin
 from judge.db import ContestDBMixin
 from judge.db import ProblemDBMixin
@@ -146,6 +148,45 @@ class AddContestHandler(BaseHandler, ProblemDBMixin, ContestDBMixin):
             self.insert_contest_problem(contest.id, pid)
         self.redirect("/contest/%d" % int(contest.id))
 
+class AddNodeHandler(BaseHandler, ForumDBMixin):
+    @backstage
+    def get(self):
+        title = self._("Add Node")
+        nid = self.get_argument("nid", default = 0)
+        node = None
+        try:
+            nid = int(nid)
+        except ValueError:
+            raise HTTPError(404)
+        if nid:
+            node = self.select_node_by_id(nid)
+            if not node:
+                raise HTTPError(404)
+            title = self._("Edit Node")
+        self.render("backstage/add_node.html", locals())
+    @backstage
+    def post(self):
+        name = self.get_argument("name", default = "")
+        link = self.get_argument("link", default = "")
+        nid = self.get_argument("nid", default = 0)
+        error = []
+        node = Node()
+        error.extend(self.check_text_value(name, self._("Name"), required = True, max = 100))
+        error.extend(self.check_text_value(link, self._("Link"), required = True, max = 100))
+        node.id = nid
+        node.name = name
+        node.link = link
+        node.description = ""
+        if error:
+            title = self._("Edit Node")
+            self.render("backstage/add_node.html", locals())
+            return
+        if node.id:
+            self.update_node(node)
+        else:
+            self.insert_node(node)
+        self.redirect("/go/%s" % node.link)
+
 class ManageJudgerHandler(BaseHandler, JudgerDBMixin):
     @backstage
     def get(self):
@@ -200,4 +241,4 @@ class AddJudgerHandler(BaseHandler, JudgerDBMixin):
             self.insert_judger(judger)
         self.redirect("/backstage/judger")
 
-__all__ = ["backstage", "AddProblemHandler", "AddContestHandler", "ManageJudgerHandler", "AddJudgerHandler"]
+__all__ = ["backstage", "AddProblemHandler", "AddContestHandler", "ManageJudgerHandler", "AddJudgerHandler", "AddNodeHandler"]
