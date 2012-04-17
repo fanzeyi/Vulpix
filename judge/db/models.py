@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/models.py
 # CREATED: 23:40:55 17/04/2012
-# MODIFIED: 00:29:45 18/04/2012
+# MODIFIED: 00:48:27 18/04/2012
 
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
@@ -36,7 +36,7 @@ class Auth(Base):
     __tablename__ = "auth"
     id = Column(Integer, primary_key = True)
     member_id = Column(Integer, ForeignKey("member.id"))
-    member = relation("member")
+    member = relation("Member")
     secret = Column(String)
     create = Column(DateTime)
 
@@ -44,7 +44,7 @@ class ResetMail(Base):
     __tablename__ = "reset_mail"
     id = Column(Integer, primary_key = True)
     member_id = Column(Integer, ForeignKey("member.id"))
-    member = relation("member")
+    member = relation("Member")
     secret = Column(String)
     create = Column(DateTime)
 
@@ -61,9 +61,9 @@ class Topic(Base):
     title = Column(String)
     content = Column(String)
     node_id = Column(Integer, ForeignKey("node.id"))
-    node = relation("node")
+    node = relation("Node")
     member_id = Column(Integer, ForeignKey("member.id"))
-    member = relation("member")
+    member = relation("Member")
     create = Column(DateTime)
     last_reply = Column(DateTime)
 
@@ -72,9 +72,9 @@ class Reply(Base):
     id = Column(Integer, primary_key = True)
     content = Column(String)
     member_id = Column(Integer, ForeignKey("member.id"))
-    member = relation("member")
+    member = relation("Member")
     topic_id = Column(Integer, ForeignKey("topic.id"))
-    topic = relation("topic")
+    topic = relation("Topic")
     create = Column(DateTime)
 
 class Note(Base):
@@ -83,16 +83,16 @@ class Note(Base):
     title = Column(String)
     content = Column(String)
     member_id = Column(Integer, ForeignKey("member.id"))
-    member = relation("member")
+    member = relation("Member")
     create = Column(DateTime)
 
 class RelatedProblem(Base):
     __tablename__ = "related_problem"
     id = Column(Integer, primary_key = True)
     problem_id = Column(Integer, ForeignKey("problem.id"))
-    problem = relation("problem")
+    problem = relation("Problem")
     note_id = Column(Integer, ForeignKey("note.id"))
-    note = relation("note")
+    note = relation("Note")
 
 class Problem(Base):
     __tablename__ = "problem"
@@ -110,16 +110,16 @@ class ProblemTag(Base):
     __tablename__ = "problem_tag"
     id = Column(Integer, primary_key = True)
     problem_id = Column(Integer, ForeignKey("problem.id"))
-    problem = relation("problem")
+    problem = relation("Problem")
     tagname = Column(String)
 
 class Submit(Base):
     __tablename__ = "submit"
     id = Column(Integer, primary_key = True)
     problem_id = Column(Integer, ForeignKey("problem.id"))
-    problem = relation("problem")
+    problem = relation("Problem")
     member_id = Column(Integer, ForeignKey("member.id"))
-    member = relation("member")
+    member = relation("Member")
     code = Column(String)
     status = Column(Integer)
     testpoint = Column(String)
@@ -142,26 +142,26 @@ class Contest(Base):
     description = Column(String)
     start_time = Column(DateTime)
     end_time = Column(DateTime)
-    invisible = Column(Boolean)
+    invisible = Column(Integer)
     create = Column(DateTime)
 
 class ContestProblem(Base):
     __tablename__ = "contest_problem"
     id = Column(Integer, primary_key = True)
     contest_id = Column(Integer, ForeignKey("contest.id"))
-    contest = relation("contest")
+    contest = relation("Contest")
     problem_id = Column(Integer, ForeignKey("problem.id"))
-    problem = relation("problem")
+    problem = relation("Problem")
 
 class ContestSubmit(Base):
     __tablename__ = "contest_submit"
     id = Column(Integer, primary_key = True)
     contest_id = Column(Integer, ForeignKey("contest.id"))
-    contest = relation("contest")
+    contest = relation("Contest")
     problem_id = Column(Integer, ForeignKey("problem.id"))
-    problem = relation("problem")
+    problem = relation("Problem")
     member_id = Column(Integer, ForeignKey("member.id"))
-    member = relation("member")
+    member = relation("Member")
     code = Column(String)
     status = Column(Integer)
     testpoint = Column(String)
