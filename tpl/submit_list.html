@@ -22,8 +22,8 @@
             <tr>
                 <td style="text-align:center">{{ submit.id }}</td>
                 <td><a href="/submit/{{ submit.id }}" class="nounderline">{{ submit | get_submit_status }}</a></td>
-                <td><a href="/problem/{{ submit.problem_id }}">{{ submit.title }}</a></td>
-                <td><a href="/member/{{ submit.username }}">{{ submit.username }}</a></td>
+                <td><a href="/problem/{{ submit.problem_id }}">{{ submit.problem.title }}</a></td>
+                <td><a href="/member/{{ submit.member.username }}">{{ submit.member.username }}</a></td>
                 <td style="text-align:center">{{ submit.lang | lang2humantext }}</td>
                 <td>{{ submit.costtime }} ms</td>
                 <td>{{ submit.costmemory }} KB</td>
