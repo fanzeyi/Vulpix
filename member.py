@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: member.py
 # CREATED: 02:18:23 09/03/2012
-# MODIFIED: 17:18:20 17/04/2012
+# MODIFIED: 19:24:32 17/04/2012
 # DESCRIPTION: member handlers
 
 import re
@@ -180,4 +180,25 @@ class MemberHandler(BaseHandler, MemberDBMixin, ProblemDBMixin):
         breadcrumb.append((member.username, '/member/%s' % member.username))
         self.render("member.html", locals())
 
-__all__ = ["SigninHandler", "SignupHandler", "SignoutHandler", "SettingsHandler", "ChangePasswordHandler", "MemberHandler"]
+class ListMemberHandler(BaseHandler, MemberDBMixin):
+    @authenticated
+    def get(self):
+        start = self.get_argument("start", default = 0)
+        try:
+            start = int(start)
+        except ValueError:
+            start = 0
+        breadcrumb = []
+        breadcrumb.append((self._('Home'),  '/'))
+        breadcrumb.append((self._('Member List'), '/member'))
+        title = self._("Member List")
+        members = self.select_member_order_by_id(start = start)
+        count = self.count_member()
+        pages = self.get_page_count(count, 20)
+        for member in members:
+            member.accepted = self.count_accepted_by_member_id(member.id)
+            member.submit = self.count_submit_by_member_id(member.id)
+            member.rating = member.accepted / float(member.submit) * 100
+        self.render("member_list.html", locals())
+
+__all__ = ["SigninHandler", "SignupHandler", "SignoutHandler", "SettingsHandler", "ChangePasswordHandler", "MemberHandler", "ListMemberHandler"]

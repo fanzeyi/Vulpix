@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: home.py
 # CREATED: 02:00:16 08/03/2012
-# MODIFIED: 17:19:36 17/04/2012
+# MODIFIED: 19:27:54 17/04/2012
 # DESCRIPTION: Home handler
 
 from contest import get_contest_status
@@ -19,7 +19,7 @@ class HomeHandler(BaseHandler, MemberDBMixin, ProblemDBMixin, ContestDBMixin):
         breadcrumb.append((self._("Home"), "/"))
         latest_problem = self.select_latest_visible_problem_order_by_id(count = 5)
         latest_contest = self.select_visible_contest(count = 5)
-        latest_submit = self.select_submit_order_by_id()
+        latest_submit = self.select_submit_order_by_id(count = 5)
         for contest in latest_contest:
             contest.status = get_contest_status(contest)
         latest_topic = []

@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 17:19:01 17/04/2012
+# MODIFIED: 19:21:42 17/04/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -72,6 +72,12 @@ class MemberDBMixin(BaseDBMixin):
     def count_member(self):
         count = self.db.get("""SELECT COUNT(*) FROM `member`""")
         return count["COUNT(*)"]
+    def count_accepted_by_member_id(self, member_id):
+        count = self.db.get("""SELECT COUNT(*) FROM `submit` WHERE `status` = 1 AND `member_id` = %s""", member_id)
+        return count["COUNT(*)"]
+    def count_submit_by_member_id(self, member_id):
+        count = self.db.get("""SELECT COUNT(*) FROM `submit` WHERE `member_id` = %s""", member_id)
+        return count["COUNT(*)"]
     ''' SELECT '''
     def select_member_by_username_lower(self, username_lower):
         row = self.db.get("""SELECT * FROM `member` WHERE `username_lower` = %s LIMIT 1""", username_lower)
@@ -88,6 +94,12 @@ class MemberDBMixin(BaseDBMixin):
         if row:
             return self._new_member(row)
         return None
+    def select_member_order_by_id(self, count = 10, start = 0):
+        rows = self.db.query("""SELECT * FROM `member` ORDER BY `id` LIMIT %s, %s""", int(start), int(count))
+        result = []
+        for row in rows:
+            result.append(self._new_member(row))
+        return result
     ''' INSERT '''
     def insert_member(self, member):
         member.id = self.db.execute("""INSERT INTO `member` (`username`, `username_lower`, `password`, `email`, 

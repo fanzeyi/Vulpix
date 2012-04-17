@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: handlers.py
 # CREATED: 01:41:06 08/03/2012
-# MODIFIED: 16:36:58 05/04/2012
+# MODIFIED: 19:08:55 17/04/2012
 # DESCRIPTION: URL Route
 
 from api import *
@@ -24,6 +24,7 @@ handlers = [
     (r'/signout', SignoutHandler), 
     (r'/settings', SettingsHandler), 
     (r'/settings/changepass', ChangePasswordHandler), 
+    (r'/member', ListMemberHandler), 
     (r'/member/(.*)', MemberHandler), 
     (r'/lang/(.*)', SetLanguageHandler), 
     (r'/problem', ListProblemHandler), 
