@@ -11,11 +11,11 @@
             </tr>
             <tr>
                 <th>{{ _('Problem') }}</th>
-                <td><a href="/problem/{{ submit.problem_id }}">{{ submit.title }}</a></td>
+                <td><a href="/problem/{{ submit.problem_id }}">{{ submit.problem.title }}</a></td>
             </tr>
             <tr>
                 <th>{{ _('Member') }}</th>
-                <td><a href="/member/{{ submit.username }}">{{ submit.username }}</a></td>
+                <td><a href="/member/{{ submit.member.username }}">{{ submit.member.username }}</a></td>
             </tr> 
             <tr>
                 <th>{{ _('Status') }}</th>
@@ -38,7 +38,7 @@
                 <td>{{ submit.costmemory }} KB</td>
             </tr>
             <tr>
-                <th>{{ _('Time') }}</th>
+                <th>{{ _('Date') }}</th>
                 <td>{{ submit.create }}</td>
             </tr>
             {% if user.admin %}

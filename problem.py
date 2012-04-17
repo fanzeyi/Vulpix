@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: problem.py
 # CREATED: 04:04:57 15/03/2012
-# MODIFIED: 16:59:41 05/04/2012
+# MODIFIED: 02:22:02 18/04/2012
 
 import os
 import time
@@ -185,7 +185,7 @@ class ViewSubmitHandler(BaseHandler, ProblemDBMixin):
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((self._('Submit'), '/submit'))
         breadcrumb.append(("# %d" % submit.id, '/submit/%d' % submit.id))
-        title = self._("Submit #%d - %s") % (submit.id, submit.title)
+        title = self._("Submit #%d - %s") % (submit.id, submit.problem.title)
         testpoint = []
         if submit.testpoint:
             testpoint = zip(range(1, len(submit.testpoint) + 1), submit.testpoint, \

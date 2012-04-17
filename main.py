@@ -2,13 +2,15 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: main.py
 # CREATED: 01:37:19 08/03/2012
-# MODIFIED: 15:46:12 15/03/2012
+# MODIFIED: 23:41:07 17/04/2012
 # DESCRIPTION: Main Server File,  run as `python2 main.py [port_num]`
 
 import re
 import sys
 import httplib
 from jinja2 import Environment, FileSystemLoader
+from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 httplib.responses[418] = "I'm a teapot" # hack for HTTP 418 :D
 
@@ -20,13 +22,17 @@ import tornado.httpserver
 from tornado.options import define
 from tornado.options import options
 
+from judge.db import models
 from judge.filters import filters
 
+from config import mysql_path
 from config import site_config
 from config import mysql_config
 from handlers import handlers
 
 tornado.options.parse_command_line()
+
+define("debug", default = True)
 
 # Set MySQL
 define("mysql_host",     default = mysql_config['mysql_host'])
@@ -42,9 +48,12 @@ class Application(tornado.web.Application):
         jinja_env = Environment(loader = FileSystemLoader(self.settings['template_path']))
         jinja_env.filters.update(filters)
         self.jinja2 = jinja_env
-        self.db = tornado.database.Connection(
-                  host=options.mysql_host, database=options.mysql_database,
-                  user=options.mysql_user, password=options.mysql_password)
+#        self.db = tornado.database.Connection(
+#                  host=options.mysql_host, database=options.mysql_database,
+#                  user=options.mysql_user, password=options.mysql_password)
+        engine = create_engine(mysql_path, convert_unicode=True, echo=options.debug)
+        models.init_db(engine)
+        self.db = scoped_session(sessionmaker(bind=engine))
 
 if __name__ == '__main__':
     http_server = tornado.httpserver.HTTPServer(Application())

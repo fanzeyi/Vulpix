@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 16:42:19 17/04/2012
+# MODIFIED: 02:16:21 18/04/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -25,6 +25,7 @@ import tornado.web
 import tornado.escape
 from tornado.httpclient import AsyncHTTPClient
 
+from judge.db import Auth
 from judge.db import Member
 from judge.utils import _len
 
@@ -61,28 +62,26 @@ class BaseHandler(tornado.web.RequestHandler):
     def get_current_user(self):
         '''Check user is logined'''
         auth = self.get_secure_cookie("auth")
-        uid = self.get_secure_cookie("uid")
+        member_id = self.get_secure_cookie("uid")
         member = None
-        if auth and uid:
-            auth = self.db.get("""SELECT * FROM `auth` WHERE `secret` = %s AND `member_id` = %s LIMIT 1""", auth, uid)
+        if auth and member_id:
+            auth = self.db.query(Auth).filter_by(secret = auth).filter_by(member_id = member_id).one()
             if auth:
-                member = Member()
-                query = self.db.get("""SELECT * FROM `member` WHERE `id` = %s LIMIT 1""", auth["member_id"])
-                if query:
-                    member._init_row(query)
-                    delta = auth['create'] - datetime.datetime.now()
+                member = self.db.query(Member).get(auth.member_id)
+                if member:
+                    delta = auth.create - datetime.datetime.now()
                     if delta.days > 20:
                         """ Refresh Token """
-                        sql = """DELETE FROM `auth` WHERE `secret` = '%s' LIMIT 1""" \
-                                 % auth
-                        self.db.execute(sql)
-                        random = binascii.b2a_hex(uuid.uuid4().bytes)
-                        sql = """INSERT INTO `auth` (`uid`, `secret`, `create`) \
-                                 VALUES ('%d', '%s', UTC_TIMESTAMP())""" \
-                                 % (uid, random)
-                        self.db.execute(sql)
-                        self.set_cookie('auth', random)
-                        self.set_cookie('uid', str(uid))
+                        auth.delete()
+                        self.db.commit()
+                        auth = Auth()
+                        auth.member_id = member_id
+                        auth.secret = binascii.b2a_hex(uuid.uuid4().bytes)
+                        auth.create = datetime.datetime.now()
+                        self.db.add(auth)
+                        self.db.commit()
+                        self.set_cookie('auth', auth.secret)
+                        self.set_cookie('uid', auth.member_id)
                 else:
                     self.clear_cookie("auth")
                     self.clear_cookie("uid")
