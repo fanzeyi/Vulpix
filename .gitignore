@@ -5,3 +5,4 @@ privekey.key
 upload/
 test.py
 *.log
+dbconvert.py

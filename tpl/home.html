@@ -7,13 +7,40 @@
 <div class="row-fluid">
     <div class="span8">
         <div class="cell">
-            <div class="title">{{ _('Latest Problem') }}</div>
+            <div class="title">{{ _('Recent Problem') }}</div>
             <div class="body">
                 {{ show_problem_list(latest_problem) }}
             </div>
         </div>
         <div class="cell">
-            <div class="title">{{ _('Latest Contest') }}</div>
+            <div class="title">{{ _('Recent Submit') }}</div>
+            <div class="body">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width:20px; text-align:center; ">#</th>
+                        <th style="width:100px;">{{ _('Status') }}</th>
+                        <th>{{ _('Problem') }}</th>
+                        <th style="width:100px">{{ _('User') }}</th>
+                        <th style="width:50px">{{ _('Language') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for submit in latest_submit %}
+                    <tr>
+                        <td style="text-align:center">{{ submit.id }}</td>
+                        <td><a href="/submit/{{ submit.id }}" class="nounderline">{{ submit | get_submit_status }}</a></td>
+                        <td><a href="/problem/{{ submit.problem_id }}">{{ submit.title }}</a></td>
+                        <td><a href="/member/{{ submit.username }}">{{ submit.username }}</a></td>
+                        <td style="text-align:center">{{ submit.lang | lang2humantext }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="cell">
+            <div class="title">{{ _('Recent Contest') }}</div>
             <div class="body">
                 {{ show_contest_list(latest_contest) }}
             </div>
@@ -31,6 +58,11 @@
             <div class="title">{{ _('Notice') }}</div>
             <div class="body content">
                 {% include 'widget/notice.html' %}
+            </div>
+        </div>
+        <div class="cell">
+            <div class="title">{{ _('New Node') }}</div>
+            <div class="body content">
             </div>
         </div>
         <div class="cell" id="count">

@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 16:57:43 05/04/2012
+# MODIFIED: 17:19:01 17/04/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -316,6 +316,16 @@ class ProblemDBMixin(BaseDBMixin):
                                 LEFT JOIN `member` ON `submit`.`member_id` = `member`.`id`
                                 LEFT JOIN `problem` ON `submit`.`problem_id` = `problem`.`id`
                                 ORDER BY `submit`.`id` DESC LIMIT %s, %s""", int(start), int(count))
+        result = []
+        for row in rows:
+            result.append(self._new_submit(row))
+        return result
+    def select_submit_by_member_id(self, member_id, count = 10):
+        rows = self.db.query("""SELECT `submit`.*, `problem`.`title` FROM `submit` 
+                                LEFT JOIN `member` ON `submit`.`member_id` = `member`.`id`
+                                LEFT JOIN `problem` ON `submit`.`problem_id` = `problem`.`id`
+                                WHERE `submit`.`member_id` = %s
+                                ORDER BY `submit`.`id` DESC LIMIT %s""", int(member_id), int(count))
         result = []
         for row in rows:
             result.append(self._new_submit(row))

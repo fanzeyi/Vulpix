@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: member.py
 # CREATED: 02:18:23 09/03/2012
-# MODIFIED: 04:22:54 19/03/2012
+# MODIFIED: 17:18:20 17/04/2012
 # DESCRIPTION: member handlers
 
 import re
@@ -14,6 +14,7 @@ from tornado.web import authenticated
 
 from judge.db import Member
 from judge.db import MemberDBMixin
+from judge.db import ProblemDBMixin
 from judge.base import BaseHandler
 from judge.base import unauthenticated
 
@@ -166,13 +167,14 @@ class ChangePasswordHandler(BaseHandler, MemberDBMixin):
         self.set_secure_cookie('msg', self._('Password Updated.'))
         self.redirect('/settings')
 
-class MemberHandler(BaseHandler, MemberDBMixin):
+class MemberHandler(BaseHandler, MemberDBMixin, ProblemDBMixin):
     def get(self, username):
         title = username
         username = username.lower()
         member = self.select_member_by_username_lower(username)
         if not member:
             raise HTTPError(404)
+        submits = self.select_submit_by_member_id(member.id, 5)
         breadcrumb = []
         breadcrumb.append((self._('Home'), '/'))
         breadcrumb.append((member.username, '/member/%s' % member.username))
