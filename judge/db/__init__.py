@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 02:14:39 18/04/2012
+# MODIFIED: 02:49:21 18/04/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -30,6 +30,8 @@ class MemberDBMixin(object):
     def count_submit_by_member_id(self, member_id):
         return self.db.query(Submit).filter_by(member_id = 1).count()
     ''' SELECT '''
+    def select_member_by_id(self, member_id):
+        return self.db.query(Member).get(member_id)
     def select_member_by_username_lower(self, username_lower):
         return self.db.query(Member).filter_by(username_lower = username_lower).one()
     def select_member_by_email(self, email):
@@ -53,11 +55,17 @@ class MemberDBMixin(object):
         return auth
     ''' UPDATE '''
     def update_member(self, member):
-        # should not use this method
-        pass
+        db_member = self.select_member_by_id(member.id)
+        db_member.email = member.email
+        db_member.website = member.website
+        db_member.tagline = member.tagline
+        db_member.bio = member.bio
+        db_member.gravatar_link = member.gravatar_link
+        db_member.lang = member.lang
+        self.db.commit()
     def update_member_password(self, member):
-        # should not use this method 
-        pass 
+        db_member = self.select_member_by_id(member.id)
+        db_member.password = member.password
     ''' DELETE '''
     def delete_auth_by_secret(self, secret):
         self.db.query(Auth).filter_by(secret = secret).delete()
@@ -157,8 +165,15 @@ class ProblemDBMixin(object):
         self.db.commit()
     ''' UPDATE '''
     def update_problem(self, problem):
-        # should not use this method
-        pass
+        db_problem = self.select_problem_by_id(problem.id)
+        db_problem.title = problem.title
+        db_problem.shortname = problem.shortname
+        db_problem.content   = problem.content
+        db_problem.timelimit = problem.timelimit
+        db_problem.memlimit  = problem.memlimit
+        db_problem.testpoint = problem.testpoint
+        db_problem.invisible = problem.invisible
+        self.db.commit()
     ''' DELETE '''
     def delete_problem_tag_by_problem_id(self, problem_id):
         self.db.query(ProblemTag).filter_by(problem_id = problem_id).delete()
@@ -200,8 +215,13 @@ class ContestDBMixin(object):
         self.db.commit()
     ''' UPDATE '''
     def update_contest(self, contest):
-        # should not use this method
-        pass
+        db_contest = self.select_contest_by_id(contest_id)
+        db_contest.title       = contest.title
+        db_contest.description = contest.description
+        db_contest.start_time  = contest.start_time
+        db_contest.end_time    = contest.end_time
+        db_contest.invisible   = contest.invisible
+        self.db.commit()
     ''' DELETE '''
     def delete_contest_problem_by_contest_id(self, contest_id):
         self.db.query(ContestProblem).filter_by(contest_id = contest_id).delete()
@@ -222,8 +242,14 @@ class JudgerDBMixin(object):
         self.commit()
     ''' UPDATE '''
     def update_judger(self, judger):
-        # should not use this method
-        pass
+        db_judger = self.select_judger_by_id(judger.id)
+        db_judger.name        = judger.name
+        db_judger.description = judger.description
+        db_judger.path        = judger.path
+        db_judger.priority    = judger.priority
+        db_judger.pubkey      = judger.pubkey
+        self.db.commit()
     def update_judger_count(self, judger):
-        # should not use this method
-        pass
+        db_judger = self.select_judger_by_id(Judger.id)
+        db_judger.queue_num = 0
+        self.db.commit()

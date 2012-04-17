@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/models.py
 # CREATED: 23:40:55 17/04/2012
-# MODIFIED: 00:48:27 18/04/2012
+# MODIFIED: 02:51:29 18/04/2012
 
 from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
@@ -24,13 +24,13 @@ class Member(Base):
     username_lower = Column(String)
     password = Column(String)
     email = Column(String)
-    website = Column(String)
-    tagline = Column(String)
-    bio = Column(String)
-    gravatar_link = Column(String)
+    website = Column(String, default = "")
+    tagline = Column(String, default = "")
+    bio = Column(String, default = "")
+    gravatar_link = Column(String, default = "")
     create = Column(DateTime)
-    admin = Column(Integer)
-    lang = Column(Integer)
+    admin = Column(Integer, default = 0)
+    lang = Column(Integer, default = 1)
 
 class Auth(Base):
     __tablename__ = "auth"
@@ -53,13 +53,13 @@ class Node(Base):
     id = Column(Integer, primary_key = True)
     name = Column(String)
     link = Column(String)
-    description = Column(String)
+    description = Column(String, default = "")
 
 class Topic(Base):
     __tablename__ = "topic"
     id = Column(Integer, primary_key = True)
     title = Column(String)
-    content = Column(String)
+    content = Column(String, default = "")
     node_id = Column(Integer, ForeignKey("node.id"))
     node = relation("Node")
     member_id = Column(Integer, ForeignKey("member.id"))
@@ -103,7 +103,7 @@ class Problem(Base):
     timelimit = Column(Integer)
     memlimit = Column(Integer)
     testpoint = Column(Integer)
-    invisible = Column(Boolean)
+    invisible = Column(Boolean, default = False)
     create = Column(DateTime)
 
 class ProblemTag(Base):
@@ -120,19 +120,19 @@ class Submit(Base):
     problem = relation("Problem")
     member_id = Column(Integer, ForeignKey("member.id"))
     member = relation("Member")
-    code = Column(String)
-    status = Column(Integer)
-    testpoint = Column(String)
-    testpoint_time = Column(String)
-    testpoint_memory = Column(String)
-    score = Column(Integer)
-    costtime = Column(Integer)
-    costmemory = Column(Integer)
-    timestamp = Column(String)
-    lang = Column(Integer)
-    msg = Column(String)
-    user_agent = Column(String)
-    ip = Column(String)
+    code = Column(String, default = "")
+    status = Column(Integer, default = 0)
+    testpoint = Column(String, default = "")
+    testpoint_time = Column(String, default = "")
+    testpoint_memory = Column(String, default = "")
+    score = Column(Integer, default = 0)
+    costtime = Column(Integer, default = 0)
+    costmemory = Column(Integer, default = 0)
+    timestamp = Column(String, default = "")
+    lang = Column(Integer, default = 1)
+    msg = Column(String, default = "")
+    user_agent = Column(String, default = "")
+    ip = Column(String, default = "")
     create = Column(DateTime)
 
 class Contest(Base):
@@ -142,7 +142,7 @@ class Contest(Base):
     description = Column(String)
     start_time = Column(DateTime)
     end_time = Column(DateTime)
-    invisible = Column(Integer)
+    invisible = Column(Boolean, default = False)
     create = Column(DateTime)
 
 class ContestProblem(Base):
@@ -183,7 +183,7 @@ class Judger(Base):
     name = Column(String)
     description = Column(String)
     path = Column(String)
-    priority = Column(Integer)
-    queue_num = Column(Integer)
-    pubkey = Column(String)
+    priority = Column(Integer, default = 0)
+    queue_num = Column(Integer, default = 0)
+    pubkey = Column(String, default = "")
     create = Column(DateTime)
