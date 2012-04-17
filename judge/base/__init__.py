@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 16:59:00 05/04/2012
+# MODIFIED: 16:42:19 17/04/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -32,6 +32,12 @@ CODE_LEXER = {
     1 : DelphiLexer, 
     2 : CLexer, 
     3 : CppLexer, 
+}
+
+CODE_LANG = {
+    1 : "delphi", 
+    2 : "c", 
+    3 : "cpp", 
 }
 
 def unauthenticated(method):
@@ -170,6 +176,7 @@ class BaseHandler(tornado.web.RequestHandler):
         return "http://www.gravatar.com/avatar/%s?d=mm" % (gravatar_id) 
     def post_to_judger(self, query, judger, callback = None):
         query["time"] = time.time()
+        query["code"] = query["code"].decode("utf-8")
         query = dict(sorted(query.iteritems(), key=itemgetter(1)))
         jsondump = json.dumps(query)
         print jsondump
@@ -179,7 +186,16 @@ class BaseHandler(tornado.web.RequestHandler):
         http_client = AsyncHTTPClient()
         http_client.fetch(judger.path, method = "POST", body = urllib.urlencode({"query" : json.dumps(query)}), callback = callback)
     def highlight_code(self, code, lang):
-        return highlight(code, CODE_LEXER[lang](), HtmlFormatter(linenos=True))
+        return highlight(code, CODE_LEXER[lang](), HtmlFormatter(linenos = True))   
+        codestr = highlight(code, CODE_LEXER[lang](), HtmlFormatter(nowrap = True))
+        table = '<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers">'
+        code = ''
+        lines = codestr.split("\n")
+        for index, line in zip(range(len(lines)), lines):
+            table  +=  "<span class='line-number'>%d</span>\n" % (index + 1)
+            code   +=  "<span class='line'>%s</span>\n" % line
+        table  +=  "</pre></td><td class='code'><pre><code class='%s'>%s</code></pre></td></tr></table></div>" % (CODE_LANG[lang], code)
+        return table
     @property
     def db(self):
         return self.application.db

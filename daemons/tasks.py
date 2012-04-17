@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: tasks.py
 # CREATED: 02:27:12 17/03/2012
-# MODIFIED: 14:26:12 19/03/2012
+# MODIFIED: 16:45:07 17/04/2012
 
 import os
 import MySQLdb
@@ -50,7 +50,7 @@ def _compile(result, query):
     _clean(COMPILE_DIR)
     os.chdir(COMPILE_DIR)
     with open(COMPILE_DIR + query['filename'], "w+") as code:
-        code.write(query['code'])
+        code.write(query['code'].encode("utf-8"))
     cmd = " ".join(["timeout 30", _compile_cmd(query['lang'], query['filename'])])
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     (stdoutput,erroutput) = proc.communicate()

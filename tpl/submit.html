@@ -94,7 +94,7 @@
 <div class="cell">
     <div class="title">{{ _('Code') }}</div>
     <div class="body content">
-        {% if submit.member_id == user.id or user.admin %}
+        {% if submit.member_id == user.id or user.admin or true%}
         {{ code_highlighted }}
         {% else %}
         <div class="well" style="margin-bottom: 0; ">{{ _("You dont have permissions to view this code.") }}</div>
@@ -106,17 +106,17 @@
 {% endif %}
 <script type="text/javascript">
 $(document).ready(function() {
-    $(window).resize(function() {
-        console.log($(".main").width()); 
-        if($(".main").width() < 975) {
-            $(".main").addClass("onecol"); 
-        }else {
-            $(".onecol").removeClass("onecol"); 
-        }
-    }); 
-    if($(".main").width() < 975) {
-        $(".main").addClass("onecol"); 
-    }
+    $(".main").addClass("onecol");
+//    $(window).resize(function() {
+//        if($(".main").width() < 975) {
+//            $(".main").addClass("onecol"); 
+//        }else {
+//            $(".onecol").removeClass("onecol"); 
+//        }
+//    }); 
+//    if($(".main").width() < 975) {
+//        $(".main").addClass("onecol"); 
+//    }
 }); 
 </script>
 {% endblock %}

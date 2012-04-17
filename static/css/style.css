@@ -4052,7 +4052,6 @@ nav .copyright a {
   -webkit-border-radius: 0 !important;
   -moz-border-radius: 0 !important;
   border-radius: 0 !important;
-  border-bottom: 1px solid #DDD;
 }
 .highlighttable {
   width: 100%;
@@ -4086,6 +4085,8 @@ nav .copyright a {
 }
 .highlight {
   background: #ffffff;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 .highlight .c {
   color: #888888;
