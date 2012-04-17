@@ -42,13 +42,9 @@ class ReceiveQueryHandler(tornado.web.RequestHandler):
             raise HTTPError(404)
         query = dict(sorted(query.iteritems(), key=itemgetter(1)))
         sign = hashlib.sha1(json.dumps(query) + SALT).hexdigest()
-        print json.dumps(query)
-        print SALT
         if not sign ==  query_sign:
             logging.error("Signature is invalid")
             raise HTTPError(404)
-        print sign
-        print query_sign
         judge.delay(query)
         
 application = tornado.web.Application([

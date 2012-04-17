@@ -7,6 +7,15 @@
     {{ _('This Problem is Invisible!') }}
 </div>
 {% endif %}
+{% if error %}
+<div class="alert alert-error">
+<ul>
+{% for err in error %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
 <div class="cell signleproblem">
     <div class="title">
         {% if user.admin %}
