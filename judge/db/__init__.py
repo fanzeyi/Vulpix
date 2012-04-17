@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 03:04:51 18/04/2012
+# MODIFIED: 04:10:34 18/04/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -87,15 +87,34 @@ class ForumDBMixin(object):
     '''COUNT'''
     '''SELECT'''
     def select_node_by_id(self, node_id):
-        pass
-        return None
+        return self.db.query(Node).get(node_id)
+    def select_node_by_link(self, link):
+        return self.db.query(Node).filter_by(link = link).one()
+    def select_topic_by_id(self, topic_id):
+        return self.db.query(Topic).get(topic_id)
+    def select_topic_by_node_id(self, node_id, start = 0, count = 10):
+        return self.db.query(Topic).filter_by(node_id = node_id).offset(start).limit(count).all()
     '''INSERT'''
     def insert_node(self, node):
-        pass
+        self.db.add(node)
+        self.db.commit()
+    def insert_topic(self, topic):
+        # a bug here.. todo
+        topic.create = datetime.datetime.now()
+        topic.last_reply = datetime.datetime.now()
+        self.db.add(topic)
+        self.db.commit()
     '''UPDATE'''
     def update_node(self, node):
-        # shoud not use this method
-        pass
+        db_node = self.select_node_by_id(node.id)
+        db_node.name = node.name
+        db_node.link = node.link
+        db_node.description = node.description
+        self.db.commit()
+    def update_topic(self, topic):
+        db_topic = self.select_topic_by_id(topic.id)
+        db_topic.title   = topic.title
+        db_topic.content = topic.content
     '''DELETE'''
 
 '''
@@ -231,8 +250,8 @@ class JudgerDBMixin(object):
     ''' SELECT '''
     def select_judgers(self):
         return self.db.query(Judger).all()
-    def select_judger_by_id(self, juder_id):
-        return self.db.query(Judger).get(juder_id)
+    def select_judger_by_id(self, judger_id):
+        return self.db.query(Judger).get(judger_id)
     def select_judger_by_queue(self):
         return self.db.query(Judger).order_by(Judger.queue_num, Judger.priority).one()
     ''' INSERT '''

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "macros.html" import input %}
+{% from "macros.html" import textarea %}
+{% from "macros.html" import form_actions %}
+
+{% block body %}
+{% if topics %}
+<div class="cell">
+    <div class="title">
+        <div class="fr"><a href="/new/{{ node.link }}">Create Topic</a></div>
+        {{ node.name }}
+    </div>
+    <div class"body">
+        {% for topic in topics %}
+        {{topic.title}}
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="well" style="text-align: center">
+    No topic yet. {% if user %}<a href="/new/{{ node.link }}">Create one?</a>{% endif %}
+</div>
+{% endif %}
+{% if user %}
+<form method="POST" action="/new/{{ node.link }}" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ _('Create Topic') }}</div>
+    {{ page.xsrf_form_html() }}
+    <div class="sep30"></div>
+    {{ input("title", _("Title"), style="width:516px; ") }}
+    {{ textarea("content", _("Content"), style="width:516px; height: 300px; ") }}
+    {{ form_actions(_("Submit")) }}
+</fieldset>
+</form>
+{% endif %}
+{% endblock %}

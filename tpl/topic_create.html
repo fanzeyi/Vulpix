@@ -6,14 +6,13 @@
 
 {% block body %}
 {{ show_error_list(error) }}
-<form method="POST" action="" class="form-horizontal cell form">
+<form method="POST" action="/new/{{ node.link }}" class="form-horizontal cell form">
 <fieldset>
-    <div class="title">{{ title }}</div>
+    <div class="title">{{ _('Create Topic') }} - {{ node.name }}</div>
     {{ page.xsrf_form_html() }}
-    <input type="hidden" name="nid" value="{% if node %}{{ node.id }}{% endif %}" />
     <div class="sep30"></div>
-    {{ input("name", _("Name"), value=node.name) }}
-    {{ input("link", _("Link"), value=node.link) }}
+    {{ input("title", _("Title"), value=topic.title, style="width:516px; ") }}
+    {{ textarea("content", _("Content"), value=topic.content, style="width:516px; height: 600px; ") }}
     {{ form_actions(_("Submit")) }}
 </fieldset>
 </form>

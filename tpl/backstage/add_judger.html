@@ -2,8 +2,10 @@
 {% from "macros.html" import input %}
 {% from "macros.html" import textarea %}
 {% from "macros.html" import form_actions %}
+{% from "macros.html" import show_error_list %}
 
 {% block body %}
+{{ show_error_list(error) }}
 <form method="POST" action="" class="form-horizontal cell form">
 <fieldset>
     <div class="title">{{ title }}</div>

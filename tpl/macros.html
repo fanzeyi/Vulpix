@@ -59,12 +59,12 @@
 
 {#================ Form ================#}
 
-{% macro input(name, label, value = '', type = 'TEXT', class = 'input-xlarge', default = '', addon = '') %}
+{% macro input(name, label, value = '', type = 'TEXT', class = 'input-xlarge', default = '', addon = '', style = '') %}
     <div class="control-group">
         <label class="control-label" for="{{ name }}">{{ label }}</label>
         <div class="controls">
             {% if addon %}<div class="input-append">{% endif %}
-            <input name="{{ name }}" class="{{ class }}" type="{{ type }}" {% if value %}value="{{ value }}"{% elif default %}value="{{ default }}"{% endif %}/>
+                <input name="{{ name }}" class="{{ class }}" type="{{ type }}" {% if value %}value="{{ value }}"{% elif default %}value="{{ default }}"{% endif %} style="{{ style }}"/>
             {% if addon %}<span class="add-on">{{ addon }}</span></div>{% endif %}
         </div>
     </div>

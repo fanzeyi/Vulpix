@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: backstage.py
 # CREATED: 02:43:49 15/03/2012
-# MODIFIED: 03:05:03 18/04/2012
+# MODIFIED: 03:31:00 18/04/2012
 
 import re
 import datetime
@@ -167,12 +167,16 @@ class AddNodeHandler(BaseHandler, ForumDBMixin):
     @backstage
     def post(self):
         name = self.get_argument("name", default = "")
-        link = self.get_argument("link", default = "")
+        link = self.get_argument("link", default = "").lower()
         nid = self.get_argument("nid", default = 0)
         error = []
         node = Node()
         error.extend(self.check_text_value(name, self._("Name"), required = True, max = 100))
         error.extend(self.check_text_value(link, self._("Link"), required = True, max = 100))
+        if not error:
+            duplinode = self.select_node_by_link(link)
+            if duplinode:
+                error.append(self._("This link have taken."))
         node.id = nid
         node.name = name
         node.link = link

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from 'macros.html' import form_actions %}
+{% from "macros.html" import show_error_list %}
 
 {% block body %}
 {% if problem.invisible %}
@@ -7,15 +8,7 @@
     {{ _('This Problem is Invisible!') }}
 </div>
 {% endif %}
-{% if error %}
-<div class="alert alert-error">
-<ul>
-{% for err in error %}
-<li>{{ err }}</li>
-{% endfor %}
-</ul>
-</div>
-{% endif %}
+{{ show_error_list(error) }}
 <div class="cell signleproblem">
     <div class="title">
         {% if user.admin %}
