@@ -2,29 +2,16 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 19:21:42 17/04/2012
+# MODIFIED: 00:30:09 18/04/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
 import binascii
+from sqlalchemy import Column
+from sqlalchemy import String
+from sqlalchemy import Integer
 
-class BaseDBObject(object):
-    ''' Base Table Object '''
-    def __repr__(self):
-        ''' for debug '''
-        result = ", \n".join(["'%s': '%s'" % (attr, getattr(self, attr)) for attr in dir(self) if attr[0] != '_' and not callable(getattr(self, attr)) ])
-        return "<{%s}>" % result
-    def _init_row(self, row):
-        keys = row.keys()
-        for key in keys:
-            setattr(self, key, row[key])
-
-class BaseDBMixin(object):
-    ''' Base Database Mixin '''
-    def _new_object_by_row(self, Obj, row):
-        obj = Obj()
-        obj._init_row(row)
-        return obj
+from judge.db.models import *
 
 '''
 '' ===================================
@@ -32,37 +19,7 @@ class BaseDBMixin(object):
 '' ===================================
 '''
 
-class Member(BaseDBObject):
-    '''User data table'''
-    __tablename__ = "member"
-    id = 0
-    username = ""
-    username_lower = ""
-    passowrd = ""
-    email = ""
-    website = ""
-    tagline = ""
-    bio = ""
-    gravatar_link = ""
-    create = None
-    admin = 0
-    lang = 1
-
-class Auth(BaseDBObject):
-    '''User auth table'''
-    __tablename__ = "auth"
-    member_id = 0 
-    secret = ""
-    create = None
-
-class ResetMail(BaseDBObject):
-    '''User reset mail table'''
-    __tablename__ = "reset_mail"
-    member_id = 0
-    secret = ""
-    create = None
-
-class MemberDBMixin(BaseDBMixin):
+class MemberDBMixin(object):
     ''' New Data Model '''
     def _new_member(self, row):
         member = Member()
@@ -146,36 +103,29 @@ class MemberDBMixin(BaseDBMixin):
 '' ===================================
 '''
 
-class Node(BaseDBObject):
-    '''Forum node table'''
-    __tablename__ = "node"
-    id = 0
-    name = ""
-    description = ""
-    link = ""
-
-class Topic(BaseDBObject):
-    '''Forum topic table'''
-    __tablename__ = "topic"
-    id = 0
-    title = ""
-    content = ""
-    node_id = 0
-    member_id = 0
-    create = None
-    last_reply = None
-
-class Reply(BaseDBObject):
-    '''Forum topic reply table'''
-    __tablename__ = "reply"
-    id = 0
-    content = ""
-    member_id = 0
-    topic_id = 0
-    create = None
-
-class ForumDBMixin(BaseDBMixin):
-    pass
+class ForumDBMixin(object):
+    def _new_node(row):
+        node = Node()
+        node._init_row(row)
+        return node
+    '''COUNT'''
+    '''SELECT'''
+    def select_node_by_id(self, node_id):
+        row = self.db.get("""SELECT * FROM `node` WHERE `id` = %s""", int(node_id))
+        if row:
+            return self._new_node(row)
+        return None
+    '''INSERT'''
+    def insert_node(self, node):
+        node.id = self.db.execute("""INSERT INTO `node` (`name`, `link`, `description`) 
+                                     VALUES (%s, %s, %s)""", node.name, node.link, node.description)
+    '''UPDATE'''
+    def update_node(self, node):
+        self.db.execute("""UPDATE `node` SET `name` = %s, 
+                                             `link` = %s, 
+                                             `description` = %s, 
+                                         WHERE `node`.`id` = %s""", node.name, node.link, node.description, node.id)
+    '''DELETE'''
 
 '''
 '' ===================================
@@ -183,22 +133,7 @@ class ForumDBMixin(BaseDBMixin):
 '' ===================================
 '''
 
-class Note(BaseDBObject):
-    '''Note data table'''
-    __tablename__ = "note"
-    id = 0
-    title = ""
-    content = ""
-    member_id = 0
-    create = None
-
-class RelatedProblem(BaseDBObject):
-    '''Note related problem table'''
-    __tablename__ = "related_problem"
-    problem_id = 0
-    note_id = 0
-
-class NoteDBMixin(BaseDBMixin):
+class NoteDBMixin(object):
     pass
 
 '''
@@ -207,47 +142,7 @@ class NoteDBMixin(BaseDBMixin):
 '' ===================================
 '''
 
-class Problem(BaseDBObject):
-    '''Problem table'''
-    __tablename__ = "problem"
-    id = 0
-    title = ""
-    shortname = ""
-    content = ""
-    timelimit = 0
-    memlimit = 0
-    testpoint = 0
-    invisible = 0
-    create = None
-
-class ProblemTag(BaseDBObject):
-    '''Problem tag table'''
-    __tablename__ = "problem_tag"
-    problem_id = 0
-    tagname = ""
-
-class Submit(BaseDBObject):
-    '''Submit table'''
-    __tablename__ = "submit"
-    id = 0
-    problem_id = 0
-    member_id = 0
-    code = ""
-    status = 0
-    testpoint = 0
-    testpoint_time = ""
-    testpoint_memory = ""
-    score = 0
-    costtime = 0
-    costmemory = 0
-    timestamp = ""
-    lang = 0
-    msg = ""
-    user_agent = 0
-    ip = 0
-    create = 0
-
-class ProblemDBMixin(BaseDBMixin):
+class ProblemDBMixin(object):
     ''' New Data Model '''
     def _new_problem(self, row):
         problem = Problem()
@@ -401,42 +296,7 @@ class ProblemDBMixin(BaseDBMixin):
 '' ===================================
 '''
 
-class Contest(BaseDBObject):
-    '''Contest data table'''
-    __tablename__ = "contest"
-    id = 0
-    title = ""
-    description = ""
-    start_time = None
-    end_time = None
-    invisible = 0
-    create = None
-
-class ContestProblem(BaseDBObject):
-    '''Contest problem table'''
-    __tablename__ = "contest_problem"
-    contest_id = 0
-    problem_id = 0
-
-class ContestSubmit(BaseDBObject):
-    '''Contest submit table'''
-    __tablename__ = "contest_submit"
-    contest_id = 0
-    problem_id = 0
-    member_id = 0
-    status = 0
-    testpoint = ""
-    score = 0
-    costtime = 0
-    costmemory = 0
-    timestamp = ""
-    lang = 0
-    msg = ""
-    user_agent = 0
-    ip = 0
-    create = 0
-
-class ContestDBMixin(BaseDBMixin):
+class ContestDBMixin(object):
     ''' New Data Model '''
     def _new_contest(self, row):
         contest = Contest()
@@ -513,19 +373,7 @@ class ContestDBMixin(BaseDBMixin):
         self.db.execute("""DELETE FROM `contest_problem` WHERE `contest_id` = %s""", contest_id)
     ''' OTHER '''
 
-class Judger(BaseDBObject):
-    '''Contest problem table'''
-    __tablename__ = "judge"
-    id = 0
-    name = ""
-    description = ""
-    path = "" # support HTTP protocol
-    priority = 0
-    queue_num = 0
-    pubkey = ""
-    create = None
-
-class JudgerDBMixin(BaseDBMixin):
+class JudgerDBMixin(object):
     ''' New Data Model '''
     def _new_judger(self, row):
         judger = Judger()
