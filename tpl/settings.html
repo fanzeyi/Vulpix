@@ -8,7 +8,7 @@
 {{ show_error_list(error) }}
 {% if msg %}
 <div class="alert alert-success">
-    {{ msg }}
+    {{ msg.decode("utf-8") }}
 </div>
 {% endif %}
 <form method="POST" action="/settings" class="form-horizontal cell form">

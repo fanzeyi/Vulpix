@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: main.py
 # CREATED: 01:37:19 08/03/2012
-# MODIFIED: 23:41:07 17/04/2012
+# MODIFIED: 22:08:52 18/04/2012
 # DESCRIPTION: Main Server File,  run as `python2 main.py [port_num]`
 
 import re
@@ -51,7 +51,7 @@ class Application(tornado.web.Application):
 #        self.db = tornado.database.Connection(
 #                  host=options.mysql_host, database=options.mysql_database,
 #                  user=options.mysql_user, password=options.mysql_password)
-        engine = create_engine(mysql_path, convert_unicode=True, echo=options.debug)
+        engine = create_engine(mysql_path, convert_unicode=True)#, echo=options.debug)
         models.init_db(engine)
         self.db = scoped_session(sessionmaker(bind=engine))
 

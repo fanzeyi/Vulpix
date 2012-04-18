@@ -54,7 +54,7 @@
         </table>
     </div>
 </div>
-{% if submit.status == 6%}
+{% if submit.status == 6 %}
 <div class="cell">
     <div class="title">{{ _('Compile Output') }}</div>
     <div class="body content">
@@ -94,7 +94,7 @@
 <div class="cell">
     <div class="title">{{ _('Code') }}</div>
     <div class="body content">
-        {% if submit.member_id == user.id or user.admin or true%}
+        {% if submit.member_id == user.id or user.admin %}
         {{ code_highlighted }}
         {% else %}
         <div class="well" style="margin-bottom: 0; ">{{ _("You dont have permissions to view this code.") }}</div>

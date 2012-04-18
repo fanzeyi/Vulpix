@@ -2,10 +2,11 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: problem.py
 # CREATED: 04:04:57 15/03/2012
-# MODIFIED: 02:22:02 18/04/2012
+# MODIFIED: 22:08:40 18/04/2012
 
 import os
 import time
+from sqlalchemy.orm.exc import NoResultFound
 
 from tornado.web import HTTPError
 from tornado.web import asynchronous
@@ -128,7 +129,10 @@ class ListProblemHandler(BaseHandler, ProblemDBMixin):
         pages = self.get_page_count(count, 20)
         if self.current_user:
             for problem in problems:
-                problem.submit = self.select_last_submit_by_problem_id_member_id(problem.id)
+                try:
+                    problem.submit = self.select_last_submit_by_problem_id_member_id(problem.id)
+                except NoResultFound:
+                    problem.submit = None
         self.render("problem_list.html", locals())
 
 class ViewTagHandler(BaseHandler, ProblemDBMixin):
@@ -171,6 +175,7 @@ class ListSubmitHandler(BaseHandler, ProblemDBMixin):
         submits = self.select_submit_order_by_id(10, start)
         pages = self.get_page_count(count)
         self.render("submit_list.html", locals())
+#        self.db.close()
 
 class ViewSubmitHandler(BaseHandler, ProblemDBMixin):
     def get(self, sid):

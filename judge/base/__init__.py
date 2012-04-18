@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 02:16:21 18/04/2012
+# MODIFIED: 22:24:01 18/04/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -20,6 +20,7 @@ from pygments.lexers import CLexer
 from pygments.lexers import CppLexer
 from pygments.lexers import DelphiLexer
 from pygments.formatters import HtmlFormatter
+from sqlalchemy.orm.exc import NoResultFound
 
 import tornado.web
 import tornado.escape
@@ -104,6 +105,7 @@ class BaseHandler(tornado.web.RequestHandler):
         tpl = self.jinja2.get_template(tplname)
         ren = tpl.render(page = self, _ = self._, user = self.current_user, **args)
         self.write(ren)
+        self.db.close()
         self.finish()
     def write_error(self, status_code, **kwargs):
         '''Rewrite write_error for custom error page'''
@@ -154,8 +156,11 @@ class BaseHandler(tornado.web.RequestHandler):
                                            regex = re.compile(r'^([\w\d]*)$'), \
                                            regex_msg = self._("A username can only contain letters and digits.")))
         if not error and queryDB:
-            query = self.select_member_by_username_lower(usr.lower())
-            if query:
+            try:
+                query = self.select_member_by_username_lower(usr.lower())
+            except NoResultFound:
+                pass
+            else:
                 error.append(self._("That username is taken. Please choose another."))
         return error
     def check_password(self, pwd):
@@ -166,8 +171,11 @@ class BaseHandler(tornado.web.RequestHandler):
                                            regex = re.compile(r"(?:^|\s)[-a-z0-9_.+]+@(?:[-a-z0-9]+\.)+[a-z]{2,6}(?:\s|$)", re.IGNORECASE), \
                                            regex_msg = self._("Your Email address is invalid.")))
         if not error and queryDB:
-            query = self.select_member_by_email(email)
-            if query:
+            try:
+                query = self.select_member_by_email(email)
+            except NoResultFound:
+                pass
+            else:
                 error.append(self._("That Email is taken. Please choose another."))
         return error
     def get_gravatar_url(self, email):
@@ -178,8 +186,6 @@ class BaseHandler(tornado.web.RequestHandler):
         query["code"] = query["code"].decode("utf-8")
         query = dict(sorted(query.iteritems(), key=itemgetter(1)))
         jsondump = json.dumps(query)
-        print jsondump
-        print judger.pubkey.strip()
         sign = hashlib.sha1(jsondump + judger.pubkey.strip()).hexdigest()
         query["sign"] = sign
         http_client = AsyncHTTPClient()

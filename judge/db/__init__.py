@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 18:18:21 18/04/2012
+# MODIFIED: 20:41:50 18/04/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -26,9 +26,9 @@ class MemberDBMixin(object):
     def count_member(self):
         return self.db.query(Member).count()
     def count_accepted_by_member_id(self, member_id):
-        return self.db.query(Submit).filter_by(member_id = 1).filter_by(status = 1).count()
+        return self.db.query(Submit).filter_by(member_id = member_id).filter_by(status = 1).count()
     def count_submit_by_member_id(self, member_id):
-        return self.db.query(Submit).filter_by(member_id = 1).count()
+        return self.db.query(Submit).filter_by(member_id = member_id).count()
     ''' SELECT '''
     def select_member_by_id(self, member_id):
         return self.db.query(Member).get(member_id)
@@ -88,6 +88,8 @@ class ForumDBMixin(object):
     def count_reply_by_topic_id(self, topic_id):
         return self.db.query(Reply).filter_by(topic_id = topic_id).count()
     '''SELECT'''
+    def select_latest_node(self, count = 20):
+        return self.db.query(Node).order_by(desc(Node.id)).limit(count).all()
     def select_node_by_id(self, node_id):
         return self.db.query(Node).get(node_id)
     def select_node_by_link(self, link):
@@ -162,7 +164,7 @@ class ProblemDBMixin(object):
     def select_latest_visible_problem_order_by_id(self, count = 10):
         return self.db.query(Problem).filter_by(invisible = 0).order_by(desc(Problem.id)).limit(count).all()
     def select_last_submit_by_problem_id_member_id(self, problem_id):
-        return self.db.query(Submit).filter_by(problem_id = problem_id).filter_by(member_id = self.current_user.id).order_by(desc(Submit.id)).all()
+        return self.db.query(Submit).filter_by(problem_id = problem_id).filter_by(member_id = self.current_user.id).order_by(desc(Submit.id)).limit(1).one()
     def select_submit_by_id(self, sid):
         return self.db.query(Submit).get(sid)
     def select_submit_order_by_id(self, count = 10, start = 0):

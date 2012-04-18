@@ -40,7 +40,7 @@
 </div>
 {% endif %}
 {% if user and node %}
-<form method="POST" action="/new/{#{ node.link }#}" class="form-horizontal cell form">
+<form method="POST" action="/new/{{ node.link }}" class="form-horizontal cell form">
 <fieldset>
     <div class="title">{{ _('Create Topic') }}</div>
     {{ page.xsrf_form_html() }}

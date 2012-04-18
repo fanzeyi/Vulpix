@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: handlers.py
 # CREATED: 01:41:06 08/03/2012
-# MODIFIED: 18:18:55 18/04/2012
+# MODIFIED: 20:28:26 18/04/2012
 # DESCRIPTION: URL Route
 
 from api import *
@@ -44,5 +44,6 @@ handlers = [
     (r'/t/([\d]*)', ViewTopicHandler), 
     (r'/new/(.*)', CreateTopicHandler), 
     (r'/forum', ViewForumHandler), 
+    (r'/test', TestHandler), 
     (r'/api/problem/get/([\d]*)', GetProblemHandler), 
 ]

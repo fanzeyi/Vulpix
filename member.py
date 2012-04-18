@@ -2,12 +2,16 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: member.py
 # CREATED: 02:18:23 09/03/2012
-# MODIFIED: 19:24:32 17/04/2012
+# MODIFIED: 20:29:11 18/04/2012
 # DESCRIPTION: member handlers
 
 import re
 import copy
+import uuid
+import binascii
 import bcrypt
+import datetime
+from sqlalchemy.orm.exc import NoResultFound
 
 from tornado.web import HTTPError
 from tornado.web import authenticated
@@ -32,8 +36,9 @@ class SigninHandler(BaseHandler, MemberDBMixin):
         pwd = pwd.encode("utf-8")
         pwd = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
         if not error:
-            member = self.select_member_by_usr_pwd(usr, pwd)
-            if not member:
+            try:
+                member = self.select_member_by_usr_pwd(usr, pwd)
+            except NoResultFound:
                 error.append(self._("Wrong Username and password combination."))
         if error:
             self.render("signin.html", locals())
@@ -42,7 +47,6 @@ class SigninHandler(BaseHandler, MemberDBMixin):
         self.set_secure_cookie("auth", auth.secret)
         self.set_secure_cookie("uid", str(auth.member_id))
         go_next = self.get_argument("next", default = None)
-        print go_next
         if go_next:
             self.redirect(go_next)
             return
@@ -68,10 +72,12 @@ class SignupHandler(BaseHandler, MemberDBMixin):
         member = Member()
         member.username = usr
         member.username_lower = usr.lower()
-        member.passowrd = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
+        member.password = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
         member.email = email
         member.gravatar_link = self.get_gravatar_url(email)
-        self.insert_member(member)
+        member.create = datetime.datetime.now()
+        self.db.add(member)
+        self.db.commit()
         auth = self.create_auth(member.id)
         self.set_secure_cookie('auth', auth.secret)
         self.set_secure_cookie('uid', str(auth.member_id))
@@ -198,7 +204,35 @@ class ListMemberHandler(BaseHandler, MemberDBMixin):
         for member in members:
             member.accepted = self.count_accepted_by_member_id(member.id)
             member.submit = self.count_submit_by_member_id(member.id)
-            member.rating = member.accepted / float(member.submit) * 100
+            member.rating = 0.0
+            if member.submit:
+                member.rating = round(float(member.accepted) / member.submit * 100, 2)
         self.render("member_list.html", locals())
 
-__all__ = ["SigninHandler", "SignupHandler", "SignoutHandler", "SettingsHandler", "ChangePasswordHandler", "MemberHandler", "ListMemberHandler"]
+class TestHandler(BaseHandler, MemberDBMixin):
+    def post(self):
+        usr = binascii.b2a_hex(uuid.uuid4().bytes)[3:10]
+        pwd = binascii.b2a_hex(uuid.uuid4().bytes)[3:10]
+        email = usr + "@gmail.com"
+        error = []
+        error.extend(self.check_username(usr.lower(), queryDB = True))
+        error.extend(self.check_password(pwd))
+        error.extend(self.check_email(email, queryDB = True))
+        if error:
+            self.render("signup.html", locals())
+            return
+        member = Member()
+        member.username = usr
+        member.username_lower = usr.lower()
+        member.password = bcrypt.hashpw(pwd, self.settings['bcrypt_salt'])
+        member.email = email
+        member.gravatar_link = self.get_gravatar_url(email)
+        member.create = datetime.datetime.now()
+        self.db.add(member)
+        self.db.commit()
+        auth = self.create_auth(member.id)
+        self.set_secure_cookie('auth', auth.secret)
+        self.set_secure_cookie('uid', str(auth.member_id))
+        self.redirect('/')
+
+__all__ = ["SigninHandler", "SignupHandler", "SignoutHandler", "SettingsHandler", "ChangePasswordHandler", "MemberHandler", "ListMemberHandler", "TestHandler"]

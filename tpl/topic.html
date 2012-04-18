@@ -13,7 +13,7 @@
     <div class="body">
         <table class="topicContent">
             <tr>
-                <td class="content">{{ topic.content | autolink }}</td>
+                <td class="content" style="vertical-align:top">{{ topic.content | autolink }}</td>
                 <td class="author"><a href="/member/{{ topic.member.username }}">{{ topic.member.gravatar_link | avatar_img(70) }}</a></td>
             </tr>
         </table>
@@ -30,7 +30,7 @@
         <table class="replyContent">
             <tr>
                 <td class="avatar" rowspan="2">
-                    <a href="/member/{{ topic.member.username }}">{{ topic.member.gravatar_link | avatar_img(50) }}</a>
+                    <a href="/member/{{ reply.member.username }}">{{ reply.member.gravatar_link | avatar_img(50) }}</a>
                 </td>
                 <td class="replyMeta">
                     #{{ loop.index }} by <a href="/member/{{ reply.member.username }}">{{ reply.member.username}}</a> at {{ reply.create }}

@@ -2,11 +2,12 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: forum.py
 # CREATED: 22:39:44 17/04/2012
-# MODIFIED: 18:21:14 18/04/2012
+# MODIFIED: 18:52:37 18/04/2012
 
 import datetime
 from tornado.web import HTTPError
 from tornado.web import authenticated
+from sqlalchemy.orm.exc import NoResultFound
 
 from judge.db import Node
 from judge.db import Reply
@@ -57,6 +58,7 @@ class CreateTopicHandler(BaseHandler, ForumDBMixin):
         node = self.select_node_by_link(link.lower())
         if not node:
             raise HTTPError(404)
+        topic = None
         if self.current_user.admin:
             tid = self.get_argument("tid", default = 0)
             try:
@@ -73,8 +75,9 @@ class CreateTopicHandler(BaseHandler, ForumDBMixin):
         self.render("topic_create.html", locals())
     @authenticated
     def post(self, link):
-        node = self.select_node_by_link(link.lower())
-        if not node:
+        try:
+            node = self.select_node_by_link(link.lower())
+        except NoResultFound:
             raise HTTPError(404)
         title = self.get_argument("title", default = "")
         content = self.get_argument("content", default = "")
@@ -157,7 +160,7 @@ class ViewTopicHandler(BaseHandler, ForumDBMixin):
             self.render("topic.html", locals())
             return
         reply = Reply()
-        reply.content = content
+        reply.content = self.xhtml_escape(content)
         reply.topic_id = topic.id
         reply.member_id = self.current_user.id
         reply.create = datetime.datetime.now()

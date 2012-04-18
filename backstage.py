@@ -2,11 +2,12 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: backstage.py
 # CREATED: 02:43:49 15/03/2012
-# MODIFIED: 03:31:00 18/04/2012
+# MODIFIED: 18:31:05 18/04/2012
 
 import re
 import datetime
 import functools
+from sqlalchemy.orm.exc import NoResultFound
 
 from tornado.web import HTTPError
 
@@ -174,10 +175,14 @@ class AddNodeHandler(BaseHandler, ForumDBMixin):
         error.extend(self.check_text_value(name, self._("Name"), required = True, max = 100))
         error.extend(self.check_text_value(link, self._("Link"), required = True, max = 100))
         if not error:
-            duplinode = self.select_node_by_link(link)
-            if duplinode:
+            try:
+                duplinode = self.select_node_by_link(link)
+            except NoResultFound:
+                pass
+            else:
                 error.append(self._("This link have taken."))
-        node.id = nid
+        if nid:
+            node.id = nid
         node.name = name
         node.link = link
         node.description = ""
