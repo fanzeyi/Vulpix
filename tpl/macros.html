@@ -93,3 +93,13 @@
         <button type="submit" class="btn {{ class }}">{{ submit }}</button>
     </div>
 {% endmacro %}
+
+{% macro plural_word(count, zero, single, more) %}
+{% if count == 0 %}
+{{ zero }}
+{% elif count == 1 %}
+{{ single }}
+{% else %}
+{{ more }}
+{% endif %}
+{% endmacro %}

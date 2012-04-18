@@ -2,12 +2,14 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: forum.py
 # CREATED: 22:39:44 17/04/2012
-# MODIFIED: 04:06:41 18/04/2012
+# MODIFIED: 18:21:14 18/04/2012
 
+import datetime
 from tornado.web import HTTPError
 from tornado.web import authenticated
 
 from judge.db import Node
+from judge.db import Reply
 from judge.db import Topic
 from judge.db import ForumDBMixin
 from judge.base import BaseHandler
@@ -28,6 +30,25 @@ class ViewNodeHandler(BaseHandler, ForumDBMixin):
         breadcrumb.append((self._('Forum'), '/forum'))
         breadcrumb.append((node.name, '/go/%s' % node.link))
         title = node.name
+        for topic in topics:
+            topic.reply_count = self.count_reply_by_topic_id(topic.id)
+        self.render("topic_list.html", locals())
+
+class ViewForumHandler(BaseHandler, ForumDBMixin):
+    def get(self):
+        start = self.get_argument("start", default = 0)
+        try:
+            start = int(start)
+        except ValueError:
+            start = 0
+        topics = self.select_lates_topic(start = 0)
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self._('Forum'), '/forum'))
+        title = self._("Forum")
+        index = True
+        for topic in topics:
+            topic.reply_count = self.count_reply_by_topic_id(topic.id)
         self.render("topic_list.html", locals())
 
 class CreateTopicHandler(BaseHandler, ForumDBMixin):
@@ -65,7 +86,8 @@ class CreateTopicHandler(BaseHandler, ForumDBMixin):
                 tid = int(tid)
             except ValueError:
                 raise HTTPError(404)
-            topic.id = tid
+            if tid:
+                topic.id = tid
         error.extend(self.check_text_value(title, self._("Topic Title"), required = True, max = 255))
         error.extend(self.check_text_value(content, self._("Topic Content"), required = True, min = 5, max = 100000))
         topic.title = self.xhtml_escape(title)
@@ -84,7 +106,66 @@ class CreateTopicHandler(BaseHandler, ForumDBMixin):
         if topic.id:
             self.update_topic(topic)
         else:
-            self.insert_topic(topic)
+            #self.insert_topic(topic)
+            topic.create = datetime.datetime.now()
+            topic.last_reply = datetime.datetime.now()
+            self.db.add(topic)
+            self.db.commit()
+            self.db.flush()
         self.redirect("/t/%s" % topic.id)
 
-__all__ = ["ViewNodeHandler", "CreateTopicHandler"]
+class ViewTopicHandler(BaseHandler, ForumDBMixin):
+    def get(self, topic_id):
+        try:
+            topic_id = int(topic_id)
+        except ValueError:
+            raise HTTPError(404)
+        topic = self.select_topic_by_id(topic_id)
+        if not topic:
+            raise HTTPError(404)
+        replies = self.select_reply_by_topic_id(topic_id)
+        topic.reply_count = len(replies)
+        title = topic.title
+        breadcrumb = []
+        breadcrumb.append((self._('Home'), '/'))
+        breadcrumb.append((self._('Forum'), '/forum'))
+        breadcrumb.append((topic.node.name, '/go/%s' % topic.node.link))
+        breadcrumb.append((topic.title, '/t/%d' % topic.id))
+        self.render("topic.html", locals())
+    @authenticated
+    def post(self, topic_id):
+        try:
+            topic_id = int(topic_id)
+        except ValueError:
+            raise HTTPError(404)
+        topic = self.select_topic_by_id(topic_id)
+        if not topic:
+            raise HTTPError(404)
+        content = self.get_argument("content", default = "")
+        error = []
+        error.extend(self.check_text_value(content, self._("Reply Content"), required = True, min = 5))
+        if error:
+            replies = self.select_reply_by_topic_id(topic_id)
+            topic.reply_count = len(replies)
+            title = topic.title
+            content = self.xhtml_escape(content)
+            breadcrumb = []
+            breadcrumb.append((self._('Home'), '/'))
+            breadcrumb.append((self._('Forum'), '/forum'))
+            breadcrumb.append((topic.node.name, '/go/%s' % topic.node.link))
+            breadcrumb.append((topic.title, '/t/%d' % topic.id))
+            self.render("topic.html", locals())
+            return
+        reply = Reply()
+        reply.content = content
+        reply.topic_id = topic.id
+        reply.member_id = self.current_user.id
+        reply.create = datetime.datetime.now()
+        self.db.add(reply)
+        self.db.commit()
+        topic.last_reply = datetime.datetime.now()
+        self.db.commit()
+        self.redirect("/t/%d" % topic_id)
+
+
+__all__ = ["ViewNodeHandler", "CreateTopicHandler", "ViewTopicHandler", "ViewForumHandler"]

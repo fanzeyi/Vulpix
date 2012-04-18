@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/db/__init__.py
 # CREATED: 02:01:23 08/03/2012
-# MODIFIED: 04:10:34 18/04/2012
+# MODIFIED: 18:18:21 18/04/2012
 # DESCRIPTION: Database Table Object
 
 import uuid
@@ -85,6 +85,8 @@ class MemberDBMixin(object):
 
 class ForumDBMixin(object):
     '''COUNT'''
+    def count_reply_by_topic_id(self, topic_id):
+        return self.db.query(Reply).filter_by(topic_id = topic_id).count()
     '''SELECT'''
     def select_node_by_id(self, node_id):
         return self.db.query(Node).get(node_id)
@@ -93,7 +95,11 @@ class ForumDBMixin(object):
     def select_topic_by_id(self, topic_id):
         return self.db.query(Topic).get(topic_id)
     def select_topic_by_node_id(self, node_id, start = 0, count = 10):
-        return self.db.query(Topic).filter_by(node_id = node_id).offset(start).limit(count).all()
+        return self.db.query(Topic).filter_by(node_id = node_id).order_by(desc(Topic.last_reply)).offset(start).limit(count).all()
+    def select_reply_by_topic_id(self, topic_id):
+        return self.db.query(Reply).filter_by(topic_id = topic_id).all()
+    def select_lates_topic(self, start = 0, count = 10):
+        return self.db.query(Topic).order_by(desc(Topic.last_reply)).offset(start).limit(count).all()
     '''INSERT'''
     def insert_node(self, node):
         self.db.add(node)
