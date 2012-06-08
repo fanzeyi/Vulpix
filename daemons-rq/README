@@ -1,0 +1,1 @@
+此评测进程依赖 [RQ](https://github.com/nvie/rq) 作为任务队列系统，相比 Celery 更轻便。
