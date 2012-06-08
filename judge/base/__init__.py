@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 22:24:01 18/04/2012
+# MODIFIED: 15:42:49 19/04/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -20,6 +20,7 @@ from pygments.lexers import CLexer
 from pygments.lexers import CppLexer
 from pygments.lexers import DelphiLexer
 from pygments.formatters import HtmlFormatter
+from sqlalchemy.exc import StatementError
 from sqlalchemy.orm.exc import NoResultFound
 
 import tornado.web
@@ -66,7 +67,12 @@ class BaseHandler(tornado.web.RequestHandler):
         member_id = self.get_secure_cookie("uid")
         member = None
         if auth and member_id:
-            auth = self.db.query(Auth).filter_by(secret = auth).filter_by(member_id = member_id).one()
+            try:
+                auth = self.db.query(Auth).filter_by(secret = auth).filter_by(member_id = member_id).one()
+            except StatementError:
+                # for mysql session broken
+                self.db.rollback()
+                auth = self.db.query(Auth).filter_by(secret = auth).filter_by(member_id = member_id).one()
             if auth:
                 member = self.db.query(Member).get(auth.member_id)
                 if member:
