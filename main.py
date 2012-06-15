@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: main.py
 # CREATED: 01:37:19 08/03/2012
-# MODIFIED: 22:08:52 18/04/2012
+# MODIFIED: 14:33:44 15/06/2012
 # DESCRIPTION: Main Server File,  run as `python2 main.py [port_num]`
 
 import re
@@ -13,6 +13,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 httplib.responses[418] = "I'm a teapot" # hack for HTTP 418 :D
+httplib.responses[451] = "Unavailable for Legal Reasons" # HTTP 451 Unavailable for Legal Reasons http://www.tbray.org/tmp/draft-tbray-http-legally-restricted-status.html#anchor3
 
 import tornado.web
 import tornado.ioloop
