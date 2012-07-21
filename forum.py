@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: forum.py
 # CREATED: 22:39:44 17/04/2012
-# MODIFIED: 18:52:37 18/04/2012
+# MODIFIED: 03:27:28 22/07/2012
 
 import datetime
 from tornado.web import HTTPError
@@ -48,6 +48,7 @@ class ViewForumHandler(BaseHandler, ForumDBMixin):
         breadcrumb.append((self._('Forum'), '/forum'))
         title = self._("Forum")
         index = True
+        node = None
         for topic in topics:
             topic.reply_count = self.count_reply_by_topic_id(topic.id)
         self.render("topic_list.html", locals())

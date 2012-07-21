@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 03:15:47 22/07/2012
+# MODIFIED: 03:29:42 22/07/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -188,7 +188,7 @@ class BaseHandler(tornado.web.RequestHandler):
         return error
     def get_gravatar_url(self, email):
         gravatar_id = hashlib.md5(email.lower()).hexdigest()
-        return "http://www.gravatar.com/avatar/%s?d=mm" % (gravatar_id) 
+        return "http://0.gravatar.com/avatar/%s?d=mm" % (gravatar_id) 
     def post_to_judger(self, query, judger, callback = None):
         query["time"] = time.time()
         query["code"] = query["code"].decode("utf-8")

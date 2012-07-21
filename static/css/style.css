@@ -3849,16 +3849,17 @@ a.nounderline:hover {
   margin-top: 10px;
 }
 .tagcloud .tag {
+  display: inline-block;
+  padding: 4px 0;
+  margin-right: 4px;
+  margin-bottom: 5px;
+}
+.tagcloud .tag a {
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
   background-color: #EEE;
   padding: 4px 10px;
-  display: inline;
-  margin-right: 4px;
-  margin-bottom: 5px;
-}
-.tagcloud .tag a {
   color: black;
 }
 .pagination {
