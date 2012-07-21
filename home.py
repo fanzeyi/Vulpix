@@ -2,8 +2,10 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: home.py
 # CREATED: 02:00:16 08/03/2012
-# MODIFIED: 18:26:17 18/04/2012
+# MODIFIED: 03:39:19 22/07/2012
 # DESCRIPTION: Home handler
+
+from tornado.web import HTTPError
 
 from contest import get_contest_status
 
@@ -29,4 +31,8 @@ class HomeHandler(BaseHandler, MemberDBMixin, ProblemDBMixin, ContestDBMixin, Fo
         count_member = self.count_member()
         self.render("home.html", locals())
 
-__all__ = ["HomeHandler"]
+class NotFoundHandler(BaseHandler):
+    def get(self, _):
+        raise HTTPError(404)
+
+__all__ = ["HomeHandler", "NotFoundHandler"]
