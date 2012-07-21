@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% from 'macros.html' import show_topic_list %}
+{% from 'macros.html' import show_problem_list %}
+{% from 'macros.html' import show_contest_list %}
+
+{% block body %}
+<div class="row-fluid">
+    <div class="span8">
+        <div class="cell">
+            <div class="title">{{ _('Recent Problem') }}</div>
+            <div class="body">
+                {{ show_problem_list(latest_problem) }}
+            </div>
+        </div>
+        <div class="cell">
+            <div class="title">{{ _('Recent Submit') }}</div>
+            <div class="body">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width:20px; text-align:center; ">#</th>
+                        <th>{{ _('Status') }}</th>
+                        <th style="width: 100%">{{ _('Problem') }}</th>
+                        <th>{{ _('User') }}</th>
+                        <th style="white-space:nowrap; ">{{ _('Language') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for submit in latest_submit %}
+                    <tr>
+                        <td style="text-align:center">{{ submit.id }}</td>
+                        <td><a href="/submit/{{ submit.id }}" class="nounderline">{{ submit | get_submit_status }}</a></td>
+                        <td><a href="/problem/{{ submit.problem_id }}">{{ submit.problem.title }}</a></td>
+                        <td><a href="/member/{{ submit.member.username }}">{{ submit.member.username }}</a></td>
+                        <td style="text-align:center">{{ submit.lang | lang2humantext }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        <div class="cell">
+            <div class="title">{{ _('Recent Contest') }}</div>
+            <div class="body">
+                {{ show_contest_list(latest_contest) }}
+            </div>
+        </div>
+        {#        <div class="cell">
+            <div class="title">{{ _('Latest Discuss') }}</div>
+            <div class="body">
+                {% set latest_topic = "" %}
+                {{ show_topic_list(latest_topic) }}
+            </div>
+        </div>#}
+    </div>
+    <div class="span4">
+        <div class="cell">
+            <div class="title">{{ _('Notice') }}</div>
+            <div class="body content">
+                {% include 'widget/notice.html' %}
+            </div>
+        </div>
+        <div class="cell">
+            <div class="title">{{ _('New Node') }}</div>
+            <div class="body content">
+                <ul class="tagcloud">
+                    {% for node in latest_node %}
+                    <li class="tag"><a href="/go/{{ node.link }}">{{ node.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="cell" id="count">
+            <div class="title">{{ _('Site Count') }}</div>
+            <div class="body">
+                {% include 'widget/count.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

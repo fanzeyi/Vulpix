@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "macros.html" import input %}
+{% from "macros.html" import textarea %}
+{% from "macros.html" import form_actions %}
+{% from "macros.html" import show_error_list %}
+
+{% block body %}
+{{ show_error_list(error) }}
+{% if msg %}
+<div class="alert alert-success">
+    {{ msg.decode("utf-8") }}
+</div>
+{% endif %}
+<form method="POST" action="/settings" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ _('Basic Settings') }}</div>
+    <div class="sep30"></div>
+    {{ page.xsrf_form_html() }}
+    {{ input("email", _("Email"), value=member.email)  }}
+    {{ input("website", _("Website"), value=member.website) }}
+    {{ input("tagline", _("Tagline"), value=member.tagline) }}
+    <div class="control-group">
+        <label class="control-label" for="lang">{{ _('Code Language') }}</label>
+        <div class="controls">
+            <select name="lang">
+                <option value="pas" {% if member.lang == 1 %}selected{% endif %}>Pascal</option>
+                <option value="c" {% if member.lang == 2 %}selected{% endif %}>C</option>
+                <option value="cpp" {% if member.lang == 3 %}selected{% endif %}>C++</option>
+            </select>
+        </div>
+    </div>
+    {{ textarea("bio", _("Bio"), value=member.bio, style="width: 400px; height: 300px") }}
+    {{ form_actions(_("Save Changes")) }}
+</fieldset>
+</form>
+
+<form method="POST" action="/settings/changepass" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ _('Change Password') }}</div>
+    {{ page.xsrf_form_html() }}
+    <div class="sep30"></div>
+    {{ input("oldpwd", _("Current Password"), type="PASSWORD") }}
+    {{ input("newpwd", _("New Password"), type="PASSWORD") }}
+    {{ form_actions(_("Change Password"), class="btn-danger") }}
+</fieldset>
+</form>
+{% endblock %}

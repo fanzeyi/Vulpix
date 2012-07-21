@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="cell">
+    <div class="title">{{ _('Submit Detail') }}</div>
+    <div class="body line">
+        <table class="table table-bordered table-info">
+            <tr>
+                <th>ID</th>
+                <td>{{ submit.id }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('Problem') }}</th>
+                <td><a href="/problem/{{ submit.problem_id }}">{{ submit.problem.title }}</a></td>
+            </tr>
+            <tr>
+                <th>{{ _('Member') }}</th>
+                <td><a href="/member/{{ submit.member.username }}">{{ submit.member.username }}</a></td>
+            </tr> 
+            <tr>
+                <th>{{ _('Status') }}</th>
+                <td>{{ submit | get_submit_status }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('Language') }}</th>
+                <td>{{ submit.lang | lang2humantext }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('Score') }}</th>
+                <td>{{ submit.score }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('Time') }}</th>
+                <td>{{ submit.costtime }} ms</td>
+            </tr>
+            <tr>
+                <th>{{ _('Memory') }}</th>
+                <td>{{ submit.costmemory }} KB</td>
+            </tr>
+            <tr>
+                <th>{{ _('Date') }}</th>
+                <td>{{ submit.create }}</td>
+            </tr>
+            {% if user.admin %}
+            <tr>
+                <th>{{ _('IP') }}</th>
+                <td>{{ submit.ip }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('User-Agent') }}</th>
+                <td>{{ submit.user_agent }}</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% if submit.status == 6 %}
+<div class="cell">
+    <div class="title">{{ _('Compile Output') }}</div>
+    <div class="body content">
+        <pre>{{ submit.msg.replace("\\n", "\n") | e}}</pre>
+    </div>
+</div>
+{% else %}
+<div class="row-fluid">
+<div class="span4">
+<div class="cell">
+    <div class="title">{{ _('Test Point') }}</div>
+    <div class="body">
+        <table class="table table-bordered submitdetail">
+            <thead>
+                <tr>
+                    <th style="width: 20px; text-align: center; ">#</th>
+                    <th>{{ _('Status') }}</th>
+                    <th style="width: 50px">{{ _('Time') }}</th>
+                    <th style="width: 50px">{{ _('Memory') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tp in testpoint %}
+                <tr>
+                    <td style="text-align: center">{{ tp[0] }}</td>
+                    <td>{{ tp[1] | alpha2status }}</td>
+                    <td>{{ tp[2] }} ms</td>
+                    <td>{{ tp[3] }} KB</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+<div class="span8">
+<div class="cell">
+    <div class="title">{{ _('Code') }}</div>
+    <div class="body content">
+        {% if submit.member_id == user.id or user.admin %}
+        {{ code_highlighted }}
+        {% else %}
+        <div class="well" style="margin-bottom: 0; ">{{ _("You dont have permissions to view this code.") }}</div>
+        {% endif %}
+    </div>
+</div>
+</div>
+</div>
+{% endif %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".main").addClass("onecol");
+//    $(window).resize(function() {
+//        if($(".main").width() < 975) {
+//            $(".main").addClass("onecol"); 
+//        }else {
+//            $(".onecol").removeClass("onecol"); 
+//        }
+//    }); 
+//    if($(".main").width() < 975) {
+//        $(".main").addClass("onecol"); 
+//    }
+}); 
+</script>
+{% endblock %}

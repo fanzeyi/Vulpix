@@ -1,0 +1,105 @@
+{#================ List ================#}
+
+{% macro show_error_list(error) %}
+{%- if error -%}
+<div class="alert alert-error">
+<ul class="errorlist">
+{% for err in error %}
+<li>{{ err }}</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro show_problem_list(problem_list) %}
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th style="width:20px; text-align:center; ">#</th>
+            <th>Title</th>
+            <th style="width:100px">Short Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for problem in problem_list %}
+        <tr>
+            <td style="text-align:center">{{ problem.id }}</td>
+            <td><a href="/problem/{{ problem.id }}">{{ problem.title }}</a></td>
+            <td>{{ problem.shortname }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endmacro %}
+
+{% macro show_topic_list(topic_list) %}
+{% endmacro %}
+
+{% macro show_contest_list(contest_list) %}
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th style="width:20px; text-align:center; ">#</th>
+            <th>Title</th>
+            <th style="width:100px">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contest in contest_list %}
+        <tr>
+            <td style="text-align:center">{{ contest.id }}</td>
+            <td><a href="/problem/{{ contest.id }}">{{ contest.title }}</a></td>
+            <td>{{ contest | get_contest_status }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endmacro %}
+
+{#================ Form ================#}
+
+{% macro input(name, label, value = '', type = 'TEXT', class = 'input-xlarge', default = '', addon = '', style = '') %}
+    <div class="control-group">
+        <label class="control-label" for="{{ name }}">{{ label }}</label>
+        <div class="controls">
+            {% if addon %}<div class="input-append">{% endif %}
+                <input name="{{ name }}" class="{{ class }}" type="{{ type }}" {% if value %}value="{{ value }}"{% elif default %}value="{{ default }}"{% endif %} style="{{ style }}"/>
+            {% if addon %}<span class="add-on">{{ addon }}</span></div>{% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro checkbox(name, label, checked = 0) %}
+    <div class="control-group">
+        <label class="control-label" for="{{ name }}"></label>
+        <div class="controls">
+            <label class="checkbox"><input type="checkbox" name="{{ name }}" value="1" {% if checked %}checked{% endif %}>{{ label }}</label>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro textarea(name, label, value = '', class = 'input-xlarge', style = '') %}
+    <div class="control-group">
+        <label class="control-label" for="{{ name }}">{{ label }}</label>
+        <div class="controls">
+            <textarea name="{{ name }}" class="{{ class }}" style="{{ style }}">{% if value %}{{ value }}{% endif %}</textarea>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro form_actions(submit, class="btn-primary") %}
+    <div class="form-actions">
+        <button type="submit" class="btn {{ class }}">{{ submit }}</button>
+    </div>
+{% endmacro %}
+
+{% macro plural_word(count, zero, single, more) %}
+{% if count == 0 %}
+{{ zero }}
+{% elif count == 1 %}
+{{ single }}
+{% else %}
+{{ more }}
+{% endif %}
+{% endmacro %}

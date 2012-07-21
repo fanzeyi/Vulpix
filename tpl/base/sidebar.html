@@ -1,0 +1,144 @@
+<nav>
+<div class="profile">
+    <div class="profile_wrap">
+        {% if user %}
+        <span class="username"><a href="/member/{{ user['username'] }}">{{ user['username'] }}</a></span>
+        <span class="tagline" title="{{ user['tagline'] }}">{{ user['tagline'] }}</span>
+        {% else %}
+        <span class="username">Guest</span>
+        <span class="tagline"></span>
+        {% endif %}
+        <div class="avatar">
+            {% if user %}
+            <a href="/member/{{ user['username'] }}">
+                {% if user.email %}
+                {{ user.gravatar_link | avatar_img }}
+                {% else %}
+                {{ "/static/img/avatar.png" | avatar_img }}
+                {% endif %}
+            </a>
+            {% else %}
+            {{ "/static/img/avatar.png" | avatar_img }}
+            {% endif %}
+            <span class="avatar_mask"></span>
+        </div>
+    </div>
+</div>
+<ul class="nav nav-list">
+    <li class="nav-header">
+        {{ page.settings['site_title'] }}
+    </li>
+    <li>
+        <a href="/">
+            <i class="icon-home icon-white"></i>
+            {{ _('Home') }}
+        </a>
+    </li>
+    <li>
+        <a href="/problem">
+            <i class="icon-question-sign icon-white"></i>
+            {{ _('Problem') }}
+        </a>
+    </li>
+    <li>
+        <a href="/contest">
+            <i class="icon-fire icon-white"></i>
+            {{ _('Contest') }}
+        </a>
+    </li>
+    <li>
+        <a href="/submit">
+            <i class="icon-th-large icon-white"></i>
+            {{ _('Submit') }}
+        </a>
+    </li>
+    <li>
+        <a href="/forum">
+            <i class="icon-comment icon-white"></i>
+            {{ _('Forum') }}
+        </a>
+    </li>
+<!--    <li>
+        <a href="/list">
+            <i class="icon-list icon-white"></i>
+            {{ _('List') }}
+        </a>
+        </li>-->
+{% if user %}
+<!--    <li>
+        <a href="/member/{{ user['username'] }}/notes">
+            <i class="icon-pencil icon-white"></i>
+            {{ _('Notes') }}
+        </a>
+        </li>-->
+    <li>
+        <a href="/member">
+            <i class="icon-user icon-white"></i>
+            {{ _('Member') }}
+        </a>
+    </li>
+    <li>
+        <a href="/settings">
+            <i class="icon-cog icon-white"></i>
+            {{ _('Settings') }}
+        </a>
+    </li>
+    <li>
+        <a href="/signout">
+            <i class="icon-off icon-white"></i>
+            {{ _('Sign Out') }}
+        </a>
+    </li>
+{% if user.admin %}
+    <li class="nav-header">
+        {{ _('Backstage') }}
+    </li>
+    <li>
+        <a href="/backstage/problem/add">
+            <i class="icon-plus icon-white"></i>
+            {{ _('Add Problem') }}
+        </a>
+    </li>
+    <li>
+        <a href="/backstage/contest/add">
+            <i class="icon-plus icon-white"></i>
+            {{ _('Add Contest') }}
+        </a>
+    </li>
+    <li>
+        <a href="/backstage/node/add">
+            <i class="icon-plus icon-white"></i>
+            {{ _('Add Node') }}
+        </a>
+    </li>
+    <li>
+        <a href="/backstage/judger">
+            <i class="icon-asterisk icon-white"></i>
+            {{ _('Judger Manage') }}
+        </a>
+    </li>
+{% endif %}
+{% else %}
+    <li>
+        <a href="/signin">
+            <i class="icon-user icon-white"></i>
+            {{ _('Sign In') }}
+        </a>
+    </li>
+    <li>
+        <a href="/signup">
+            <i class="icon-flag icon-white"></i>
+            {{ _('Sign Up') }}
+        </a>
+    </li>
+{% endif %}
+</ul>
+<div class="sep"></div>
+<div class="copyright">
+    &copy; 2012 <a href="https://github.com/fanzeyi/Vulpix">Vulpix</a>
+    | <a href="/lang/en">English</a>
+    | <a href="/lang/zh_cn">简体中文</a> | <br />
+    <a href="/lang/zh_tw">正體中文</a>
+    | <a href="/help">{{ _('Help') }}</a>
+</div>
+</nav>

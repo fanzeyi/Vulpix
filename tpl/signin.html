@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8" />
+    <title>{{ _('Sign In') }} - {{ page.settings['site_title'] }}</title>
+    <link href='http://fonts.googleapis.com/css?family=Port+Lligat+Slab' rel='stylesheet' type='text/css'>    
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.1.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+</head>
+<body class="sign">
+<div id="wrapper">
+    <div id="logo">
+        <span class="logo">Vulpix</span>
+        <div class="subtitle">Online Judge System</div>
+    </div>
+<div class="signform">
+{% if error %}
+    <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">&times;</a>
+        <ul>
+            {% for err in error %}
+            <li>{{ err }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+    <form class="form-inline" method="POST" action="">
+{{ page.xsrf_form_html() }}
+        <div class="input-prepend">
+            <span class="add-on"><i class="icon-user"></i></span>
+            <input type="input" placeholder="Username" name="usr" {% if usr %}value="{{ usr }}"{% endif %}/>
+        </div>
+        <div class="input-prepend">
+            <span class="add-on"><i class="icon-lock"></i></span>
+            <input type="password" placeholder="Password" name="pwd" />
+        </div>
+        <div class="input-prepend">
+            <button type="submit" class="btn btn-info">{{ _('Sign In') }}</button>
+        </div>
+        <div class="input-prepend">
+            <a href="/signup" class="btn">{{ _('Sign Up') }}</a>
+        </div>
+    </form>
+</div>
+
+</div>
+</body>
+</html>

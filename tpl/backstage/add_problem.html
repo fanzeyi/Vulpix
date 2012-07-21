@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% from "macros.html" import input %}
+{% from "macros.html" import checkbox %}
+{% from "macros.html" import textarea %}
+{% from "macros.html" import form_actions %}
+{% from "macros.html" import show_error_list %}
+
+{% block body %}
+{{ show_error_list(error) }}
+<form method="POST" action="" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ title }}</div>
+    {{ page.xsrf_form_html() }}
+    <input type="hidden" name="pid" value="{% if problem %}{{ problem.id }}{% endif %}" />
+    <div class="sep30"></div>
+    {{ input('probtitle', _('Title'), value=problem.title) }}
+    {{ input('shortname', _('Short Name'), value=problem.shortname) }}
+    {{ input('timelimit', _('Time Limit'), value=problem.timelimit, class="span1", default="1000", addon="ms") }}
+    {{ input('memlimit', _('Memory Limit'), value=problem.memlimit, class="span1", default="128", addon="MB") }}
+    {{ input('testpoint', _('Test Point'), value=problem.testpoint, class="span1") }}
+    {{ checkbox('invisible', _('Invisible'), checked=problem.invisible) }}
+    {{ textarea('content', _('Content'), value=problem.content, style="width:522px; height: 427px; ") }}
+    <div class="control-group">
+        <label class="control-label" for="problem_tag">{{ _('Problem Tag') }}</label>
+        <div class="controls">
+            <input type="text" name="problem_tag"  class="input-xlarge" id="problem_tag" />
+            <a href="#" class="btn" id="problem_tag_submit">{{ _('Add') }}</a>
+            <ul id="problem_tag_list" class="tagcloud">
+                {% if tags %}
+                {% for tag in tags %}
+                <li class="tag">
+                    <a href="/tag/{{ tag }}" target="_blank" style="float:left">{{ tag }}</a>
+                    <a class="close" data-dismiss="alert" value="{{ tag }}" href="#"><i class="icon-remove-sign"></i></a>
+                </li>
+                {% endfor%}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    {{ form_actions(submit = _('Submit')) }}
+</fieldset>
+{% if tags %}
+{% for tag in tags %}
+    <input id="tag_{{ tag }}" type="hidden" name="tags[]" value="{{ tag }}" />
+{% endfor %}
+{% endif %}
+</form>
+<script type="text/javascript">
+$(document).ready(function() {
+    var tag_list = new Array(); 
+    $.each($('input[name="tags[]"]'), function(i, v) {
+        tag_list.push(v.value); 
+    }); 
+    function add_problem_tag() {
+        var val = $("#problem_tag").val(); 
+        if($.inArray(val, tag_list) != -1 || !val.length ) {
+            return false; 
+        }
+        $('#problem_tag_list').append('<li class="tag"><a href="/tag/' + val + '" target="_blank">' + val + '</a><a class="close" data-dismiss="alert" value="' + val + '" href="#"><i class="icon-remove-sign"></i></a></li>'); 
+        $('form.form-horizontal').append('<input id="tag_' + val + '" type="hidden" name="tags[]" value="' + val + '" />'); 
+        tag_list.push(val); 
+        $('#problem_tag').val(''); 
+        $('.tag .close').click(function () {
+            var tagname = $(this).attr('value');
+            var index = tag_list.indexOf(tagname); 
+            tag_list.splice(index, 1); 
+            $('#tag_' + tagname).remove(); 
+        }); 
+    }
+    $('.disabled').click(function() {
+        return false; 
+    }); 
+    $('#problem_tag').keypress(function (e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if(code == 13) {
+            add_problem_tag(); 
+            return false; 
+        }
+    }); 
+    $("#problem_tag_submit").click(function () {
+        add_problem_tag(); 
+        return false; 
+    }); 
+    $('.tag .close').click(function () {
+        var tagname = $(this).attr('value');
+        var index = tag_list.indexOf(tagname); 
+        tag_list.splice(index, 1); 
+        $('#tag_' + tagname).remove(); 
+    }); 
+}); 
+</script>
+{% endblock %}

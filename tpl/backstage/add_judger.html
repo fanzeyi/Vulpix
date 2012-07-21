@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% from "macros.html" import input %}
+{% from "macros.html" import textarea %}
+{% from "macros.html" import form_actions %}
+{% from "macros.html" import show_error_list %}
+
+{% block body %}
+{{ show_error_list(error) }}
+<form method="POST" action="" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ title }}</div>
+    {{ page.xsrf_form_html() }}
+    <input type="hidden" name="jid" value="{% if judger %}{{ judger.id }}{% endif %}" />
+    <div class="sep30"></div>
+    {{ input("name", _("Name"), value=judger.name) }}
+    {{ input("path", _("Path"), value=judger.path, default="http://") }}
+    {{ input("priority", _("Priority"), value=judger.priority, default="0", class="input-mini")}}
+    {{ textarea("description", _("Description"), value=judger.description, style="width: 400px; height: 200px; ") }}
+    {{ textarea("pubkey", _("RSA Public Key"), value=judger.pubkey, style="width: 400px; height: 200px; ") }}
+    {{ form_actions(_("Submit")) }}
+</fieldset>
+</form>
+{% endblock %}

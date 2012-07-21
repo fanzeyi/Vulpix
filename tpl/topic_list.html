@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% from "macros.html" import input %}
+{% from "macros.html" import textarea %}
+{% from "macros.html" import plural_word %}
+{% from "macros.html" import form_actions %}
+
+{% block body %}
+{% if topics %}
+<div class="cell">
+    <div class="title">
+        {% if node %}
+        <div class="fr"><a href="/new/{{ node.link }}">Create Topic</a></div>
+        {{ node.name }}
+        {% else %}
+        {{ _('Forum') }}
+        {% endif %}
+    </div>
+    <div class"body">
+        <ul class="topicList">
+        {% for topic in topics %}
+        <li class="topic line from_{{ topic.member_id }} node_{{ topic.node_id }}" id="topic_{{ topic.id }}">
+            <div class="userAvatar">{{ topic.member.gravatar_link | avatar_img }}</div>
+            <div class="topicInfo">
+                <div class="topicTitle"><a href="/t/{{ topic.id }}">{{topic.title}}</a></div>
+                <div class="topicMeta">
+                    <a href="/go/{{ topic.node.link }}" class="node">{{ topic.node.name }}</a> • 
+                    <a href="/member/{{ topic.member.username }}">{{ topic.member.username }}</a> • 
+                    <time class="timeago" datetime="{{ topic.last_reply }}">{{ topic.last_reply }}</time> • 
+                    <span class="reply_count">{{ plural_word(topic.reply_count, "No reply", "1 reply", "%d replies" % topic.reply_count)}}</span>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+        </ul>
+    </div>
+</div>
+{% else %}
+<div class="well" style="text-align: center">
+    No topic yet. {% if user %}<a href="/new/{{ node.link }}">Create one?</a>{% endif %}
+</div>
+{% endif %}
+{% if user and node %}
+<form method="POST" action="/new/{{ node.link }}" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ _('Create Topic') }}</div>
+    {{ page.xsrf_form_html() }}
+    <div class="sep30"></div>
+    {{ input("title", _("Title"), style="width:516px; ") }}
+    {{ textarea("content", _("Content"), style="width:516px; height: 300px; ") }}
+    {{ form_actions(_("Submit")) }}
+</fieldset>
+</form>
+{% endif %}
+{% if not node %}
+{% endif %}
+{% endblock %}

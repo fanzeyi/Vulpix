@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "macros.html" import input %}
+{% from "macros.html" import textarea %}
+{% from "macros.html" import form_actions %}
+{% from "macros.html" import show_error_list %}
+
+{% block body %}
+{{ show_error_list(error) }}
+<form method="POST" action="/new/{{ node.link }}" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ _('Create Topic') }} - {{ node.name }}</div>
+    {{ page.xsrf_form_html() }}
+    <div class="sep30"></div>
+    {{ input("title", _("Title"), value=topic.title, style="width:516px; ") }}
+    {{ textarea("content", _("Content"), value=topic.content, style="width:516px; height: 600px; ") }}
+    {{ form_actions(_("Submit")) }}
+</fieldset>
+</form>
+{% endblock %}

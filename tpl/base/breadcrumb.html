@@ -1,0 +1,16 @@
+{% if breadcrumb %}
+<ul class="breadcrumb">
+    {% for crumb in breadcrumb %}
+    {% if not loop.last %}
+    <li>
+        <a href="{{ crumb[1] }}">{{ crumb[0] }}</a>
+        <span class="divider">/</span>
+    </li>
+    {% else %}
+    <li class="active">
+        {{ crumb[0] }}
+    </li>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}

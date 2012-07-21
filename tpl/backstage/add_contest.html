@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% from "macros.html" import input %}
+{% from "macros.html" import textarea %}
+{% from "macros.html" import checkbox %}
+{% from "macros.html" import form_actions %}
+{% from "macros.html" import show_error_list %}
+
+{% block body %}
+{{ show_error_list(error) }}
+<form method="POST" action="" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ title }}</div>
+    {{ page.xsrf_form_html() }}
+    <input type="hidden" name="cid" value="{% if contest %}{{ contest.id }}{% endif %}" />
+    <div class="sep30"></div>
+    {{ input("title", _("Title"), value=contest.title) }}
+    <div class="control-group">
+        <label class="control-label" for="start_time">{{ _('Start Time') }}</label>
+        <div class="controls">
+            <input name="start_time" id="start_time" class="input-xlarge" type="test" {% if contest.start_time %}value="{% if contest.end_time is string %}{{ contest.start_time }}{% else %}{{ contest.start_time | datetimeformat }}{% endif %}" {% endif %}/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="end_time">{{ _('End Time') }}</label>
+        <div class="controls">
+            <input name="end_time" id="end_time" class="input-xlarge" type="test" {% if contest.end_time %}value="{% if contest.end_time is string %}{{ contest.end_time }}{% else %}{{ contest.end_time | datetimeformat }}{% endif %}" {% endif %}/>
+        </div>
+    </div>
+    {{ checkbox('invisible', _('Invisible'), checked=contest.invisible) }}
+    {{ textarea("description", _("Description"), value=contest.description, style="width:400px; height:300px; ") }}
+    <div class="control-group">
+        <label class="control-label" for="related_problem">{{ _('Related Problem') }}</label>
+        <div class="controls">
+            <input type="text" name="related_problem"  class="input-xlarge" id="related_problem" />
+            <a href="#" class="btn" id="related_problem_submit">{{ _('Add') }}</a>
+            <ul id="related_problem_list" class="tagcloud">
+                {% if related_problem %}
+                {% for problem in related_problem %}
+                <li class="related tag">
+                    <a href="/problem/{{ problem.problem_id }}" target="_blank" style="float:left">{{ problem.title }}</a>
+                    <a class="close" href="#" value="{{ problem.id }}" data-dismiss="alert"><i class="icon-remove-sign"></i></a>
+                </li>
+                {% endfor%}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+{% if related_problem %}
+{% for problem in related_problem %}
+<input id="related_{{ problem.id }}" type="hidden" name="link_problem[]" value="{{ problem.id }}" />
+{% endfor %}
+{% endif %}
+    {{ form_actions(_("Submit")) }}
+</fieldset>
+</form>
+<script type="text/javascript">
+$(document).ready(function () {
+    var related_list = new Array(); 
+    $.each($('input[name="link_problem[]"]'), function(i, v) {
+        related_list.push(v.value); 
+    }); 
+    function add_related_problem() {
+        var val = $("#related_problem").val(); 
+        if(val.search("^-?\\d+$") == 0) {
+            if($.inArray(val, related_list) != -1) {
+                return false; 
+            }
+            $.get('/api/problem/get/' + val, null, function(text) {
+                $('#related_problem_list').append('<li class="related tag"><a href="/problem/' + val + '" target="_blank">' + text + '</a><a class="close" data-dismiss="alert" value="' + val + '" href="#"><i class="icon-remove-sign"></i></a></li>'); 
+                $('form.form-horizontal').append('<input id="related_' + val + '" type="hidden" name="link_problem[]" value="' + val + '" />'); 
+                related_list.push(val); 
+                $('#related_problem').val(''); 
+                $('#related_problem').prop('disabled', false); 
+                $('#related_problem_submit').removeClass('disabled'); 
+                $(".tag .close").click(function () {
+                    var pid = $(this).attr('value');
+                    var index = related_list.indexOf(pid); 
+                    related_list.splice(index, 1); 
+                    $('#related_' + pid).remove(); 
+                }); 
+            }); 
+            $('#related_problem_submit').addClass('disabled'); 
+            $('#related_problem').prop('disabled', true); 
+        }
+    }
+    $('form').ajaxError(function() {
+        $('#related_problem_submit').removeClass('disabled'); 
+        $('#related_problem').prop('disabled', false); 
+    }); 
+    $('.disabled').click(function() {
+        return false; 
+    }); 
+    $('#related_problem').keypress(function (e) {
+        var code = (e.keyCode ? e.keyCode : e.which);
+        if(code == 13) {
+            add_related_problem(); 
+            return false; 
+        }
+    }); 
+    $("#related_problem_submit").click(function () {
+        add_related_problem(); 
+        return false; 
+    }); 
+    $(".tag .close").click(function () {
+        var pid = $(this).attr('value');
+        var index = related_list.indexOf(pid); 
+        related_list.splice(index, 1); 
+        $('#related_' + pid).remove(); 
+    }); 
+}); 
+</script>
+{% endblock %}
+
+{% block head %}
+<script src="/static/js/jquery-ui.min.js" type="text/javascript"></script>
+<script src="/static/js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>
+<script src="/static/js/timepicker.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/static/css/timepicker.css" />
+{% endblock %}

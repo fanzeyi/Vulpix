@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% from "macros.html" import textarea %}
+{% from "macros.html" import plural_word %}
+{% from "macros.html" import form_actions %}
+{% from "macros.html" import show_error_list %}
+
+{% block body %}
+<div class="cell singleTopic">
+    <div class="title">
+        <div class="fr topicMeta">by <a href="/member/{{ topic.member.username }}">{{ topic.member.username }}</a> at {{ topic.create }}</div>
+        {{ topic.title }}
+    </div>
+    <div class="body">
+        <table class="topicContent">
+            <tr>
+                <td class="content" style="vertical-align:top">{{ topic.content | autolink }}</td>
+                <td class="author"><a href="/member/{{ topic.member.username }}">{{ topic.member.gravatar_link | avatar_img(70) }}</a></td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% if replies %}
+<div class="cell">
+    <div class="body">
+        <div class="replyListMeta line">{{ plural_word(topic.reply_count, "No reply", "1 reply", "%d replies" % topic.reply_count)}} | Till {{ topic.last_reply }}</div>
+    </div>
+    <ul class="replyList">
+    {% for reply in replies %}
+        <li class="reply line from_{{ reply.member_id }}">
+        <table class="replyContent">
+            <tr>
+                <td class="avatar" rowspan="2">
+                    <a href="/member/{{ reply.member.username }}">{{ reply.member.gravatar_link | avatar_img(50) }}</a>
+                </td>
+                <td class="replyMeta">
+                    #{{ loop.index }} by <a href="/member/{{ reply.member.username }}">{{ reply.member.username}}</a> at {{ reply.create }}
+                </td>
+            </tr>
+            <tr>
+                <td class="replyMain content" style="vertical-align: top">
+                    {{ reply.content | autolink }}
+                </td>
+            </tr>
+        </table>
+        </li>
+    {% endfor %}
+</ul>
+</div>
+{% else %}
+<div class="well" style="text-align:center">
+    No reply yet.
+</div>
+{% endif %}
+{% if user %}
+{{ show_error_list(error) }}
+<form method="POST" action="/t/{{ topic.id }}" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ _('Reply Topic') }}</div>
+    {{ page.xsrf_form_html() }}
+    <div class="sep30"></div>
+    {{ textarea("content", _("Content"), style="width:516px; height: 300px; ", value=content) }}
+    {{ form_actions(_("Submit")) }}
+</fieldset>
+</form>
+{% endif %}
+
+{% endblock %}

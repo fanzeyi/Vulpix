@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="cell">
+    <div class="title">{{ _('Contest List') }}</div>
+    <div class="body">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th style="width:20px; text-align:center; ">#</th>
+                <th>{{ _('Title') }}</th>
+                <th style="width: 20%">{{ _('Start Time') }}</th>
+                <th style="width: 20%">{{ _('End time') }}</th>
+                <th style="width: 10%">{{ _('Status') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for contest in contests %}
+            {% if contest.invisible == 0 or user.admin == 1%}
+            <tr>
+                <td style="text-align:center">{{ contest.id }}</td>
+                <td><a href="/contest/{{ contest.id }}">{{ contest.title }}</a></td>
+                <td>{{ contest.start_time }}</td>
+                <td>{{ contest.end_time }}</td>
+                <td>{{ contest | get_contest_status }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+{% include 'count.html' %}
+{% endblock %}

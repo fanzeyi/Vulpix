@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block body %}
+<div class="cell">
+    <div class="title">
+        <div class="fr"><a href="/backstage/judger/add">{{ _('Add Judger') }}</a></div>
+        {{ _('Judger List') }}
+    </div>
+    <div class="body">
+        <table class="table table-bordered">
+            <tr>
+                <th style="width: 20px; text-align: center; ">#</th>
+                <th>{{ _('Name') }}</th>
+                <th>{{ _('Path') }}</th>
+                <th style="width: 40px">{{ _('Priority') }}</th>
+                <th style="width: 40px">{{ _('Queue') }}</th>
+                <th style="width: 100px; ">{{ _('Edit') }}</th>
+            </tr>
+            {% for judger in judgers %}
+            <tr>
+                <td style="text-align:center">{{ judger.id }}</td>
+                <td>{{ judger.name }}</td>
+                <td>{{ judger.path }}</td>
+                <td style="text-align:center">{{ judger.priority }}</td>
+                <td style="text-align:center">{{ judger.queue_num }}</td>
+                <td>
+                    <a href="/backstage/judger/add?jid={{ judger.id }}">{{ _('Edit') }}</a> | 
+                    <a href="/backstage/judger/reset?jid={{ judger.id }}">Reset</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

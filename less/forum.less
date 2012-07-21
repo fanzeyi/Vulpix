@@ -1,0 +1,98 @@
+.topicList {
+    list-style: none; 
+    margin: 0; 
+
+    .topic {
+        padding: 10px 20px; 
+        min-height: 45px; 
+
+        .userAvatar {
+            float: left; 
+        }
+        .topicInfo {
+            display: inline-block; 
+            margin-left: 10px; 
+            margin-top: 3px; 
+
+            .topicTitle {
+                font-size: 16px; 
+            }
+
+            .topicMeta {
+                font-size: 10px; 
+                margin-top: 6px; 
+                color: #CCC; 
+                font-weight: bold; 
+
+                .node {
+                    .border-radius(2px); 
+                    text-decoration: none; 
+                    color: #999; 
+                    background-color: whiteSmoke; 
+                    font-size: 10px; 
+                    line-height: 10px; 
+                    display: inline-block; 
+                    padding: 4px 4px 3px 4px; 
+
+                    &:hover {
+                        background-color: #DDD; 
+                    }
+                }
+                a {
+                    color: #999; 
+                }
+            }
+        }
+    }
+}
+
+.singleTopic {
+    .topicMeta {
+        font-size: 13px; 
+        color: #999; 
+    }
+}
+
+.topicContent {
+    width: 100%; 
+
+    .author {
+        border-left: 1px solid #DDD;
+        width: 70px; 
+        height: 70px; 
+        padding: 10px; 
+    }
+}
+
+.replyListMeta {
+    font-size: 12px; 
+    line-height: 16px; 
+    padding: 10px 10px; 
+    height: 16px; 
+    color: #999; 
+}
+
+.replyList {
+    list-style: none; 
+    margin: 0; 
+
+    .reply {
+
+        .replyContent {
+            width: 100%; 
+
+            .avatar {
+                padding: 10px; 
+                width: 50px; 
+                height: 50px; 
+                border-right: 1px solid #DDD; 
+            }
+            .replyMeta {
+                color: #999; 
+                border-bottom: 1px solid #DDD; 
+                padding: 4px; 
+                font-size: 11px; 
+            }
+        }
+    }
+}

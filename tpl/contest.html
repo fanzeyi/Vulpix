@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% from 'macros.html' import form_actions %}
+
+{% block body %}
+<div class="cell">
+    <div class="title">
+        {% if user.admin %}
+        <div class="fr"><a href="/backstage/contest/add?cid={{ contest.id }}">Edit</a></div>
+        {% endif %}
+        {{ contest.title }}
+    </div>
+    <div class="body line">
+        <table class="table table-bordered table-info">
+            <tr>
+                <th>ID</th>
+                <td>{{ contest.id }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('Start Time') }}</th>
+                <td>{{ contest.start_time }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('End Time') }}</th>
+                <td>{{ contest.end_time }}</td>
+            </tr>
+            <tr>
+                <th>{{ _('Status') }}</th>
+                <td>{{ contest | get_contest_status }}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="body content">
+        {{ contest.description }}
+    </div>
+</div>
+<div class="cell">
+    <div class="title">{{ _("Problem List") }}</div>
+    <div class="body">
+        <table class="table table-bordered">
+            <tr>
+                <th style="width:5%">#</th>
+                <th>{{ _('Name') }}</th>
+                <th style="width:15%">{{ _('Short Name') }}</th>
+                <th style="width:5%;">{{ _('Language') }}</th>
+                <th style="width:20%;">{{ _('Submit Time') }}</th>
+                <th style="width:10%;">{{ _('Status') }}</th>
+                <th style="width:5%;">{{ _('Score') }}</th>
+            </tr>
+            {% for problem in problems %}
+            <tr>
+                <td>{{ problem.problem_id }}</td>
+                <td><a href="/contest/problem/{{ problem.problem_id }}">{{ problem.title }}</a></td>
+                <td>{{ problem.shortname }}</td>
+                {% if problem.submit -%}
+                <td>{{ problem.submit.lang }}</td>
+                <td>{{ problem.submit.create }}</td>
+                <td>{{ problem.submit.status }}</td>
+                <td>{{ problem.submit.score }}</td>
+                {% else %}
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% if (user and contest.status == 1) or user.admin %}
+<form class="form-horizontal cell">
+    <fieldset>
+        <div class="title">{{ _('Submit Problem') }}</div>
+        <div class="sep30"></div>
+        <div class="control-group">
+            <label class="control-label" for="problem_id">{{ _('Problem') }}</label>
+            <div class="controls">
+                <select name="problem_id">
+                    {% set selected = False %}
+                    {% for problem in problems %}
+                    <option value="{{ problem.problem_id }}" {% if not selected and not problem.submit %}{% set selected = True %}selected{% endif %}>
+                        {{ problem.title }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="codefile">{{ _('Code File') }}</label>
+            <div class="controls">
+                <input name="codefile" type="file" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="lang">{{ _('Language') }}</label>
+            <input type="hidden" name="lang" value="{{ user.lang }}"/>
+            <div class="controls btn-group" id="lang_select">
+                <a href="#" id="pascal" class="btn{% if user.lang == 1 %} btn-success{% endif %}">Pascal</a>
+                <a href="#" id="c" class="btn{% if user.lang == 2 %} btn-success{% endif %}">C</a>
+                <a href="#" id="cpp" class="btn{% if user.lang == 3 %} btn-success{% endif %}">C++</a>
+            </div>
+        </div>
+        {{ form_actions(_('Submit')) }}
+    </fieldset>
+</form>
+<script type="text/javascript">
+$(document).ready(function () {
+    $('#lang_select > a.btn').click(function () {
+        var lang = $(this).prop('id'); 
+        $("#lang_select > a.btn").removeClass('btn-success'); 
+        $(this).addClass('btn-success'); 
+        $("input[name='lang']").val(lang); 
+        return false; 
+    }); 
+}); 
+</script>
+{% endif %}
+{% endblock %}

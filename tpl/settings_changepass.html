@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% from "macros.html" import input %}
+{% from "macros.html" import form_actions %}
+{% from "macros.html" import show_error_list %}
+
+{% block body %}
+{{ show_error_list(error) }}
+<form method="POST" action="/settings/changepass" class="form-horizontal cell form">
+<fieldset>
+    <div class="title">{{ _('Change Password') }}</div>
+    {{ page.xsrf_form_html() }}
+    <div class="sep30"></div>
+    {{ input("oldpwd", _("Current Password"), type="PASSWORD") }}
+    {{ input("newpwd", _("New Password"), type="PASSWORD") }}
+    {{ form_actions(_("Change Password"), class="btn-danger") }}
+</fieldset>
+</form>
+{% endblock %}
