@@ -2,7 +2,7 @@
 # AUTHOR: Zeray Rice <fanzeyi1994@gmail.com>
 # FILE: judge/base/__init__.py
 # CREATED: 01:49:33 08/03/2012
-# MODIFIED: 15:42:49 19/04/2012
+# MODIFIED: 03:15:47 22/07/2012
 # DESCRIPTION: Base handler
 
 import re
@@ -73,6 +73,8 @@ class BaseHandler(tornado.web.RequestHandler):
                 # for mysql session broken
                 self.db.rollback()
                 auth = self.db.query(Auth).filter_by(secret = auth).filter_by(member_id = member_id).one()
+            except NoResultFound:
+                auth = None
             if auth:
                 member = self.db.query(Member).get(auth.member_id)
                 if member:
